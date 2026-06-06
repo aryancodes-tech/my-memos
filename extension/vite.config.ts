@@ -4,7 +4,7 @@ import path from "node:path";
 import { defineConfig } from "vite";
 import manifest from "./manifest.config";
 
-/** Vite dev server port — keep in sync with manifest.config.ts DEV_SERVER_PORT. */
+/** Vite dev server port - keep in sync with manifest.config.ts DEV_SERVER_PORT. */
 const DEV_SERVER_PORT = 5173;
 
 export default defineConfig({

@@ -4,7 +4,7 @@ import { useState } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KnowledgeOS — Chrome Extension" },
+      { title: "KnowledgeOS - Chrome Extension" },
       {
         name: "description",
         content:
@@ -87,7 +87,7 @@ function Index() {
             <li>
               Click <strong>Load unpacked</strong> and pick the unzipped folder.
             </li>
-            <li>Open a new tab — KnowledgeOS takes over.</li>
+            <li>Open a new tab - KnowledgeOS takes over.</li>
           </ol>
         </section>
 
@@ -101,11 +101,11 @@ function Index() {
             with nested pages and ⌘K search.
           </Feature>
           <Feature title="Notion-style editor">
-            Slash commands, headings, lists, checklists, quotes, code blocks, dividers — auto-saved,
+            Slash commands, headings, lists, checklists, quotes, code blocks, dividers - auto-saved,
             keyboard-first.
           </Feature>
           <Feature title="Themes">
-            7 built-in themes — Light/Dark, Midnight, Dracula, Solarized, Forest, Ocean — switched
+            7 built-in themes - Light/Dark, Midnight, Dracula, Solarized, Forest, Ocean - switched
             via CSS variables.
           </Feature>
           <Feature title="Future-ready">

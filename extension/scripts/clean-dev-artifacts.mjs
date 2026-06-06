@@ -10,4 +10,4 @@ for (const target of ["dist", ".vite"]) {
 
 fs.writeFileSync(devSessionPath, `${Date.now()}\n`, "utf8");
 
-console.log("Prepared dev workspace — removed dist/ and .vite/ for a fresh CRXJS dev build.");
+console.log("Prepared dev workspace - removed dist/ and .vite/ for a fresh CRXJS dev build.");

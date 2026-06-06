@@ -387,7 +387,7 @@ export const useStore = create<State>((set, get) => ({
   },
 }));
 
-/** Pages shown in Favorites / Recent — documents only, never folders. */
+/** Pages shown in Favorites / Recent - documents only, never folders. */
 export function isSidebarPage(page: Page): boolean {
   return page.kind !== "directory" && !page.archived;
 }

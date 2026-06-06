@@ -15,7 +15,7 @@ interface Props {
 
 /**
  * Block-based editor. We persist `editor.getJSON()` (Tiptap/ProseMirror doc).
- * We NEVER persist `editor.getHTML()` — rendered HTML is generated on read.
+ * We NEVER persist `editor.getHTML()` - rendered HTML is generated on read.
  */
 export default function Editor({ docKey, initial, onChange }: Props) {
   const debounceRef = useRef<number | null>(null);

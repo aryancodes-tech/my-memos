@@ -54,7 +54,7 @@ export type BuiltInThemeName =
   | "forest"
   | "ocean";
 
-/** Active theme id — built-in preset or `custom-{id}`. */
+/** Active theme id - built-in preset or `custom-{id}`. */
 export type ThemeName = BuiltInThemeName | `custom-${string}`;
 
 /** Primary colors users pick when creating a custom theme. */

@@ -3,11 +3,11 @@
 [![CI](https://github.com/aryancodes-tech/knowledge-os/actions/workflows/ci.yml/badge.svg)](https://github.com/aryancodes-tech/knowledge-os/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Personal knowledge management as a Chrome extension** — a Notion-inspired workspace and learning dashboard that replaces your New Tab page.
+**Personal knowledge management as a Chrome extension** - a Notion-inspired workspace and learning dashboard that replaces your New Tab page.
 
 **Local-first · Offline-only · No backend · No account required**
 
-Your notes, pages, and images live entirely in the browser. Nothing is sent to a server.
+Your notes and pages live entirely in the browser. Nothing is sent to a server.
 
 ---
 
@@ -31,13 +31,13 @@ Your notes, pages, and images live entirely in the browser. Nothing is sent to a
 
 ## What is KnowledgeOS?
 
-KnowledgeOS is a Chrome Manifest V3 extension that turns every new browser tab into a personal knowledge workspace. It is designed for developers, students, and lifelong learners who want a fast, keyboard-first place to capture notes, organize study material, and revisit recent work — without signing up for a cloud service.
+KnowledgeOS is a Chrome Manifest V3 extension that turns every new browser tab into a personal knowledge workspace. It is designed for developers, students, and lifelong learners who want a fast, keyboard-first place to capture notes, organize study material, and revisit recent work - without signing up for a cloud service.
 
 The repository contains two apps:
 
 | App                  | Path         | Purpose                                                  |
 | -------------------- | ------------ | -------------------------------------------------------- |
-| **Chrome extension** | `extension/` | Core product — editor, sidebar, search, themes, storage  |
+| **Chrome extension** | `extension/` | Core product - editor, sidebar, search, themes, storage  |
 | **Landing site**     | `src/`       | Marketing / download page with a one-click extension ZIP |
 
 ---
@@ -46,35 +46,35 @@ The repository contains two apps:
 
 ### Workspace & navigation
 
-- **New Tab override** — KnowledgeOS loads automatically when you open a new tab
-- **Dashboard** — greeting view with quick-create actions and recently edited pages
-- **Sidebar** — favorites, recents, and a nested **Pages** workspace with folders and sub-pages
-- **Global search** — `⌘K` / `Ctrl+K` palette powered by an in-memory FlexSearch index
-- **Collapsible sidebar** — icon rail for a minimal layout
+- **New Tab override** - KnowledgeOS loads automatically when you open a new tab
+- **Dashboard** - greeting view with quick-create actions and recently edited pages
+- **Sidebar** - favorites, recents, and a nested **Pages** workspace with folders and sub-pages
+- **Global search** - `⌘K` / `Ctrl+K` palette powered by an in-memory FlexSearch index
+- **Collapsible sidebar** - icon rail for a minimal layout
 
 ### Notion-style editor
 
 Built on [Tiptap](https://tiptap.dev/) (ProseMirror) with auto-save and keyboard-first editing:
 
-- **Slash commands** (`/`) — text, headings (H1–H4), bullet/numbered lists, to-do lists, quotes, code blocks, dividers
-- **Formatting toolbar** — bold, italic, underline, strikethrough, links, text alignment
-- **Rich text colors** — preset and custom text, highlight, and background colors
-- **Code blocks** — syntax highlighting via lowlight
-- **Debounced persistence** — changes save automatically (250 ms debounce)
+- **Slash commands** (`/`) - text, headings (H1–H4), bullet/numbered lists, to-do lists, quotes, code blocks, dividers
+- **Formatting toolbar** - bold, italic, underline, strikethrough, links, text alignment
+- **Rich text colors** - preset and custom text, highlight, and background colors
+- **Code blocks** - syntax highlighting via lowlight
+- **Debounced persistence** - changes save automatically (250 ms debounce)
 
 ### Themes & appearance
 
-- **7 built-in themes** — Light, Dark, Midnight, Dracula, Solarized, Forest, Ocean
-- **Custom themes** — create your own with background, text, and accent colors
-- **CSS variable theming** — instant theme switches via `data-theme` on `<html>`
+- **7 built-in themes** - Light, Dark, Midnight, Dracula, Solarized, Forest, Ocean
+- **Custom themes** - create your own with background, text, and accent colors
+- **CSS variable theming** - instant theme switches via `data-theme` on `<html>`
 
 ### Local-first storage
 
-- **IndexedDB** — pages (compressed block JSON) and image blobs
-- **chrome.storage.local** — lightweight settings (theme, last view, custom themes, collapsed folders)
-- **No rendered HTML or markdown on disk** — only source block JSON is persisted; plain text is extracted on the fly for search
-- **LZString compression** — documents are compacted before write
-- **Versioned schema** — future features (AI, backlinks, sync, version history) can be added without data migrations
+- **IndexedDB** - pages (compressed block JSON) and image blobs
+- **chrome.storage.local** - lightweight settings (theme, last view, custom themes, collapsed folders)
+- **No rendered HTML or markdown on disk** - only source block JSON is persisted; plain text is extracted on the fly for search
+- **LZString compression** - documents are compacted before write
+- **Versioned schema** - future features (AI, backlinks, sync, version history) can be added without data migrations
 
 ---
 
@@ -114,10 +114,10 @@ flowchart TB
 
 ### Storage design principles
 
-1. **Block JSON only** — every page is a Tiptap/ProseMirror `doc`; never store rendered HTML or duplicate markdown
-2. **Images are separate** — binary blobs live in their own IndexedDB object store, referenced by id from blocks (no base64 in docs)
-3. **Search index is ephemeral** — FlexSearch is rebuilt in memory on demand, never persisted
-4. **Two-tier storage** — heavy data in IndexedDB, light settings in `chrome.storage.local`
+1. **Block JSON only** - every page is a Tiptap/ProseMirror `doc`; never store rendered HTML or duplicate markdown
+2. **Images are separate** - binary blobs live in their own IndexedDB object store, referenced by id from blocks (no base64 in docs)
+3. **Search index is ephemeral** - FlexSearch is rebuilt in memory on demand, never persisted
+4. **Two-tier storage** - heavy data in IndexedDB, light settings in `chrome.storage.local`
 
 For deeper extension internals, see [`extension/README.md`](extension/README.md).
 
@@ -128,16 +128,16 @@ For deeper extension internals, see [`extension/README.md`](extension/README.md)
 | Layer    | Extension (`extension/`)     | Landing site (`src/`)   |
 | -------- | ---------------------------- | ----------------------- |
 | UI       | React 18                     | React 19                |
-| State    | Zustand                      | —                       |
-| Editor   | Tiptap 2 + ProseMirror       | —                       |
+| State    | Zustand                      | -                       |
+| Editor   | Tiptap 2 + ProseMirror       | -                       |
 | Styling  | Tailwind CSS 3               | Tailwind CSS 4          |
 | Build    | Vite 5 + CRXJS               | Vite 7 + TanStack Start |
-| Storage  | IndexedDB (`idb`) + LZString | —                       |
-| Search   | FlexSearch                   | —                       |
+| Storage  | IndexedDB (`idb`) + LZString | -                       |
+| Search   | FlexSearch                   | -                       |
 | Language | TypeScript 5                 | TypeScript 5            |
 | Tests    | Vitest (root)                | Vitest (root)           |
 
-The two apps are intentionally separate today — no shared workspace packages yet. Toolchain versions differ by design until a monorepo workspace is introduced.
+The two apps are intentionally separate today - no shared workspace packages yet. Toolchain versions differ by design until a monorepo workspace is introduced.
 
 ---
 
@@ -195,8 +195,8 @@ npm run dev
 2. Enable **Developer mode** (top-right toggle)
 3. Click **Load unpacked**
 4. Select the `extension/dist/` folder
-5. Confirm the extension name is **KnowledgeOS (Dev)** — not plain "KnowledgeOS"
-6. Open a **new tab** — KnowledgeOS takes over
+5. Confirm the extension name is **KnowledgeOS (Dev)** - not plain "KnowledgeOS"
+6. Open a **new tab** - KnowledgeOS takes over
 
 > **Keep `npm run dev` running** while you work. UI changes should hot-reload in open tabs. If they do not, open a fresh tab.
 
@@ -241,7 +241,7 @@ Run these from the **repo root**:
 | `npm run lint`              | ESLint across web + extension                              |
 | `npm run format`            | Prettier write                                             |
 | `npm run format:check`      | Prettier check (CI)                                        |
-| `npm run typecheck`         | TypeScript — web + extension                               |
+| `npm run typecheck`         | TypeScript - web + extension                               |
 | `npm run test`              | Vitest unit tests                                          |
 | `npm run test:watch`        | Vitest in watch mode                                       |
 | `npm run ci`                | Full CI pipeline locally                                   |
@@ -278,11 +278,11 @@ This runs lint, format check, typecheck, tests, and production builds for both t
 
 ### Code conventions
 
-- **Constants** — put magic values in `extension/src/lib/constants.ts`
-- **Empty strings** — use `len(value) > 0` from `extension/src/lib/text.ts`
-- **Storage** — persist block JSON only; never store rendered HTML or markdown
-- **Types** — keep domain models in `extension/src/storage/types.ts`
-- **Tests** — live next to the code they cover (`*.test.ts`)
+- **Constants** - put magic values in `extension/src/lib/constants.ts`
+- **Empty strings** - use `len(value) > 0` from `extension/src/lib/text.ts`
+- **Storage** - persist block JSON only; never store rendered HTML or markdown
+- **Types** - keep domain models in `extension/src/storage/types.ts`
+- **Tests** - live next to the code they cover (`*.test.ts`)
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor guide and PR checklist.
 
@@ -310,7 +310,7 @@ This:
 2. Creates `extension/knowledgeos-extension.zip`
 3. Copies the ZIP to `public/knowledgeos-extension.zip` for the landing page download button
 
-> Do not commit `public/knowledgeos-extension.zip` — CI and release workflows build it on demand.
+> Do not commit `public/knowledgeos-extension.zip` - CI and release workflows build it on demand.
 
 ### Install from ZIP (end users)
 
@@ -331,7 +331,7 @@ knowledge-os/
 │   │   ├── background.js       # Service worker
 │   │   └── icons/              # 16 / 48 / 128 px PNGs
 │   ├── manifest.config.ts      # MV3 manifest (CRXJS source of truth)
-│   ├── newtab.html             # Vite entry — becomes the new-tab page
+│   ├── newtab.html             # Vite entry - becomes the new-tab page
 │   ├── src/
 │   │   ├── App.tsx             # Root, keyboard shortcuts, view router
 │   │   ├── components/         # Sidebar, SearchPalette, dialogs, theme UI
@@ -356,10 +356,10 @@ knowledge-os/
 
 ## Data & privacy
 
-- **All data stays on your machine** — pages, images, and settings are stored in Chrome's local storage APIs
-- **No network calls** — the extension works fully offline after install (dev mode connects to `localhost:5173` for HMR only)
-- **No analytics or telemetry** — nothing is phoned home
-- **Uninstalling removes extension storage** — export important notes before removing the extension if you need a backup (import/export is on the roadmap)
+- **All data stays on your machine** - pages, images, and settings are stored in Chrome's local storage APIs
+- **No network calls** - the extension works fully offline after install (dev mode connects to `localhost:5173` for HMR only)
+- **No analytics or telemetry** - nothing is phoned home
+- **Uninstalling removes extension storage** - export important notes before removing the extension if you need a backup (import/export is on the roadmap)
 
 ---
 
@@ -375,7 +375,7 @@ npm run dev:reset --prefix extension
 In Chrome:
 
 1. Go to `chrome://extensions`
-2. Click **Reload** on **KnowledgeOS (Dev)** — or remove and **Load unpacked** again on `extension/dist/`
+2. Click **Reload** on **KnowledgeOS (Dev)** - or remove and **Load unpacked** again on `extension/dist/`
 3. Open a **new tab** (existing tabs may keep old code)
 
 ### Extension shows "KnowledgeOS" instead of "KnowledgeOS (Dev)"
@@ -394,7 +394,7 @@ Then reload the extension in Chrome.
 
 ### HMR not working
 
-Use the watch fallback — rebuilds on every save:
+Use the watch fallback - rebuilds on every save:
 
 ```bash
 npm run dev:watch --prefix extension
@@ -428,11 +428,11 @@ The storage schema and module boundaries are designed so these can be added with
 
 - AI search, summaries, and flashcards (reads the same block JSON)
 - Backlinks and page mentions (graph built dynamically from blocks)
-- Cloud sync (Google Drive, GitHub, or custom) — same block JSON on the wire
+- Cloud sync (Google Drive, GitHub, or custom) - same block JSON on the wire
 - Version history (append-only snapshots in a sibling object store)
 
 ---
 
 ## License
 
-[MIT](LICENSE) — Copyright (c) 2026 KnowledgeOS Contributors
+[MIT](LICENSE) - Copyright (c) 2026 KnowledgeOS Contributors

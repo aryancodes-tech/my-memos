@@ -76,7 +76,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "KnowledgeOS — Chrome Extension" },
+      { title: "KnowledgeOS - Chrome Extension" },
       {
         name: "description",
         content:
@@ -85,7 +85,7 @@ export const Route = createRootRoute({
       { property: "og:title", content: "KnowledgeOS" },
       {
         property: "og:description",
-        content: "Personal knowledge management Chrome extension — local-first, offline-only.",
+        content: "Personal knowledge management Chrome extension - local-first, offline-only.",
       },
       { property: "og:type", content: "website" },
     ],
