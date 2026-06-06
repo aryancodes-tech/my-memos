@@ -24,14 +24,19 @@ import {
   Underline,
   Undo2
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { DEFAULT_CODE_LANGUAGE } from "@/editor/codeLowlight";
 import { preventEditorBlur, ToolbarPopover } from "@/editor/ToolbarPopover";
 import {
   EDITOR_BACKGROUND_COLORS,
+  EDITOR_BACKGROUND_CUSTOM_DEFAULT,
+  EDITOR_CUSTOM_COLOR_LABEL,
   EDITOR_HIGHLIGHT_COLORS,
-  EDITOR_TEXT_COLORS
+  EDITOR_HIGHLIGHT_CUSTOM_DEFAULT,
+  EDITOR_TEXT_COLORS,
+  EDITOR_TEXT_CUSTOM_DEFAULT
 } from "@/lib/constants";
+import { normalizeHexColor } from "@/lib/themes";
 import { useStore } from "@/store/useStore";
 import { len } from "@/lib/text";
 
@@ -211,6 +216,8 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           icon={<Palette size={14} strokeWidth={1.75} />}
           colors={EDITOR_TEXT_COLORS}
           activeColor={textColor}
+          allowCustom
+          customDefault={EDITOR_TEXT_CUSTOM_DEFAULT}
           onPick={(color) => {
             if (len(color) === 0) editor.chain().focus().unsetColor().run();
             else editor.chain().focus().setColor(color).run();
@@ -222,6 +229,8 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           colors={EDITOR_HIGHLIGHT_COLORS}
           activeColor={highlightColor}
           align="right"
+          allowCustom
+          customDefault={EDITOR_HIGHLIGHT_CUSTOM_DEFAULT}
           onPick={(color) => {
             if (len(color) === 0) editor.chain().focus().unsetHighlight().run();
             else editor.chain().focus().setHighlight({ color }).run();
@@ -233,6 +242,8 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           colors={EDITOR_BACKGROUND_COLORS}
           activeColor={backgroundColor}
           align="right"
+          allowCustom
+          customDefault={EDITOR_BACKGROUND_CUSTOM_DEFAULT}
           onPick={(color) => {
             if (len(color) === 0) editor.chain().focus().unsetBackgroundColor().run();
             else editor.chain().focus().setBackgroundColor(color).run();
@@ -315,7 +326,9 @@ function ColorMenu({
   colors,
   activeColor,
   onPick,
-  align = "left"
+  align = "left",
+  allowCustom = false,
+  customDefault = "#000000"
 }: {
   title: string;
   icon: ReactNode;
@@ -323,9 +336,36 @@ function ColorMenu({
   activeColor: string;
   onPick: (color: string) => void;
   align?: "left" | "right";
+  /** When true, shows a native color picker and hex field below presets. */
+  allowCustom?: boolean;
+  /** Fallback hex for the custom picker when no custom color is active. */
+  customDefault?: string;
 }) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
+  const presetValues = useMemo(
+    () => new Set(colors.map((color) => color.value).filter((value) => len(value) > 0)),
+    [colors]
+  );
+  const isCustomActive = len(activeColor) > 0 && !presetValues.has(activeColor);
+  const [customColor, setCustomColor] = useState(
+    isCustomActive ? activeColor : customDefault
+  );
+
+  useEffect(() => {
+    if (!open) return;
+    setCustomColor(isCustomActive ? activeColor : customDefault);
+  }, [open, activeColor, customDefault, isCustomActive]);
+
+  const applyCustomColor = useCallback(
+    (value: string) => {
+      const normalized = normalizeHexColor(value, customDefault);
+      setCustomColor(normalized);
+      onPick(normalized);
+    },
+    [customDefault, onPick]
+  );
+  const customInputId = `${title.toLowerCase().replace(/\s+/g, "-")}-custom`;
 
   return (
     <div className="ko-toolbar-color-menu" ref={anchorRef}>
@@ -345,7 +385,9 @@ function ColorMenu({
                 key={color.id}
                 type="button"
                 title={color.label}
-                className={`ko-toolbar-color-swatch ${color.value === activeColor ? "is-active" : ""}`}
+                className={`ko-toolbar-color-swatch ${
+                  color.value === activeColor && !isCustomActive ? "is-active" : ""
+                }`}
                 style={
                   len(color.value) > 0
                     ? { background: color.value }
@@ -358,6 +400,39 @@ function ColorMenu({
               />
             ))}
           </div>
+          {allowCustom && (
+            <div className={`ko-toolbar-color-custom ${isCustomActive ? "is-active" : ""}`}>
+              <label className="ko-toolbar-color-custom-label" htmlFor={customInputId}>
+                {EDITOR_CUSTOM_COLOR_LABEL}
+              </label>
+              <div className="ko-toolbar-color-custom-row">
+                <input
+                  id={customInputId}
+                  type="color"
+                  className="ko-toolbar-color-picker"
+                  value={customColor}
+                  onChange={(event) => applyCustomColor(event.target.value)}
+                />
+                <input
+                  type="text"
+                  className="ko-toolbar-color-hex"
+                  value={customColor}
+                  spellCheck={false}
+                  aria-label={`${title} hex value`}
+                  onChange={(event) =>
+                    setCustomColor(normalizeHexColor(event.target.value, customColor))
+                  }
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      applyCustomColor(customColor);
+                      setOpen(false);
+                    }
+                  }}
+                  onBlur={() => applyCustomColor(customColor)}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </ToolbarPopover>
     </div>
