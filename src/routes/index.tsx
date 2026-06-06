@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { DEMO_PATH, EXTENSION_ZIP_FILENAME } from "@/lib/constants";
+import { DEMO_PATH, EXTENSION_ZIP_FILENAME, PRODUCT_NAME } from "@/lib/constants";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KnowledgeOS - Chrome Extension" },
+      { title: `${PRODUCT_NAME} - Chrome Extension` },
       {
         name: "description",
         content:
@@ -47,7 +47,7 @@ function Index() {
         <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
           Chrome Extension · Manifest V3
         </p>
-        <h1 className="mt-3 text-5xl font-bold tracking-tight">KnowledgeOS</h1>
+        <h1 className="mt-3 text-5xl font-bold tracking-tight">{PRODUCT_NAME}</h1>
         <p className="mt-4 text-lg text-muted-foreground">
           A Notion-inspired personal knowledge management and learning dashboard that replaces your
           New Tab page. Local-first, offline-only, zero backend.
@@ -91,7 +91,7 @@ function Index() {
             <li>
               Click <strong>Load unpacked</strong> and pick the unzipped folder.
             </li>
-            <li>Open a new tab - KnowledgeOS takes over.</li>
+            <li>Open a new tab - {PRODUCT_NAME} takes over.</li>
           </ol>
         </section>
 

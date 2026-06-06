@@ -1,5 +1,5 @@
 {
-  "name": "knowledgeos",
+  "name": "mymemos",
   "version": "0.1.0",
   "description": "Local-first personal knowledge management Chrome extension with an optional landing site",
   "license": "MIT",
@@ -34,7 +34,7 @@
     "prebuild:web": "node scripts/check-node-version.mjs",
     "build:web": "npm run build:app && vite build",
     "build:extension": "npm run build:force --prefix extension",
-    "package:extension": "npm run package --prefix extension && cp extension/knowledgeos-extension.zip public/knowledgeos-extension.zip",
+    "package:extension": "npm run package --prefix extension && cp extension/mymemos-extension.zip public/mymemos-extension.zip",
     "prepreview": "node scripts/check-node-version.mjs",
     "preview": "vite preview",
     "lint": "eslint .",

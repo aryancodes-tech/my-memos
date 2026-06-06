@@ -7,7 +7,7 @@ const sampleDoc: BlockDoc = {
   content: [
     {
       type: "paragraph",
-      content: [{ type: "text", text: "Hello KnowledgeOS" }],
+      content: [{ type: "text", text: "Hello MyMemos" }],
     },
   ],
 };

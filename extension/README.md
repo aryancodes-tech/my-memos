@@ -1,4 +1,4 @@
-# KnowledgeOS - Chrome Extension
+# MyMemos - Chrome Extension
 
 Notion-inspired personal knowledge management and learning dashboard. Ships as a **Chrome extension** (New Tab override) and as a **standalone web app** at `/demo/` using the same `src/` React code.
 
@@ -64,8 +64,8 @@ Then in Chrome (one-time setup):
 2. Enable **Developer mode** (top-right)
 3. Click **Load unpacked**
 4. Select the `extension/dist/` folder
-5. Confirm the extension name is **KnowledgeOS (Dev)** - not plain "KnowledgeOS"
-6. Open a **new tab** - KnowledgeOS takes over
+5. Confirm the extension name is **MyMemos (Dev)** - not plain "MyMemos"
+6. Open a **new tab** - MyMemos takes over
 
 Keep `npm run dev` running. UI changes should hot-reload in open tabs. If they do not, open a fresh tab.
 
@@ -73,8 +73,8 @@ Keep `npm run dev` running. UI changes should hot-reload in open tabs. If they d
 
 | Command         | What lands in `dist/`                        | Chrome extension name |
 | --------------- | -------------------------------------------- | --------------------- |
-| `npm run dev`   | Dev build (loads from `localhost:5173`, HMR) | **KnowledgeOS (Dev)** |
-| `npm run build` | Production bundle (static files, no HMR)     | **KnowledgeOS**       |
+| `npm run dev`   | Dev build (loads from `localhost:5173`, HMR) | **MyMemos (Dev)** |
+| `npm run build` | Production bundle (static files, no HMR)     | **MyMemos**       |
 
 **Do not run `npm run build` while developing.** It replaces the dev `dist/` output. After a production build, extension reload only shows old bundled code until you rebuild again - that is the issue most people hit.
 
@@ -90,7 +90,7 @@ npm run dev:reset
 Then in Chrome:
 
 1. Go to `chrome://extensions`
-2. Click **Reload** on KnowledgeOS **(Dev)** - or Remove and Load unpacked again on `extension/dist/`
+2. Click **Reload** on MyMemos **(Dev)** - or Remove and Load unpacked again on `extension/dist/`
 3. Open a **new tab** (existing new tabs may keep old code)
 
 Verify setup:
@@ -110,12 +110,12 @@ cd extension
 npm run build
 ```
 
-Stop `npm run dev` first. Reload the unpacked extension after a production build. The name will show as **KnowledgeOS** (no Dev suffix).
+Stop `npm run dev` first. Reload the unpacked extension after a production build. The name will show as **MyMemos** (no Dev suffix).
 
 ## Package as a ZIP
 
 ```bash
-npm run package   # produces extension/knowledgeos-extension.zip
+npm run package   # produces extension/mymemos-extension.zip
 ```
 
 ## Contributing

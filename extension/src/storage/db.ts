@@ -1,10 +1,11 @@
 import { openDB, type IDBPDatabase } from "idb";
+import { DB_NAME } from "@/lib/constants";
+import { len } from "@/lib/text";
 import { decodeDoc, encodeDoc } from "./codec";
 import type { BlockDoc, ImageBlob, Page } from "./types";
-import { len } from "@/lib/text";
 
 /**
- * KnowledgeOS storage layer.
+ * MyMemos storage layer.
  * - IndexedDB stores pages (block JSON, LZString-compressed).
  * - chrome.storage.local holds lightweight metadata (settings, theme, last opened page).
  *
@@ -14,7 +15,6 @@ import { len } from "@/lib/text";
  *  - Schema versioned via DB_VERSION; future fields can be added non-destructively.
  */
 
-const DB_NAME = "knowledgeos";
 const DB_VERSION = 1;
 
 let dbPromise: Promise<IDBPDatabase> | null = null;

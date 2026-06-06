@@ -1,4 +1,4 @@
-# KnowledgeOS
+# MyMemos
 
 [![CI](https://github.com/aryancodes-tech/knowledge-os/actions/workflows/ci.yml/badge.svg)](https://github.com/aryancodes-tech/knowledge-os/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -13,7 +13,7 @@ Your notes and pages live entirely in the browser. Nothing is sent to a server.
 
 ## Table of contents
 
-- [What is KnowledgeOS?](#what-is-knowledgeos)
+- [What is MyMemos?](#what-is-mymemos)
 - [Features](#features)
 - [Architecture](#architecture)
 - [Tech stack](#tech-stack)
@@ -29,9 +29,9 @@ Your notes and pages live entirely in the browser. Nothing is sent to a server.
 
 ---
 
-## What is KnowledgeOS?
+## What is MyMemos?
 
-KnowledgeOS is a Chrome Manifest V3 extension that turns every new browser tab into a personal knowledge workspace. It is designed for developers, students, and lifelong learners who want a fast, keyboard-first place to capture notes, organize study material, and revisit recent work - without signing up for a cloud service.
+MyMemos is a Chrome Manifest V3 extension that turns every new browser tab into a personal knowledge workspace. It is designed for developers, students, and lifelong learners who want a fast, keyboard-first place to capture notes, organize study material, and revisit recent work - without signing up for a cloud service.
 
 The same React app runs in **two delivery modes**:
 
@@ -55,7 +55,7 @@ The repository contains:
 
 ### Workspace & navigation
 
-- **New Tab override** - KnowledgeOS loads automatically when you open a new tab
+- **New Tab override** - MyMemos loads automatically when you open a new tab
 - **Dashboard** - greeting view with quick-create actions and recently edited pages
 - **Sidebar** - favorites, recents, and a nested **Pages** workspace with folders and sub-pages
 - **Global search** - `⌘K` / `Ctrl+K` palette powered by an in-memory FlexSearch index
@@ -203,8 +203,8 @@ npm run dev
 2. Enable **Developer mode** (top-right toggle)
 3. Click **Load unpacked**
 4. Select the `extension/dist/` folder
-5. Confirm the extension name is **KnowledgeOS (Dev)** - not plain "KnowledgeOS"
-6. Open a **new tab** - KnowledgeOS takes over
+5. Confirm the extension name is **MyMemos (Dev)** - not plain "MyMemos"
+6. Open a **new tab** - MyMemos takes over
 
 > **Keep `npm run dev` running** while you work. UI changes should hot-reload in open tabs. If they do not, open a fresh tab.
 
@@ -227,7 +227,7 @@ npm run dev:web
 Open:
 
 - `http://localhost:8080/` — landing page (download + **Open web app**)
-- `http://localhost:8080/demo/` — full KnowledgeOS UI in the browser (no second terminal needed)
+- `http://localhost:8080/demo/` — full MyMemos UI in the browser (no second terminal needed)
 
 Optional: `npm run dev:app` runs only the web app on port 5174 if you want to work on it in isolation.
 
@@ -254,7 +254,7 @@ Run these from the **repo root**:
 | `npm run build:extension`   | Production extension build                                 |
 | `npm run build:app`         | Production web app build → `public/demo/`                   |
 | `npm run build:web`         | Web app + landing site production build                    |
-| `npm run package:extension` | Build + zip extension → `public/knowledgeos-extension.zip` |
+| `npm run package:extension` | Build + zip extension → `public/mymemos-extension.zip` |
 | `npm run lint`              | ESLint across web + extension                              |
 | `npm run format`            | Prettier write                                             |
 | `npm run format:check`      | Prettier check (CI)                                        |
@@ -276,8 +276,8 @@ Extension-only scripts (run with `--prefix extension`):
 
 | Command                   | Output in `extension/dist/`                   | Chrome extension name |
 | ------------------------- | --------------------------------------------- | --------------------- |
-| `npm run dev`             | Dev bundle (loads from `localhost:5173`, HMR) | **KnowledgeOS (Dev)** |
-| `npm run build:extension` | Static production bundle (no HMR)             | **KnowledgeOS**       |
+| `npm run dev`             | Dev bundle (loads from `localhost:5173`, HMR) | **MyMemos (Dev)** |
+| `npm run build:extension` | Static production bundle (no HMR)             | **MyMemos**       |
 
 **Do not run `npm run build:extension` during active development.** It replaces the dev `dist/` output. After a production build, extension reload only shows old bundled code until you rebuild again.
 
@@ -324,14 +324,14 @@ npm run package:extension
 This:
 
 1. Builds the production extension
-2. Creates `extension/knowledgeos-extension.zip`
-3. Copies the ZIP to `public/knowledgeos-extension.zip` for the landing page download button
+2. Creates `extension/mymemos-extension.zip`
+3. Copies the ZIP to `public/mymemos-extension.zip` for the landing page download button
 
-> Do not commit `public/knowledgeos-extension.zip` - CI and release workflows build it on demand.
+> Do not commit `public/mymemos-extension.zip` - CI and release workflows build it on demand.
 
 ### Install from ZIP (end users)
 
-1. Download and unzip `knowledgeos-extension.zip`
+1. Download and unzip `mymemos-extension.zip`
 2. Open `chrome://extensions`
 3. Enable **Developer mode**
 4. Click **Load unpacked** and select the unzipped folder
@@ -392,10 +392,10 @@ npm run dev:reset --prefix extension
 In Chrome:
 
 1. Go to `chrome://extensions`
-2. Click **Reload** on **KnowledgeOS (Dev)** - or remove and **Load unpacked** again on `extension/dist/`
+2. Click **Reload** on **MyMemos (Dev)** - or remove and **Load unpacked** again on `extension/dist/`
 3. Open a **new tab** (existing tabs may keep old code)
 
-### Extension shows "KnowledgeOS" instead of "KnowledgeOS (Dev)"
+### Extension shows "MyMemos" instead of "MyMemos (Dev)"
 
 You loaded a production build. Restart the dev server:
 
@@ -452,4 +452,4 @@ The storage schema and module boundaries are designed so these can be added with
 
 ## License
 
-[MIT](LICENSE) - Copyright (c) 2026 KnowledgeOS Contributors
+[MIT](LICENSE) - Copyright (c) 2026 MyMemos Contributors

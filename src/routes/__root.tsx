@@ -10,6 +10,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportClientError } from "../lib/client-error-reporting";
+import { PRODUCT_NAME } from "../lib/constants";
 
 function NotFoundComponent() {
   return (
@@ -76,13 +77,13 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "KnowledgeOS - Chrome Extension" },
+      { title: `${PRODUCT_NAME} - Chrome Extension` },
       {
         name: "description",
         content:
           "Notion-inspired personal knowledge management and learning dashboard that replaces your New Tab page.",
       },
-      { property: "og:title", content: "KnowledgeOS" },
+      { property: "og:title", content: PRODUCT_NAME },
       {
         property: "og:description",
         content: "Personal knowledge management Chrome extension - local-first, offline-only.",
