@@ -2,7 +2,7 @@ import { defineManifest } from "@crxjs/vite-plugin";
 import type { ConfigEnv } from "vite";
 import pkg from "./package.json";
 
-/** Vite dev server port — keep in sync with vite.config.ts server.port. */
+/** Vite dev server port - keep in sync with vite.config.ts server.port. */
 const DEV_SERVER_PORT = 5173;
 const DEV_SERVER_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`;
 
@@ -22,7 +22,7 @@ function devServerConfig(env: ConfigEnv) {
   };
 }
 
-/** Chrome extension manifest — source of truth for CRXJS dev + production builds. */
+/** Chrome extension manifest - source of truth for CRXJS dev + production builds. */
 export default defineManifest((env) => ({
   manifest_version: 3,
   name: env.command === "serve" ? "KnowledgeOS (Dev)" : "KnowledgeOS",

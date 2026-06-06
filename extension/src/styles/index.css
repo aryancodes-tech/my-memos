@@ -1049,7 +1049,7 @@ body {
   background: var(--ko-surface-2);
 }
 
-/* Sidebar — Notion-inspired tree navigation */
+/* Sidebar - Notion-inspired tree navigation */
 .ko-sidebar {
   background: var(--ko-bg);
   border-color: var(--ko-border);

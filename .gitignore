@@ -19,7 +19,7 @@ dist-ssr
 .dev-session
 coverage/
 
-# Built extension artifacts — generate via npm run package:extension
+# Built extension artifacts - generate via npm run package:extension
 public/knowledgeos-extension.zip
 extension/knowledgeos-extension.zip
 

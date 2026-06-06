@@ -6,7 +6,7 @@ export const EMPTY_BLOCK_DOC: BlockDoc = { type: "doc", content: [] };
 
 /**
  * Compresses a block document to a UTF-16 string for IndexedDB storage.
- * Only source JSON is stored — never rendered HTML or markdown.
+ * Only source JSON is stored - never rendered HTML or markdown.
  */
 export function encodeDoc(doc: BlockDoc): string {
   return LZString.compressToUTF16(JSON.stringify(doc));

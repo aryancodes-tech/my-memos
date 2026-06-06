@@ -27,7 +27,7 @@ const hasDevSession = fs.existsSync(devSessionPath);
 if (!forceBuild && (devPortBusy || hasDevSession)) {
   console.error("\n[KnowledgeOS] Blocked production build while dev mode is active.");
   console.error(
-    "npm run build replaces extension/dist with a static bundle — live reload stops working.",
+    "npm run build replaces extension/dist with a static bundle - live reload stops working.",
   );
   console.error("\nFor live changes, use:");
   console.error("  cd extension");

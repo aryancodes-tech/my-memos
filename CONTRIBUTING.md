@@ -4,9 +4,9 @@ Thank you for your interest in contributing. This guide covers setup, workflow, 
 
 ## Prerequisites
 
-- **Node.js** — use the version in [`.nvmrc`](.nvmrc) (`nvm use` recommended)
-- **npm** — canonical package manager for this repo
-- **Google Chrome** — for loading the unpacked extension during development
+- **Node.js** - use the version in [`.nvmrc`](.nvmrc) (`nvm use` recommended)
+- **npm** - canonical package manager for this repo
+- **Google Chrome** - for loading the unpacked extension during development
 
 ## Getting started
 
@@ -28,7 +28,7 @@ Load the extension in Chrome:
 4. Confirm the name is **KnowledgeOS (Dev)**
 5. Open a **new tab**
 
-Keep `npm run dev` running. Do **not** run `npm run build:extension` during active development — it replaces the dev bundle and disables HMR.
+Keep `npm run dev` running. Do **not** run `npm run build:extension` during active development - it replaces the dev bundle and disables HMR.
 
 ```bash
 npm run dev:check --prefix extension   # verify dev setup
@@ -38,7 +38,7 @@ npm run dev:check --prefix extension   # verify dev setup
 
 | Path                     | Purpose                                  |
 | ------------------------ | ---------------------------------------- |
-| `extension/`             | Core product — Chrome MV3 extension      |
+| `extension/`             | Core product - Chrome MV3 extension      |
 | `src/`                   | Landing / download site (TanStack Start) |
 | `extension/src/storage/` | IndexedDB layer and document codec       |
 | `extension/src/lib/`     | Shared utilities and constants           |
@@ -49,7 +49,7 @@ See [`extension/README.md`](extension/README.md) for architecture details.
 ## Development workflow
 
 1. **Branch** from `main` using a descriptive name (`feat/slash-menu-icons`, `fix/theme-regression`)
-2. **Make focused changes** — one logical change per PR when possible
+2. **Make focused changes** - one logical change per PR when possible
 3. **Run checks** before opening a PR:
 
 ```bash
@@ -65,26 +65,26 @@ Individual commands:
 | `npm run lint`            | ESLint across the repo        |
 | `npm run format`          | Prettier write                |
 | `npm run format:check`    | Prettier check (CI)           |
-| `npm run typecheck`       | TypeScript — web + extension  |
+| `npm run typecheck`       | TypeScript - web + extension  |
 | `npm run test`            | Vitest unit tests             |
 | `npm run build:extension` | Production extension build    |
 | `npm run build:web`       | Production landing site build |
 
 ## Code conventions
 
-- **Constants** — put magic values in `extension/src/lib/constants.ts`
-- **Empty strings** — use `len(value) > 0` from `extension/src/lib/text.ts`
-- **Storage** — persist block JSON only; never store rendered HTML or markdown
-- **Types** — keep domain models in `extension/src/storage/types.ts`
-- **Unused variables** — prefix with `_` if intentionally unused (ESLint enforces this)
+- **Constants** - put magic values in `extension/src/lib/constants.ts`
+- **Empty strings** - use `len(value) > 0` from `extension/src/lib/text.ts`
+- **Storage** - persist block JSON only; never store rendered HTML or markdown
+- **Types** - keep domain models in `extension/src/storage/types.ts`
+- **Unused variables** - prefix with `_` if intentionally unused (ESLint enforces this)
 
 ## Testing
 
 Tests live next to the code they cover (`*.test.ts`). Start with pure functions in:
 
-- `extension/src/storage/codec.ts` — document compression round-trip
-- `extension/src/lib/text.ts` — plain-text extraction
-- `extension/src/lib/themes.ts` — hex normalization and theme helpers
+- `extension/src/storage/codec.ts` - document compression round-trip
+- `extension/src/lib/text.ts` - plain-text extraction
+- `extension/src/lib/themes.ts` - hex normalization and theme helpers
 
 Add tests for new logic, especially storage, state management, and parsing.
 
@@ -98,9 +98,9 @@ Add tests for new logic, especially storage, state management, and parsing.
 
 ## Reporting issues
 
-- **Bugs** — use the bug report template; include Chrome version and reproduction steps
-- **Features** — describe the problem you're solving, not just the solution
-- **Security** — see [SECURITY.md](SECURITY.md); do not open public issues for vulnerabilities
+- **Bugs** - use the bug report template; include Chrome version and reproduction steps
+- **Features** - describe the problem you're solving, not just the solution
+- **Security** - see [SECURITY.md](SECURITY.md); do not open public issues for vulnerabilities
 
 ## Release artifacts
 
@@ -110,4 +110,4 @@ Extension ZIPs for the landing page are built via:
 npm run package:extension
 ```
 
-Do not commit `public/knowledgeos-extension.zip` — CI and release workflows build it on demand.
+Do not commit `public/knowledgeos-extension.zip` - CI and release workflows build it on demand.

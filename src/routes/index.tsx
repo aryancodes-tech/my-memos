@@ -4,7 +4,7 @@ import { useState } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KnowledgeOS — Chrome Extension" },
+      { title: "KnowledgeOS - Chrome Extension" },
       {
         name: "description",
         content:
@@ -59,14 +59,6 @@ function Index() {
           >
             {isDownloading ? "Downloading…" : "Download extension (.zip)"}
           </button>
-          <a
-            href="https://developer.chrome.com/docs/extensions/mv3/getstarted/#manifest"
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-md border border-input px-5 py-2.5 text-sm font-medium hover:bg-accent"
-          >
-            Chrome docs
-          </a>
         </div>
         {downloadError && (
           <p className="mt-3 text-sm text-destructive" role="alert">
@@ -87,7 +79,7 @@ function Index() {
             <li>
               Click <strong>Load unpacked</strong> and pick the unzipped folder.
             </li>
-            <li>Open a new tab — KnowledgeOS takes over.</li>
+            <li>Open a new tab - KnowledgeOS takes over.</li>
           </ol>
         </section>
 
@@ -101,16 +93,12 @@ function Index() {
             with nested pages and ⌘K search.
           </Feature>
           <Feature title="Notion-style editor">
-            Slash commands, headings, lists, checklists, quotes, code blocks, dividers — auto-saved,
+            Slash commands, headings, lists, checklists, quotes, code blocks, dividers - auto-saved,
             keyboard-first.
           </Feature>
           <Feature title="Themes">
-            7 built-in themes — Light/Dark, Midnight, Dracula, Solarized, Forest, Ocean — switched
+            7 built-in themes - Light/Dark, Midnight, Dracula, Solarized, Forest, Ocean - switched
             via CSS variables.
-          </Feature>
-          <Feature title="Future-ready">
-            Schema designed for AI features, backlinks, version history, and cloud sync without data
-            migrations.
           </Feature>
         </section>
       </div>
