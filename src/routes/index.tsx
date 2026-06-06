@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -7,28 +8,35 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Notion-inspired personal knowledge management, study tracker and learning dashboard that replaces your New Tab page."
-      }
-    ]
+          "Notion-inspired personal knowledge management, study tracker and learning dashboard that replaces your New Tab page.",
+      },
+    ],
   }),
-  component: Index
+  component: Index,
 });
 
 function Index() {
-  const download = () => {
-    fetch("/knowledgeos-extension.zip")
-      .then((res) => {
-        if (!res.ok) throw new Error(`Download failed: ${res.status}`);
-        return res.blob();
-      })
-      .then((blob) => {
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "knowledgeos-extension.zip";
-        a.click();
-        URL.revokeObjectURL(a.href);
-      })
-      .catch((err) => alert(err.message));
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const download = async () => {
+    setDownloadError(null);
+    setIsDownloading(true);
+    try {
+      const res = await fetch("/knowledgeos-extension.zip");
+      if (!res.ok)
+        throw new Error(`Download failed (${res.status}). Run npm run package:extension first.`);
+      const blob = await res.blob();
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "knowledgeos-extension.zip";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } catch (err) {
+      setDownloadError(err instanceof Error ? err.message : "Download failed");
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   return (
@@ -39,17 +47,17 @@ function Index() {
         </p>
         <h1 className="mt-3 text-5xl font-bold tracking-tight">KnowledgeOS</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          A Notion-inspired personal knowledge management and learning
-          dashboard that replaces your New Tab page. Local-first,
-          offline-only, zero backend.
+          A Notion-inspired personal knowledge management and learning dashboard that replaces your
+          New Tab page. Local-first, offline-only, zero backend.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <button
             onClick={download}
-            className="rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            disabled={isDownloading}
+            className="rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
           >
-            Download extension (.zip)
+            {isDownloading ? "Downloading…" : "Download extension (.zip)"}
           </button>
           <a
             href="https://developer.chrome.com/docs/extensions/mv3/getstarted/#manifest"
@@ -60,6 +68,11 @@ function Index() {
             Chrome docs
           </a>
         </div>
+        {downloadError && (
+          <p className="mt-3 text-sm text-destructive" role="alert">
+            {downloadError}
+          </p>
+        )}
 
         <section className="mt-12 rounded-xl border bg-card p-6">
           <h2 className="font-semibold">Install instructions</h2>
@@ -80,25 +93,24 @@ function Index() {
 
         <section className="mt-6 grid gap-4 sm:grid-cols-2">
           <Feature title="Block-based storage">
-            Pages are stored as compact Tiptap/ProseMirror JSON in IndexedDB,
-            LZString-compressed. No rendered HTML or duplicate markdown is ever
-            persisted.
+            Pages are stored as compact Tiptap/ProseMirror JSON in IndexedDB, LZString-compressed.
+            No rendered HTML or duplicate markdown is ever persisted.
           </Feature>
           <Feature title="Workspace + sidebar">
-            Favorites, recent, and category sections (System Design, Backend,
-            DSA, Databases, …) with nested pages and ⌘K search.
+            Favorites, recent, and category sections (System Design, Backend, DSA, Databases, …)
+            with nested pages and ⌘K search.
           </Feature>
           <Feature title="Notion-style editor">
-            Slash commands, headings, lists, checklists, quotes, code blocks,
-            dividers — auto-saved, keyboard-first.
+            Slash commands, headings, lists, checklists, quotes, code blocks, dividers — auto-saved,
+            keyboard-first.
           </Feature>
           <Feature title="Themes">
-            7 built-in themes — Light/Dark, Midnight, Dracula, Solarized,
-            Forest, Ocean — switched via CSS variables.
+            7 built-in themes — Light/Dark, Midnight, Dracula, Solarized, Forest, Ocean — switched
+            via CSS variables.
           </Feature>
           <Feature title="Future-ready">
-            Schema designed for AI features, backlinks, version history, and
-            cloud sync without data migrations.
+            Schema designed for AI features, backlinks, version history, and cloud sync without data
+            migrations.
           </Feature>
         </section>
       </div>

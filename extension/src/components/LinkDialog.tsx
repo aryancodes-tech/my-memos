@@ -16,9 +16,7 @@ export default function LinkDialog() {
 
   useEffect(() => {
     if (!open) return;
-    setHref(
-      hasExistingLink ? pendingLink!.initialHref : EDITOR_LINK_PLACEHOLDER
-    );
+    setHref(hasExistingLink ? pendingLink!.initialHref : EDITOR_LINK_PLACEHOLDER);
     const frame = requestAnimationFrame(() => {
       inputRef.current?.focus();
       inputRef.current?.select();
@@ -47,11 +45,7 @@ export default function LinkDialog() {
   };
 
   return (
-    <div
-      className="ko-dialog-overlay"
-      role="presentation"
-      onClick={cancelLink}
-    >
+    <div className="ko-dialog-overlay" role="presentation" onClick={cancelLink}>
       <div
         className="ko-dialog"
         role="dialog"
@@ -60,12 +54,7 @@ export default function LinkDialog() {
         aria-describedby="ko-link-desc"
         onClick={(event) => event.stopPropagation()}
       >
-        <button
-          type="button"
-          className="ko-dialog-close"
-          aria-label="Close"
-          onClick={cancelLink}
-        >
+        <button type="button" className="ko-dialog-close" aria-label="Close" onClick={cancelLink}>
           <X size={16} strokeWidth={1.75} />
         </button>
 
@@ -97,28 +86,16 @@ export default function LinkDialog() {
           />
 
           {hasExistingLink && (
-            <button
-              type="button"
-              className="ko-dialog-link-remove"
-              onClick={removeLink}
-            >
+            <button type="button" className="ko-dialog-link-remove" onClick={removeLink}>
               Remove link
             </button>
           )}
 
           <div className="ko-dialog-actions">
-            <button
-              type="button"
-              className="ko-dialog-btn-delete"
-              onClick={cancelLink}
-            >
+            <button type="button" className="ko-dialog-btn-delete" onClick={cancelLink}>
               Cancel
             </button>
-            <button
-              type="submit"
-              className="ko-dialog-btn-keep"
-              disabled={!canSave}
-            >
+            <button type="submit" className="ko-dialog-btn-keep" disabled={!canSave}>
               {hasExistingLink ? "Apply link" : "Add link"}
             </button>
           </div>

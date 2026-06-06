@@ -26,10 +26,10 @@ export const BackgroundColor = Extension.create({
             renderHTML: (attributes) => {
               if (!attributes.backgroundColor) return {};
               return { style: `background-color: ${attributes.backgroundColor}` };
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     ];
   },
 
@@ -42,7 +42,7 @@ export const BackgroundColor = Extension.create({
       unsetBackgroundColor:
         () =>
         ({ chain }) =>
-          chain().setMark("textStyle", { backgroundColor: null }).removeEmptyTextStyle().run()
+          chain().setMark("textStyle", { backgroundColor: null }).removeEmptyTextStyle().run(),
     };
-  }
+  },
 });

@@ -12,12 +12,7 @@ interface PageIconProps {
 }
 
 /** Minimal Lucide icon for sidebar rows, search results, and page headers. */
-export function PageIcon({
-  kind,
-  size = 14,
-  expanded = false,
-  className = ""
-}: PageIconProps) {
+export function PageIcon({ kind, size = 14, expanded = false, className = "" }: PageIconProps) {
   const iconClass = ["shrink-0 text-[var(--ko-text-muted)]", className]
     .filter((value) => value.length > 0)
     .join(" ");

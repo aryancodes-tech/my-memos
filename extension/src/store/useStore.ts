@@ -9,7 +9,7 @@ import {
   DEFAULT_THEME,
   RECENT_PAGE_LIMIT,
   SETTINGS_KEYS,
-  WORKSPACE_SECTION
+  WORKSPACE_SECTION,
 } from "@/lib/constants";
 import { len } from "@/lib/text";
 import {
@@ -17,7 +17,7 @@ import {
   getCustomThemeStorageId,
   isCustomThemeId,
   syncCustomThemeStyles,
-  toCustomThemeName
+  toCustomThemeName,
 } from "@/lib/themes";
 
 /** Legacy sidebar section names migrated into the workspace section. */
@@ -32,7 +32,7 @@ const LEGACY_SECTIONS = new Set([
   "Networking",
   "DSA",
   "Projects",
-  "Interview Preparation"
+  "Interview Preparation",
 ]);
 
 type View = { kind: "page"; id: string } | { kind: "dashboard" };
@@ -148,7 +148,7 @@ export const useStore = create<State>((set, get) => ({
       db.getSetting<ThemeName>(SETTINGS_KEYS.theme),
       db.getSetting<CustomTheme[]>(CUSTOM_THEMES_SETTING),
       db.getSetting<Record<string, boolean>>(COLLAPSED_DIRS_SETTING),
-      db.getSetting<View>(SETTINGS_KEYS.lastView)
+      db.getSetting<View>(SETTINGS_KEYS.lastView),
     ]);
 
     const savedCustomThemes = customThemes ?? [];
@@ -176,7 +176,7 @@ export const useStore = create<State>((set, get) => ({
       customThemes: savedCustomThemes,
       collapsedDirs: collapsedDirs ?? {},
       view: resolvedView,
-      ready: true
+      ready: true,
     });
     applyThemeToDocument(resolvedTheme, savedCustomThemes);
     if (themeIsMissingCustom) {
@@ -191,7 +191,7 @@ export const useStore = create<State>((set, get) => ({
     set({
       view: v,
       pageEditor: v.kind === "page" ? get().pageEditor : null,
-      pendingLink: v.kind === "page" ? get().pendingLink : null
+      pendingLink: v.kind === "page" ? get().pendingLink : null,
     });
     void db.setSetting(SETTINGS_KEYS.lastView, v);
   },
@@ -217,7 +217,7 @@ export const useStore = create<State>((set, get) => ({
     const theme: CustomTheme = {
       id: nanoid(8),
       name: trimmedName,
-      colors
+      colors,
     };
     const customThemes = [...get().customThemes, theme];
     syncCustomThemeStyles(customThemes);
@@ -312,16 +312,14 @@ export const useStore = create<State>((set, get) => ({
       tags: [],
       created_at: now,
       updated_at: now,
-      doc: { type: "doc", content: [{ type: "paragraph" }] }
+      doc: { type: "doc", content: [{ type: "paragraph" }] },
     };
     await db.putPage(page);
     set((s) => ({
       pages: [page, ...s.pages],
       view: { kind: "page", id: page.id },
       collapsedDirs:
-        parent_id !== null
-          ? { ...s.collapsedDirs, [parent_id]: false }
-          : s.collapsedDirs
+        parent_id !== null ? { ...s.collapsedDirs, [parent_id]: false } : s.collapsedDirs,
     }));
     return page;
   },
@@ -339,7 +337,7 @@ export const useStore = create<State>((set, get) => ({
       tags: [],
       created_at: now,
       updated_at: now,
-      doc: { type: "doc", content: [] }
+      doc: { type: "doc", content: [] },
     };
     await db.putPage(directory);
     set((s) => ({
@@ -347,8 +345,8 @@ export const useStore = create<State>((set, get) => ({
       collapsedDirs: {
         ...s.collapsedDirs,
         [directory.id]: false,
-        ...(parent_id !== null ? { [parent_id]: false } : {})
-      }
+        ...(parent_id !== null ? { [parent_id]: false } : {}),
+      },
     }));
     return directory;
   },
@@ -383,13 +381,10 @@ export const useStore = create<State>((set, get) => ({
       return {
         pages: s.pages.filter((p) => !removeIds.has(p.id)),
         collapsedDirs: nextCollapsed,
-        view:
-          s.view.kind === "page" && removeIds.has(s.view.id)
-            ? { kind: "dashboard" }
-            : s.view
+        view: s.view.kind === "page" && removeIds.has(s.view.id) ? { kind: "dashboard" } : s.view,
       };
     });
-  }
+  },
 }));
 
 /** Pages shown in Favorites / Recent — documents only, never folders. */
@@ -407,9 +402,7 @@ export function selectSearchablePages(pages: Page[]): Page[] {
 }
 
 function selectRecentSorted(pages: Page[]): Page[] {
-  return [...selectSearchablePages(pages)].sort(
-    (a, b) => b.updated_at - a.updated_at
-  );
+  return [...selectSearchablePages(pages)].sort((a, b) => b.updated_at - a.updated_at);
 }
 
 /** Recent pages for the sidebar, capped at RECENT_PAGE_LIMIT. */
@@ -431,22 +424,12 @@ function sortWorkspaceItems(a: Page, b: Page): number {
 
 export function selectWorkspaceRoots(pages: Page[]): Page[] {
   return pages
-    .filter(
-      (p) =>
-        !p.archived &&
-        p.section === WORKSPACE_SECTION &&
-        p.parent_id === null
-    )
+    .filter((p) => !p.archived && p.section === WORKSPACE_SECTION && p.parent_id === null)
     .sort(sortWorkspaceItems);
 }
 
 export function selectWorkspaceChildren(pages: Page[], parentId: string): Page[] {
   return pages
-    .filter(
-      (p) =>
-        !p.archived &&
-        p.section === WORKSPACE_SECTION &&
-        p.parent_id === parentId
-    )
+    .filter((p) => !p.archived && p.section === WORKSPACE_SECTION && p.parent_id === parentId)
     .sort(sortWorkspaceItems);
 }

@@ -20,18 +20,18 @@ export const BUILT_IN_THEME_OPTIONS: { id: BuiltInThemeName; label: string }[] =
   { id: "dracula", label: "Dracula" },
   { id: "solarized", label: "Solarized" },
   { id: "forest", label: "Forest" },
-  { id: "ocean", label: "Ocean" }
+  { id: "ocean", label: "Ocean" },
 ];
 
 /** Swatch colors for built-in themes in the theme picker preview. */
 export const BUILT_IN_THEME_SWATCHES: Record<BuiltInThemeName, CustomThemeColors> = {
-  "light": { bg: "#ffffff", text: "#1f1f1e", accent: "#2f80ed" },
-  "dark": { bg: "#191919", text: "#e8e8e8", accent: "#6aa9ff" },
+  light: { bg: "#ffffff", text: "#1f1f1e", accent: "#2f80ed" },
+  dark: { bg: "#191919", text: "#e8e8e8", accent: "#6aa9ff" },
   midnight: { bg: "#0b0d12", text: "#e6e9ef", accent: "#7aa2f7" },
   dracula: { bg: "#282a36", text: "#f8f8f2", accent: "#bd93f9" },
   solarized: { bg: "#fdf6e3", text: "#073642", accent: "#268bd2" },
   forest: { bg: "#0f1a14", text: "#e3f0e6", accent: "#6fcf97" },
-  ocean: { bg: "#0d1b2a", text: "#e6f0fa", accent: "#4cc9f0" }
+  ocean: { bg: "#0d1b2a", text: "#e6f0fa", accent: "#4cc9f0" },
 };
 
 /** chrome.storage key for user-created themes. */
@@ -44,7 +44,7 @@ export const CUSTOM_THEME_ID_PREFIX = "custom-";
 export const CUSTOM_THEME_DEFAULT_COLORS: CustomThemeColors = {
   bg: "#ffffff",
   text: "#1f1f1e",
-  accent: "#2f80ed"
+  accent: "#2f80ed",
 };
 
 /** Fallback theme when the active custom theme is removed. */
@@ -104,7 +104,7 @@ export const EDITOR_TEXT_COLORS: { id: string; label: string; value: string }[] 
   { id: "yellow", label: "Yellow", value: "#b7950b" },
   { id: "green", label: "Green", value: "#1e8449" },
   { id: "blue", label: "Blue", value: "#2874a6" },
-  { id: "purple", label: "Purple", value: "#7d3c98" }
+  { id: "purple", label: "Purple", value: "#7d3c98" },
 ];
 
 /** Label for the custom color picker row in toolbar color menus. */
@@ -128,7 +128,7 @@ export const EDITOR_HIGHLIGHT_COLORS: { id: string; label: string; value: string
   { id: "green", label: "Green", value: "#d5f5e3" },
   { id: "blue", label: "Blue", value: "#d6eaf8" },
   { id: "purple", label: "Purple", value: "#ebdef0" },
-  { id: "gray", label: "Gray", value: "#eaecee" }
+  { id: "gray", label: "Gray", value: "#eaecee" },
 ];
 
 /** Preset background colors applied via highlight for subtle text backgrounds. */
@@ -140,7 +140,7 @@ export const EDITOR_BACKGROUND_COLORS: { id: string; label: string; value: strin
   { id: "orange", label: "Orange", value: "#fff8e1" },
   { id: "yellow", label: "Yellow", value: "#fffde7" },
   { id: "green", label: "Green", value: "#e8f5e9" },
-  { id: "blue", label: "Blue", value: "#e3f2fd" }
+  { id: "blue", label: "Blue", value: "#e3f2fd" },
 ];
 
 /** Setting key for persisted collapsed directory ids in chrome.storage. */

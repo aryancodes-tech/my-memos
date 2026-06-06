@@ -27,7 +27,13 @@ export default function Editor({ docKey, initial, onChange }: Props) {
       content: initial,
       editorProps: {
         handleKeyDown(view, event) {
-          if (event.key !== "Tab" || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) {
+          if (
+            event.key !== "Tab" ||
+            event.shiftKey ||
+            event.altKey ||
+            event.ctrlKey ||
+            event.metaKey
+          ) {
             return false;
           }
 
@@ -44,16 +50,16 @@ export default function Editor({ docKey, initial, onChange }: Props) {
 
           dispatch(tr);
           return true;
-        }
+        },
       },
       onUpdate({ editor: ed }) {
         if (debounceRef.current) window.clearTimeout(debounceRef.current);
         debounceRef.current = window.setTimeout(() => {
           onChange(ed.getJSON() as BlockDoc);
         }, EDITOR_SAVE_DEBOUNCE_MS);
-      }
+      },
     },
-    [docKey]
+    [docKey],
   );
 
   useEffect(() => {

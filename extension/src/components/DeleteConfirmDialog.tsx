@@ -10,14 +10,13 @@ export default function DeleteConfirmDialog() {
 
   const item = useMemo(
     () => (pendingDelete ? pages.find((page) => page.id === pendingDelete.pageId) : undefined),
-    [pages, pendingDelete]
+    [pages, pendingDelete],
   );
 
   const open = pendingDelete !== null && item !== undefined;
   const childCount = pendingDelete?.childCount ?? 0;
   const isDirectory = item?.kind === "directory";
-  const label =
-    item?.title || (isDirectory ? "Untitled folder" : "Untitled");
+  const label = item?.title || (isDirectory ? "Untitled folder" : "Untitled");
 
   useEffect(() => {
     if (!open) return;
@@ -39,11 +38,7 @@ export default function DeleteConfirmDialog() {
     : `"${label}" and all of its content will be permanently removed. This cannot be undone.`;
 
   return (
-    <div
-      className="ko-dialog-overlay"
-      role="presentation"
-      onClick={cancelDelete}
-    >
+    <div className="ko-dialog-overlay" role="presentation" onClick={cancelDelete}>
       <div
         className="ko-dialog"
         role="alertdialog"
@@ -52,12 +47,7 @@ export default function DeleteConfirmDialog() {
         aria-describedby="ko-delete-desc"
         onClick={(event) => event.stopPropagation()}
       >
-        <button
-          type="button"
-          className="ko-dialog-close"
-          aria-label="Close"
-          onClick={cancelDelete}
-        >
+        <button type="button" className="ko-dialog-close" aria-label="Close" onClick={cancelDelete}>
           <X size={16} strokeWidth={1.75} />
         </button>
 

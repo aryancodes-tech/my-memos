@@ -3,7 +3,7 @@ import { PageIcon } from "@/components/PageIcon";
 import {
   CONTENT_MAX_WIDTH_PX,
   PAGE_CONTENT_PADDING_X_PX,
-  PAGE_CONTENT_PADDING_TOP_PX
+  PAGE_CONTENT_PADDING_TOP_PX,
 } from "@/lib/constants";
 import { FileText, Folder, Plus } from "lucide-react";
 import { useMemo } from "react";
@@ -24,7 +24,7 @@ function formatRecentActivity(timestamp: number): string {
 
   return `Edited ${new Date(timestamp).toLocaleDateString(undefined, {
     month: "short",
-    day: "numeric"
+    day: "numeric",
   })}`;
 }
 
@@ -39,7 +39,7 @@ export default function Dashboard() {
         maxWidth: CONTENT_MAX_WIDTH_PX,
         paddingLeft: PAGE_CONTENT_PADDING_X_PX,
         paddingRight: PAGE_CONTENT_PADDING_X_PX,
-        paddingTop: PAGE_CONTENT_PADDING_TOP_PX
+        paddingTop: PAGE_CONTENT_PADDING_TOP_PX,
       }}
     >
       <header className="ko-dashboard-header">

@@ -1,7 +1,5 @@
 import { useStore } from "@/store/useStore";
-import {
-  CUSTOM_THEME_DEFAULT_COLORS
-} from "@/lib/constants";
+import { CUSTOM_THEME_DEFAULT_COLORS } from "@/lib/constants";
 import { deriveThemeTokens, normalizeHexColor } from "@/lib/themes";
 import { len } from "@/lib/text";
 import type { CustomThemeColors } from "@/storage/types";
@@ -74,7 +72,7 @@ export default function CustomThemeDialog() {
   const updateColor = (key: keyof CustomThemeColors, value: string) => {
     setColors((current) => ({
       ...current,
-      [key]: normalizeHexColor(value, current[key])
+      [key]: normalizeHexColor(value, current[key]),
     }));
   };
 
@@ -85,11 +83,7 @@ export default function CustomThemeDialog() {
   };
 
   return (
-    <div
-      className="ko-dialog-overlay"
-      role="presentation"
-      onClick={closeCustomThemeDialog}
-    >
+    <div className="ko-dialog-overlay" role="presentation" onClick={closeCustomThemeDialog}>
       <div
         className="ko-dialog ko-theme-dialog"
         role="dialog"
@@ -115,7 +109,8 @@ export default function CustomThemeDialog() {
         </div>
 
         <p id="ko-theme-dialog-desc" className="ko-dialog-body">
-          Name your theme and pick the core colors. Surface and border tones are generated automatically.
+          Name your theme and pick the core colors. Surface and border tones are generated
+          automatically.
         </p>
 
         <div
@@ -123,7 +118,7 @@ export default function CustomThemeDialog() {
           style={{
             background: previewTokens["--ko-bg"],
             borderColor: previewTokens["--ko-border"],
-            color: previewTokens["--ko-text"]
+            color: previewTokens["--ko-text"],
           }}
         >
           <div
@@ -133,10 +128,7 @@ export default function CustomThemeDialog() {
             Preview
           </div>
           <div className="ko-theme-preview-title">{name.trim() || "My theme"}</div>
-          <div
-            className="ko-theme-preview-link"
-            style={{ color: previewTokens["--ko-accent"] }}
-          >
+          <div className="ko-theme-preview-link" style={{ color: previewTokens["--ko-accent"] }}>
             Accent link
           </div>
           <div
@@ -187,18 +179,10 @@ export default function CustomThemeDialog() {
           </div>
 
           <div className="ko-dialog-actions">
-            <button
-              type="button"
-              className="ko-dialog-btn-delete"
-              onClick={closeCustomThemeDialog}
-            >
+            <button type="button" className="ko-dialog-btn-delete" onClick={closeCustomThemeDialog}>
               Cancel
             </button>
-            <button
-              type="submit"
-              className="ko-dialog-btn-keep"
-              disabled={!canSave}
-            >
+            <button type="submit" className="ko-dialog-btn-keep" disabled={!canSave}>
               Create theme
             </button>
           </div>

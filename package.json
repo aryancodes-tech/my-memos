@@ -1,6 +1,27 @@
 {
   "name": "knowledgeos",
-  "private": true,
+  "version": "0.1.0",
+  "description": "Local-first personal knowledge management Chrome extension with an optional landing site",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aryancodes-tech/knowledge-os.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aryancodes-tech/knowledge-os/issues"
+  },
+  "homepage": "https://github.com/aryancodes-tech/knowledge-os#readme",
+  "engines": {
+    "node": ">=24.16.0"
+  },
+  "keywords": [
+    "chrome-extension",
+    "knowledge-management",
+    "notion",
+    "tiptap",
+    "local-first",
+    "new-tab"
+  ],
   "sideEffects": false,
   "type": "module",
   "scripts": {
@@ -12,7 +33,12 @@
     "package:extension": "npm run package --prefix extension && cp extension/knowledgeos-extension.zip public/knowledgeos-extension.zip",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --prefix extension",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build:extension && npm run build:web"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
@@ -27,7 +53,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
-    "@lovable.dev/vite-tanstack-config": "^2.1.1",
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
@@ -38,10 +63,11 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
-    "nitro": "3.0.260429-beta",
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^3.2.4",
+    "happy-dom": "^17.4.7"
   }
 }
