@@ -1,6 +1,16 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+/** Extension package root — content globs must be absolute (Tailwind resolves from cwd). */
+const extensionRoot = path.dirname(fileURLToPath(import.meta.url));
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./newtab.html", "./src/**/*.{ts,tsx}"],
+  content: [
+    path.join(extensionRoot, "newtab.html"),
+    path.join(extensionRoot, "index.html"),
+    path.join(extensionRoot, "src/**/*.{ts,tsx}"),
+  ],
   theme: {
     extend: {
       fontFamily: {

@@ -1,6 +1,6 @@
 # KnowledgeOS - Chrome Extension
 
-Notion-inspired personal knowledge management and learning dashboard that **replaces your New Tab page**. Local-first, offline-only, MV3, zero backend required.
+Notion-inspired personal knowledge management and learning dashboard. Ships as a **Chrome extension** (New Tab override) and as a **standalone web app** at `/demo/` using the same `src/` React code.
 
 ## Architecture highlights
 
@@ -8,7 +8,6 @@ Notion-inspired personal knowledge management and learning dashboard that **repl
 - **Block-based storage** - every page is a Tiptap/ProseMirror JSON `doc`. We **never** persist rendered HTML or markdown. Plain text is extracted on the fly for the search index.
 - **Compact, compressed JSON** - documents are LZString-compressed before being written to IndexedDB. Schema is versioned via the IDB upgrade hook so future fields (AI metadata, backlinks, version history) can be added without migrations.
 - **Two-tier storage** - IndexedDB for documents; `chrome.storage.local` for lightweight settings (theme, last opened view, custom themes).
-- **Images stored separately** from documents in their own object store, referenced by id. No base64 inside the doc.
 - **In-memory FlexSearch index** - rebuilt on demand, never persisted (no duplicate data on disk).
 - **Themes via CSS variables** - 7 built-in themes, switched by toggling `data-theme` on `<html>`.
 
@@ -20,7 +19,8 @@ extension/
 │   ├── background.js     ← service worker
 │   └── icons/            ← 16/48/128 px PNGs
 ├── manifest.config.ts    ← MV3 manifest (CRXJS source of truth)
-├── newtab.html           ← Vite entry - becomes the new-tab page
+├── newtab.html           ← Chrome extension entry (new-tab page)
+├── index.html            ← Web app entry (standalone SPA)
 ├── src/
 │   ├── App.tsx           ← root, keyboard shortcuts, view router
 │   ├── components/       ← Sidebar, SearchPalette
@@ -29,11 +29,28 @@ extension/
 │   ├── store/            ← Zustand store
 │   ├── storage/          ← IndexedDB + LZString + chrome.storage
 │   └── lib/              ← helpers
-├── vite.config.ts
+├── vite.config.ts        ← Chrome extension build (CRXJS)
+├── vite.web.config.ts    ← Web app build → public/demo/
 └── package.json
 ```
 
-## Develop (hot reload)
+## Web app (browser, no install)
+
+```bash
+npm run dev:web          # from extension/, or npm run dev:app from repo root
+```
+
+Open `http://localhost:8080/demo/` when the landing site is running (`npm run dev:web` from root), or `http://localhost:5174/demo/` when using `npm run dev:web` from `extension/` alone.
+
+Production build:
+
+```bash
+npm run build:web        # outputs to public/demo/ for the landing site deploy
+```
+
+Settings persist via `localStorage`; pages use the same IndexedDB layer. Web and extension data are separate (different browser origins).
+
+## Develop extension (hot reload)
 
 ```bash
 cd extension

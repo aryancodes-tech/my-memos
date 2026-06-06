@@ -9,6 +9,8 @@
     "dev:reset": "npm run predev && vite",
     "dev:check": "node scripts/check-dev-setup.mjs",
     "dev:watch": "vite build --watch",
+    "dev:web": "vite --config vite.web.config.ts",
+    "build:web": "tsc -b --noEmit && vite build --config vite.web.config.ts",
     "prebuild": "node scripts/guard-production-build.mjs",
     "build": "tsc -b --noEmit && vite build && node scripts/finish-production-build.mjs",
     "build:force": "FORCE_BUILD=1 npm run build",

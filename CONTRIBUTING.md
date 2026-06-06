@@ -34,6 +34,18 @@ Keep `npm run dev` running. Do **not** run `npm run build:extension` during acti
 npm run dev:check --prefix extension   # verify dev setup
 ```
 
+### Web app (same UI, no Chrome install)
+
+The extension React app also builds as a standalone browser app at `/demo/`.
+
+```bash
+npm run dev:web    # landing site + web app at http://localhost:8080/demo/
+```
+
+Settings use `localStorage` instead of `chrome.storage`; pages still use IndexedDB. Data is **not shared** with the Chrome extension (different origins).
+
+After changing extension UI code, `npm run dev:web` picks up changes via HMR at `/demo/`.
+
 ## Project layout
 
 | Path                     | Purpose                                  |

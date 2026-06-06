@@ -5,13 +5,12 @@ import { len } from "@/lib/text";
 
 /**
  * KnowledgeOS storage layer.
- * - IndexedDB stores pages (block JSON, LZString-compressed) and image blobs.
+ * - IndexedDB stores pages (block JSON, LZString-compressed).
  * - chrome.storage.local holds lightweight metadata (settings, theme, last opened page).
  *
  * Design notes (per spec):
  *  - Only source data is stored. Rendered HTML / markdown are never persisted.
  *  - Documents are compact JSON blobs of Tiptap-compatible block structures.
- *  - Image binaries live in a separate object store, referenced by id from blocks.
  *  - Schema versioned via DB_VERSION; future fields can be added non-destructively.
  */
 
