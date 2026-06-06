@@ -5,22 +5,23 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aryancodes-tech/knowledge-os.git"
+    "url": "https://github.com/aryancodes-tech/my-memos.git"
   },
   "bugs": {
-    "url": "https://github.com/aryancodes-tech/knowledge-os/issues"
+    "url": "https://github.com/aryancodes-tech/my-memos/issues"
   },
-  "homepage": "https://github.com/aryancodes-tech/knowledge-os#readme",
+  "homepage": "https://github.com/aryancodes-tech/my-memos#readme",
   "engines": {
     "node": ">=24.16.0"
   },
   "keywords": [
     "chrome-extension",
-    "knowledge-management",
+    "memos",
     "notion",
     "tiptap",
     "local-first",
-    "new-tab"
+    "new-tab",
+    "chrome-extension"
   ],
   "sideEffects": false,
   "type": "module",

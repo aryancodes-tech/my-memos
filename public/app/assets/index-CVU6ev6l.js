@@ -9100,7 +9100,7 @@ function eN(t) {
     const n = JSON.parse(e);
     return (n == null ? void 0 : n.type) !== "doc" || !Array.isArray(n.content) ? Ml : n;
   } catch (e) {
-    return (console.warn("[KnowledgeOS] Failed to decode page document; using empty doc.", e), Ml);
+    return (console.warn("[MyMemos] Failed to decode page document; using empty doc.", e), Ml);
   }
 }
 function Ne(t) {
@@ -9114,7 +9114,7 @@ function tN(t) {
   for (const r of t.content) n(r);
   return e.join(" ");
 }
-const nN = "knowledgeos",
+const nN = "mymemos",
   rN = 1;
 let Zu = null;
 function gh() {
@@ -10157,7 +10157,7 @@ function lT() {
             children: [
               y.jsx("div", {
                 className: "text-sm font-semibold tracking-tight text-[var(--ko-text)]",
-                children: "KnowledgeOS",
+                children: "MyMemos",
               }),
               y.jsx(Rl, {
                 title: "Collapse sidebar",

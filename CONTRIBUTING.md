@@ -11,8 +11,8 @@ Thank you for your interest in contributing. This guide covers setup, workflow, 
 ## Getting started
 
 ```bash
-git clone https://github.com/aryancodes-tech/knowledge-os.git
-cd knowledge-os
+git clone https://github.com/aryancodes-tech/my-memos.git
+cd my-memos
 
 npm install
 npm install --prefix extension

@@ -1,6 +1,6 @@
 # MyMemos
 
-[![CI](https://github.com/aryancodes-tech/knowledge-os/actions/workflows/ci.yml/badge.svg)](https://github.com/aryancodes-tech/knowledge-os/actions/workflows/ci.yml)
+[![CI](https://github.com/aryancodes-tech/my-memos/actions/workflows/ci.yml/badge.svg)](https://github.com/aryancodes-tech/my-memos/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **Personal knowledge management as a Chrome extension** - a Notion-inspired workspace and learning dashboard that replaces your New Tab page.
@@ -170,8 +170,8 @@ nvm use
 ### 1. Clone and install dependencies
 
 ```bash
-git clone https://github.com/aryancodes-tech/knowledge-os.git
-cd knowledge-os
+git clone https://github.com/aryancodes-tech/my-memos.git
+cd my-memos
 
 # Root workspace (landing site, lint, tests, CI scripts)
 npm install
@@ -342,7 +342,7 @@ This:
 ## Project structure
 
 ```
-knowledge-os/
+my-memos/
 ├── extension/                  # Chrome MV3 extension (core product)
 │   ├── public/
 │   │   ├── background.js       # Service worker

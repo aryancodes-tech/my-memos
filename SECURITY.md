@@ -12,7 +12,7 @@
 **Please do not open a public GitHub issue for security vulnerabilities.**
 
 Instead, report security issues privately by opening a
-[GitHub Security Advisory](https://github.com/aryancodes-tech/knowledge-os/security/advisories/new)
+[GitHub Security Advisory](https://github.com/aryancodes-tech/my-memos/security/advisories/new)
 or emailing the repository maintainers.
 
 Include:
