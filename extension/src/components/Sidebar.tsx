@@ -7,6 +7,7 @@ import {
 } from "@/store/useStore";
 import type { Page } from "@/storage/types";
 import {
+  PRODUCT_NAME,
   SIDEBAR_INDENT_PX,
   SIDEBAR_MENU_MIN_WIDTH_PX,
   SIDEBAR_WIDTH_PX,
@@ -65,7 +66,7 @@ export default function Sidebar() {
     >
       <div className="flex items-center justify-between px-3 py-3">
         <div className="text-sm font-semibold tracking-tight text-[var(--ko-text)]">
-          KnowledgeOS
+          {PRODUCT_NAME}
         </div>
         <IconRailButton title="Collapse sidebar" onClick={toggleSidebar}>
           <ChevronLeft size={16} strokeWidth={1.75} />

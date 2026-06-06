@@ -22,7 +22,7 @@ body:
       label: Steps to reproduce
       description: Numbered steps to reproduce the behavior.
       placeholder: |
-        1. Open KnowledgeOS new tab
+        1. Open MyMemos new tab
         2. Click ...
         3. See error
     validations:

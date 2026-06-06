@@ -25,7 +25,7 @@ const devPortBusy = await isDevPortInUse();
 const hasDevSession = fs.existsSync(devSessionPath);
 
 if (!forceBuild && (devPortBusy || hasDevSession)) {
-  console.error("\n[KnowledgeOS] Blocked production build while dev mode is active.");
+  console.error("\n[MyMemos] Blocked production build while dev mode is active.");
   console.error(
     "npm run build replaces extension/dist with a static bundle - live reload stops working.",
   );
@@ -34,7 +34,7 @@ if (!forceBuild && (devPortBusy || hasDevSession)) {
   console.error("  npm run dev");
   console.error("  npm run dev:check");
   console.error(
-    '\nThen reload the extension in chrome://extensions (name must be "KnowledgeOS (Dev)").',
+    '\nThen reload the extension in chrome://extensions (name must be "MyMemos (Dev)").',
   );
   console.error("\nTo build for production anyway:");
   console.error("  1. Stop npm run dev (Ctrl+C)");

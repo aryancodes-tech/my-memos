@@ -1,4 +1,4 @@
-# Contributing to KnowledgeOS
+# Contributing to MyMemos
 
 Thank you for your interest in contributing. This guide covers setup, workflow, and what we expect in pull requests.
 
@@ -11,8 +11,8 @@ Thank you for your interest in contributing. This guide covers setup, workflow, 
 ## Getting started
 
 ```bash
-git clone https://github.com/aryancodes-tech/knowledge-os.git
-cd knowledge-os
+git clone https://github.com/aryancodes-tech/my-memos.git
+cd my-memos
 
 npm install
 npm install --prefix extension
@@ -25,7 +25,7 @@ Load the extension in Chrome:
 1. Open `chrome://extensions`
 2. Enable **Developer mode**
 3. **Load unpacked** → select `extension/dist/`
-4. Confirm the name is **KnowledgeOS (Dev)**
+4. Confirm the name is **MyMemos (Dev)**
 5. Open a **new tab**
 
 Keep `npm run dev` running. Do **not** run `npm run build:extension` during active development - it replaces the dev bundle and disables HMR.
@@ -122,4 +122,4 @@ Extension ZIPs for the landing page are built via:
 npm run package:extension
 ```
 
-Do not commit `public/knowledgeos-extension.zip` - CI and release workflows build it on demand.
+Do not commit `public/mymemos-extension.zip` - CI and release workflows build it on demand.

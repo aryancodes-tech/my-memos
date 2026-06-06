@@ -21,7 +21,7 @@ export function webAppDevPlugin(): Plugin {
   let webAppServer: ViteDevServer | undefined;
 
   return {
-    name: "knowledgeos-web-demo-dev",
+    name: "mymemos-web-demo-dev",
     enforce: "pre",
     async configureServer(server) {
       const parentHttpServer = server.httpServer as HttpServer | undefined;

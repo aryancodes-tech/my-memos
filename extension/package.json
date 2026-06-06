@@ -1,5 +1,5 @@
 {
-  "name": "knowledgeos-extension",
+  "name": "mymemos-extension",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -14,7 +14,7 @@
     "prebuild": "node scripts/guard-production-build.mjs",
     "build": "tsc -b --noEmit && vite build && node scripts/finish-production-build.mjs",
     "build:force": "FORCE_BUILD=1 npm run build",
-    "package": "npm run build:force && cd dist && zip -r ../knowledgeos-extension.zip . && cp ../knowledgeos-extension.zip ../../public/knowledgeos-extension.zip",
+    "package": "npm run build:force && cd dist && zip -r ../mymemos-extension.zip . && cp ../mymemos-extension.zip ../../public/mymemos-extension.zip",
     "typecheck": "tsc -b --noEmit",
     "lint": "eslint ."
   },

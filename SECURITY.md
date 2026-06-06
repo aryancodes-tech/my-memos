@@ -12,7 +12,7 @@
 **Please do not open a public GitHub issue for security vulnerabilities.**
 
 Instead, report security issues privately by opening a
-[GitHub Security Advisory](https://github.com/aryancodes-tech/knowledge-os/security/advisories/new)
+[GitHub Security Advisory](https://github.com/aryancodes-tech/my-memos/security/advisories/new)
 or emailing the repository maintainers.
 
 Include:
@@ -29,7 +29,7 @@ timeline when possible.
 
 In scope:
 
-- The KnowledgeOS Chrome extension (`extension/`)
+- The MyMemos Chrome extension (`extension/`)
 - The landing site (`src/`)
 - Data handling in IndexedDB and `chrome.storage.local`
 
@@ -40,7 +40,7 @@ Out of scope:
 
 ## Data handling
 
-KnowledgeOS is **local-first**. User documents stay in the browser (IndexedDB).
+MyMemos is **local-first**. User documents stay in the browser (IndexedDB).
 The extension does not send page content to a backend. When reviewing changes,
 pay special attention to:
 

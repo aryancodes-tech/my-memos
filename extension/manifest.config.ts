@@ -1,5 +1,6 @@
 import { defineManifest } from "@crxjs/vite-plugin";
 import type { ConfigEnv } from "vite";
+import { PRODUCT_NAME } from "./src/lib/constants";
 import pkg from "./package.json";
 
 /** Vite dev server port - keep in sync with vite.config.ts server.port. */
@@ -25,7 +26,7 @@ function devServerConfig(env: ConfigEnv) {
 /** Chrome extension manifest - source of truth for CRXJS dev + production builds. */
 export default defineManifest((env) => ({
   manifest_version: 3,
-  name: env.command === "serve" ? "KnowledgeOS (Dev)" : "KnowledgeOS",
+  name: env.command === "serve" ? `${PRODUCT_NAME} (Dev)` : PRODUCT_NAME,
   version: pkg.version,
   description:
     "A Notion-inspired personal knowledge management and learning dashboard that replaces your New Tab.",
@@ -38,7 +39,7 @@ export default defineManifest((env) => ({
     type: "module",
   },
   action: {
-    default_title: "KnowledgeOS",
+    default_title: PRODUCT_NAME,
     default_icon: {
       "16": "public/icons/icon-16.png",
       "48": "public/icons/icon-48.png",

@@ -47,7 +47,7 @@ if (!current || !meetsMinimum(current, minimum)) {
   const required = `${MIN_NODE_MAJOR}.${MIN_NODE_MINOR}.${MIN_NODE_PATCH}`;
   const nvmrcVersion = readNvmrcVersion();
 
-  console.error("\n[KnowledgeOS] Unsupported Node.js version.");
+  console.error("\n[MyMemos] Unsupported Node.js version.");
   console.error(`  Required: Node.js >= ${required}`);
   console.error(`  Current:  ${process.version}`);
   console.error("\nVite 7 and TanStack Start need a current Node release.");

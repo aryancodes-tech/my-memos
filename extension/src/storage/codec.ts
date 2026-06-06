@@ -27,7 +27,7 @@ export function decodeDoc(encoded: string | undefined | null): BlockDoc {
     }
     return parsed;
   } catch (error) {
-    console.warn("[KnowledgeOS] Failed to decode page document; using empty doc.", error);
+    console.warn("[MyMemos] Failed to decode page document; using empty doc.", error);
     return EMPTY_BLOCK_DOC;
   }
 }

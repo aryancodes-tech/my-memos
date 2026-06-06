@@ -1,26 +1,27 @@
 {
-  "name": "knowledgeos",
+  "name": "mymemos",
   "version": "0.1.0",
   "description": "Local-first personal knowledge management Chrome extension with an optional landing site",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aryancodes-tech/knowledge-os.git"
+    "url": "https://github.com/aryancodes-tech/my-memos.git"
   },
   "bugs": {
-    "url": "https://github.com/aryancodes-tech/knowledge-os/issues"
+    "url": "https://github.com/aryancodes-tech/my-memos/issues"
   },
-  "homepage": "https://github.com/aryancodes-tech/knowledge-os#readme",
+  "homepage": "https://github.com/aryancodes-tech/my-memos#readme",
   "engines": {
     "node": ">=24.16.0"
   },
   "keywords": [
     "chrome-extension",
-    "knowledge-management",
+    "memos",
     "notion",
     "tiptap",
     "local-first",
-    "new-tab"
+    "new-tab",
+    "chrome-extension"
   ],
   "sideEffects": false,
   "type": "module",
@@ -34,7 +35,7 @@
     "prebuild:web": "node scripts/check-node-version.mjs",
     "build:web": "npm run build:app && vite build",
     "build:extension": "npm run build:force --prefix extension",
-    "package:extension": "npm run package --prefix extension && cp extension/knowledgeos-extension.zip public/knowledgeos-extension.zip",
+    "package:extension": "npm run package --prefix extension && cp extension/mymemos-extension.zip public/mymemos-extension.zip",
     "prepreview": "node scripts/check-node-version.mjs",
     "preview": "vite preview",
     "lint": "eslint .",

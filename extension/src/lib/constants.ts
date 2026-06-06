@@ -1,5 +1,11 @@
 import type { BuiltInThemeName, CustomThemeColors } from "@/storage/types";
 
+/** Display name of the product shown in the UI and extension manifest. */
+export const PRODUCT_NAME = "MyMemos";
+
+/** IndexedDB database name for persisted pages and settings. */
+export const DB_NAME = "mymemos";
+
 /** Sidebar label for the user-managed pages and directories section. */
 export const WORKSPACE_SECTION = "Pages";
 

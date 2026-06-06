@@ -7,4 +7,4 @@ if (fs.existsSync(devSessionPath)) {
   fs.rmSync(devSessionPath, { force: true });
 }
 
-console.log("[KnowledgeOS] Production build complete. Run npm run dev to restore live reload.");
+console.log("[MyMemos] Production build complete. Run npm run dev to restore live reload.");
