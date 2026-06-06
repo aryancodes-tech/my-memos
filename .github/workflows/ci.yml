@@ -42,5 +42,5 @@ jobs:
       - name: Build extension
         run: npm run build:extension
 
-      - name: Build landing site
+      - name: Build landing site and web app
         run: npm run build:web

@@ -33,12 +33,21 @@ Your notes and pages live entirely in the browser. Nothing is sent to a server.
 
 KnowledgeOS is a Chrome Manifest V3 extension that turns every new browser tab into a personal knowledge workspace. It is designed for developers, students, and lifelong learners who want a fast, keyboard-first place to capture notes, organize study material, and revisit recent work - without signing up for a cloud service.
 
-The repository contains two apps:
+The same React app runs in **two delivery modes**:
 
-| App                  | Path         | Purpose                                                  |
-| -------------------- | ------------ | -------------------------------------------------------- |
-| **Chrome extension** | `extension/` | Core product - editor, sidebar, search, themes, storage  |
-| **Landing site**     | `src/`       | Marketing / download page with a one-click extension ZIP |
+| Mode                 | How to use                                | Storage                            |
+| -------------------- | ----------------------------------------- | ---------------------------------- |
+| **Chrome extension** | Replaces your New Tab (`extension/dist/`) | IndexedDB + `chrome.storage.local` |
+| **Web app**          | Browser at `/demo/` (no install)           | IndexedDB + `localStorage`         |
+
+The repository contains:
+
+| App                 | Path                                          | Purpose                                                       |
+| ------------------- | --------------------------------------------- | ------------------------------------------------------------- |
+| **Shared UI**       | `extension/src/`                              | Editor, sidebar, search, themes, storage (used by both modes) |
+| **Extension shell** | `extension/newtab.html`, `manifest.config.ts` | Chrome MV3 packaging via CRXJS                                |
+| **Web shell**       | `extension/index.html`, `vite.web.config.ts`  | Standalone SPA build → `public/demo/`                          |
+| **Landing site**    | `src/`                                        | Home page, download button, link to web app                   |
 
 ---
 
@@ -70,7 +79,7 @@ Built on [Tiptap](https://tiptap.dev/) (ProseMirror) with auto-save and keyboard
 
 ### Local-first storage
 
-- **IndexedDB** - pages (compressed block JSON) and image blobs
+- **IndexedDB** - pages (compressed block JSON)
 - **chrome.storage.local** - lightweight settings (theme, last view, custom themes, collapsed folders)
 - **No rendered HTML or markdown on disk** - only source block JSON is persisted; plain text is extracted on the fly for search
 - **LZString compression** - documents are compacted before write
@@ -207,13 +216,20 @@ npm run dev:check --prefix extension
 
 This fails if `dist/manifest.json` reflects a production build instead of a dev build.
 
-### 5. (Optional) Run the landing site locally
+### 5. (Optional) Run the web app and landing site locally
+
+The web app is the same UI as the extension, served at `/demo/` on the landing dev server:
 
 ```bash
 npm run dev:web
 ```
 
-The landing site dev server runs on **port 8080** (`http://localhost:8080`). It provides a download button for the packaged extension ZIP.
+Open:
+
+- `http://localhost:8080/` — landing page (download + **Open web app**)
+- `http://localhost:8080/demo/` — full KnowledgeOS UI in the browser (no second terminal needed)
+
+Optional: `npm run dev:app` runs only the web app on port 5174 if you want to work on it in isolation.
 
 To serve the download button locally, build the extension package first:
 
@@ -232,10 +248,12 @@ Run these from the **repo root**:
 | Command                     | Description                                                |
 | --------------------------- | ---------------------------------------------------------- |
 | `npm run dev`               | Extension dev server with HMR (alias for `dev:extension`)  |
-| `npm run dev:extension`     | Extension dev server                                       |
-| `npm run dev:web`           | Landing site dev server (port 8080)                        |
+| `npm run dev:extension`     | Extension dev server (Chrome, port 5173)                   |
+| `npm run dev:app`           | Web app dev server (browser, port 5174, base `/demo/`)      |
+| `npm run dev:web`           | Landing site + web app at `/demo/` (port 8080)              |
 | `npm run build:extension`   | Production extension build                                 |
-| `npm run build:web`         | Production landing site build                              |
+| `npm run build:app`         | Production web app build → `public/demo/`                   |
+| `npm run build:web`         | Web app + landing site production build                    |
 | `npm run package:extension` | Build + zip extension → `public/knowledgeos-extension.zip` |
 | `npm run lint`              | ESLint across web + extension                              |
 | `npm run format`            | Prettier write                                             |
@@ -355,7 +373,7 @@ knowledge-os/
 
 ## Data & privacy
 
-- **All data stays on your machine** - pages, images, and settings are stored in Chrome's local storage APIs
+- **All data stays on your machine** - pages and settings are stored in Chrome's local storage APIs
 - **No network calls** - the extension works fully offline after install (dev mode connects to `localhost:5173` for HMR only)
 - **No analytics or telemetry** - nothing is phoned home
 - **Uninstalling removes extension storage** - export important notes before removing the extension if you need a backup (import/export is on the roadmap)

@@ -23,6 +23,9 @@ coverage/
 public/knowledgeos-extension.zip
 extension/knowledgeos-extension.zip
 
+# Standalone web app build - generate via npm run build:app
+public/demo/
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars

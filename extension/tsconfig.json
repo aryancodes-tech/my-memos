@@ -19,5 +19,12 @@
     "paths": { "@/*": ["src/*"] },
     "types": ["chrome", "vite/client"]
   },
-  "include": ["src", "newtab.html", "manifest.config.ts", "vite.config.ts"]
+  "include": [
+    "src",
+    "newtab.html",
+    "index.html",
+    "manifest.config.ts",
+    "vite.config.ts",
+    "vite.web.config.ts"
+  ]
 }

@@ -145,3 +145,6 @@ export const EDITOR_BACKGROUND_COLORS: { id: string; label: string; value: strin
 
 /** Setting key for persisted collapsed directory ids in chrome.storage. */
 export const COLLAPSED_DIRS_SETTING = "collapsedDirs";
+
+/** localStorage key for dismissing the standalone web app install banner. */
+export const WEB_INSTALL_BANNER_DISMISS_KEY = "koWebInstallBannerDismissed";

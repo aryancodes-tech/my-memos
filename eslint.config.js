@@ -13,6 +13,8 @@ export default tseslint.config(
       ".vinxi",
       "extension/dist",
       "extension/.vite",
+      "public/demo",
+      "public/app",
       "coverage",
       "**/*.test.ts",
     ],
