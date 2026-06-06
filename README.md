@@ -86,7 +86,7 @@ flowchart TB
     NT["New Tab Page"]
     SW["Service Worker\nbackground.js"]
     CS["chrome.storage.local\nsettings & themes"]
-    IDB["IndexedDB\npages + images"]
+    IDB["IndexedDB\npages"]
   end
 
   subgraph Extension["extension/ (React + Zustand)"]
@@ -115,9 +115,8 @@ flowchart TB
 ### Storage design principles
 
 1. **Block JSON only** - every page is a Tiptap/ProseMirror `doc`; never store rendered HTML or duplicate markdown
-2. **Images are separate** - binary blobs live in their own IndexedDB object store, referenced by id from blocks (no base64 in docs)
-3. **Search index is ephemeral** - FlexSearch is rebuilt in memory on demand, never persisted
-4. **Two-tier storage** - heavy data in IndexedDB, light settings in `chrome.storage.local`
+2. **Search index is ephemeral** - FlexSearch is rebuilt in memory on demand, never persisted
+3. **Two-tier storage** - heavy data in IndexedDB, light settings in `chrome.storage.local`
 
 For deeper extension internals, see [`extension/README.md`](extension/README.md).
 

@@ -59,14 +59,6 @@ function Index() {
           >
             {isDownloading ? "Downloading…" : "Download extension (.zip)"}
           </button>
-          <a
-            href="https://developer.chrome.com/docs/extensions/mv3/getstarted/#manifest"
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-md border border-input px-5 py-2.5 text-sm font-medium hover:bg-accent"
-          >
-            Chrome docs
-          </a>
         </div>
         {downloadError && (
           <p className="mt-3 text-sm text-destructive" role="alert">
@@ -107,10 +99,6 @@ function Index() {
           <Feature title="Themes">
             7 built-in themes - Light/Dark, Midnight, Dracula, Solarized, Forest, Ocean - switched
             via CSS variables.
-          </Feature>
-          <Feature title="Future-ready">
-            Schema designed for AI features, backlinks, version history, and cloud sync without data
-            migrations.
           </Feature>
         </section>
       </div>
