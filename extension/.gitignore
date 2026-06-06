@@ -1,6 +1,7 @@
 node_modules
 dist
 .vite
+.dev-session
 *.zip
 .DS_Store
 

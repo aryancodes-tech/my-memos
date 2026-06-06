@@ -39,8 +39,8 @@ function Index() {
         </p>
         <h1 className="mt-3 text-5xl font-bold tracking-tight">KnowledgeOS</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          A Notion-inspired personal knowledge management, study tracking and
-          learning dashboard that replaces your New Tab page. Local-first,
+          A Notion-inspired personal knowledge management and learning
+          dashboard that replaces your New Tab page. Local-first,
           offline-only, zero backend.
         </p>
 
@@ -92,12 +92,8 @@ function Index() {
             Slash commands, headings, lists, checklists, quotes, code blocks,
             dividers — auto-saved, keyboard-first.
           </Feature>
-          <Feature title="Study tracker">
-            Topic database with status, priority, difficulty, revision count
-            and spaced-repetition next-review dates.
-          </Feature>
           <Feature title="Themes">
-            7 built-in themes — Notion Light/Dark, Midnight, Dracula, Solarized,
+            7 built-in themes — Light/Dark, Midnight, Dracula, Solarized,
             Forest, Ocean — switched via CSS variables.
           </Feature>
           <Feature title="Future-ready">

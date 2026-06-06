@@ -50,14 +50,15 @@ function decodeDoc(s: string | undefined | null): BlockDoc {
     const raw = LZString.decompressFromUTF16(s);
     if (!raw) return { type: "doc", content: [] };
     return JSON.parse(raw) as BlockDoc;
-  } catch {
+  } catch (error) {
+    console.warn("[KnowledgeOS] Failed to decode page document; using empty doc.", error);
     return { type: "doc", content: [] };
   }
 }
 
 // --- Pages ------------------------------------------------------------------
 
-export interface StoredPage extends Omit<Page, "doc"> {
+interface StoredPage extends Omit<Page, "doc"> {
   /** Compressed JSON string. Never store rendered HTML. */
   doc_c: string;
 }

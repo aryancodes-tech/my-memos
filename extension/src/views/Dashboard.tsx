@@ -1,7 +1,7 @@
 import { useStore, selectDashboardRecentPages } from "@/store/useStore";
 import { PageIcon } from "@/components/PageIcon";
 import {
-  DASHBOARD_CONTENT_MAX_WIDTH_PX,
+  CONTENT_MAX_WIDTH_PX,
   PAGE_CONTENT_PADDING_X_PX,
   PAGE_CONTENT_PADDING_TOP_PX
 } from "@/lib/constants";
@@ -36,7 +36,7 @@ export default function Dashboard() {
     <div
       className="ko-dashboard mx-auto pb-16"
       style={{
-        maxWidth: DASHBOARD_CONTENT_MAX_WIDTH_PX,
+        maxWidth: CONTENT_MAX_WIDTH_PX,
         paddingLeft: PAGE_CONTENT_PADDING_X_PX,
         paddingRight: PAGE_CONTENT_PADDING_X_PX,
         paddingTop: PAGE_CONTENT_PADDING_TOP_PX

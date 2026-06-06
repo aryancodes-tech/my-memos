@@ -9,8 +9,10 @@
     "dev:reset": "npm run predev && vite",
     "dev:check": "node scripts/check-dev-setup.mjs",
     "dev:watch": "vite build --watch",
-    "build": "tsc -b --noEmit && vite build",
-    "package": "npm run build && cd dist && zip -r ../knowledgeos-extension.zip ."
+    "prebuild": "node scripts/guard-production-build.mjs",
+    "build": "tsc -b --noEmit && vite build && node scripts/finish-production-build.mjs",
+    "build:force": "FORCE_BUILD=1 npm run build",
+    "package": "npm run build:force && cd dist && zip -r ../knowledgeos-extension.zip . && cp ../knowledgeos-extension.zip ../../public/knowledgeos-extension.zip"
   },
   "dependencies": {
     "@crxjs/vite-plugin": "^2.4.0",
@@ -28,7 +30,6 @@
     "@tiptap/react": "^2.6.6",
     "@tiptap/starter-kit": "^2.6.6",
     "flexsearch": "^0.7.43",
-    "framer-motion": "^11.5.4",
     "idb": "^8.0.0",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.445.0",

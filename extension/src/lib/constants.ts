@@ -14,8 +14,8 @@ export const SIDEBAR_INDENT_PX = 16;
 
 /** Theme options shown in the appearance dropdown. */
 export const BUILT_IN_THEME_OPTIONS: { id: BuiltInThemeName; label: string }[] = [
-  { id: "notion-light", label: "Notion Light" },
-  { id: "notion-dark", label: "Notion Dark" },
+  { id: "light", label: "Light" },
+  { id: "dark", label: "Dark" },
   { id: "midnight", label: "Midnight" },
   { id: "dracula", label: "Dracula" },
   { id: "solarized", label: "Solarized" },
@@ -25,8 +25,8 @@ export const BUILT_IN_THEME_OPTIONS: { id: BuiltInThemeName; label: string }[] =
 
 /** Swatch colors for built-in themes in the theme picker preview. */
 export const BUILT_IN_THEME_SWATCHES: Record<BuiltInThemeName, CustomThemeColors> = {
-  "notion-light": { bg: "#ffffff", text: "#1f1f1e", accent: "#2f80ed" },
-  "notion-dark": { bg: "#191919", text: "#e8e8e8", accent: "#6aa9ff" },
+  "light": { bg: "#ffffff", text: "#1f1f1e", accent: "#2f80ed" },
+  "dark": { bg: "#191919", text: "#e8e8e8", accent: "#6aa9ff" },
   midnight: { bg: "#0b0d12", text: "#e6e9ef", accent: "#7aa2f7" },
   dracula: { bg: "#282a36", text: "#f8f8f2", accent: "#bd93f9" },
   solarized: { bg: "#fdf6e3", text: "#073642", accent: "#268bd2" },
@@ -48,25 +48,34 @@ export const CUSTOM_THEME_DEFAULT_COLORS: CustomThemeColors = {
 };
 
 /** Fallback theme when the active custom theme is removed. */
-export const DEFAULT_THEME: BuiltInThemeName = "notion-light";
+export const DEFAULT_THEME: BuiltInThemeName = "light";
 
 /** Minimum width of the theme picker panel in pixels. */
 export const THEME_MENU_MIN_WIDTH_PX = 248;
 
-/** @deprecated Use BUILT_IN_THEME_OPTIONS */
-export const THEME_OPTIONS = BUILT_IN_THEME_OPTIONS;
-
 /** Label shown beside Search for the global search shortcut. */
-export const SEARCH_SHORTCUT_LABEL = "⌘K";
+export const SEARCH_SHORTCUT_LABEL = "⌘ K";
 
 /** Maximum number of pages shown in the Recent sidebar group. */
 export const RECENT_PAGE_LIMIT = 8;
 
-/** Maximum content width for a page view in pixels. */
-export const PAGE_CONTENT_MAX_WIDTH_PX = 900;
+/** Maximum content width for page and dashboard views in pixels. */
+export const CONTENT_MAX_WIDTH_PX = 900;
 
-/** Maximum content width for the dashboard in pixels. */
-export const DASHBOARD_CONTENT_MAX_WIDTH_PX = 900;
+/** Default title for a new page. */
+export const DEFAULT_PAGE_TITLE = "Untitled";
+
+/** Default title for a new folder. */
+export const DEFAULT_FOLDER_TITLE = "Untitled folder";
+
+/** Milliseconds to debounce editor and title persistence. */
+export const EDITOR_SAVE_DEBOUNCE_MS = 250;
+
+/** chrome.storage keys for lightweight settings. */
+export const SETTINGS_KEYS = {
+  theme: "theme",
+  lastView: "lastView",
+} as const;
 
 /** Horizontal padding for page content in pixels. */
 export const PAGE_CONTENT_PADDING_X_PX = 96;
@@ -85,9 +94,6 @@ export const EDITOR_TAB_INSERT = "\t";
 
 /** Default URL placeholder shown in the link dialog input. */
 export const EDITOR_LINK_PLACEHOLDER = "https://";
-
-/** Rendered width of an inserted tab character in the editor. */
-export const EDITOR_TAB_SIZE = 4;
 
 /** Preset text colors for the editor formatting toolbar. */
 export const EDITOR_TEXT_COLORS: { id: string; label: string; value: string }[] = [
