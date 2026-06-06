@@ -1,0 +1,52 @@
+{
+  "name": "knowledgeos-extension",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/clean-dev-artifacts.mjs",
+    "dev": "vite",
+    "dev:reset": "npm run predev && vite",
+    "dev:check": "node scripts/check-dev-setup.mjs",
+    "dev:watch": "vite build --watch",
+    "build": "tsc -b --noEmit && vite build",
+    "package": "npm run build && cd dist && zip -r ../knowledgeos-extension.zip ."
+  },
+  "dependencies": {
+    "@crxjs/vite-plugin": "^2.4.0",
+    "@tiptap/extension-code-block-lowlight": "^2.27.2",
+    "@tiptap/extension-color": "^2.27.2",
+    "@tiptap/extension-highlight": "^2.6.6",
+    "@tiptap/extension-link": "^2.6.6",
+    "@tiptap/extension-placeholder": "^2.6.6",
+    "@tiptap/extension-task-item": "^2.6.6",
+    "@tiptap/extension-task-list": "^2.6.6",
+    "@tiptap/extension-text-align": "^2.27.2",
+    "@tiptap/extension-text-style": "^2.27.2",
+    "@tiptap/extension-underline": "^2.27.2",
+    "@tiptap/pm": "^2.6.6",
+    "@tiptap/react": "^2.6.6",
+    "@tiptap/starter-kit": "^2.6.6",
+    "flexsearch": "^0.7.43",
+    "framer-motion": "^11.5.4",
+    "idb": "^8.0.0",
+    "lowlight": "^3.3.0",
+    "lucide-react": "^0.445.0",
+    "lz-string": "^1.5.0",
+    "nanoid": "^5.0.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.270",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.45",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.3"
+  }
+}

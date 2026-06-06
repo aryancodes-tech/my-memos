@@ -1,0 +1,13 @@
+node_modules
+dist
+.vite
+*.zip
+.DS_Store
+
+# Accidental compiled JS in src shadows .tsx sources during Vite resolution
+src/**/*.js
+
+# Accidental compiled config duplicates that break Vite/CRXJS dev resolution
+vite.config.js
+manifest.config.js
+vite.config.js.timestamp-*
