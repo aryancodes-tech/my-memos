@@ -13,7 +13,7 @@
   --ko-font: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
 
-[data-theme="notion-dark"] {
+[data-theme="dark"] {
   --ko-bg: #191919;
   --ko-surface: #202020;
   --ko-surface-2: #2a2a2a;
@@ -22,6 +22,7 @@
   --ko-text-muted: #9a9a9a;
   --ko-accent: #6aa9ff;
 }
+
 [data-theme="midnight"] {
   --ko-bg: #0b0d12;
   --ko-surface: #11141b;
@@ -31,6 +32,7 @@
   --ko-text-muted: #8a93a6;
   --ko-accent: #7aa2f7;
 }
+
 [data-theme="dracula"] {
   --ko-bg: #282a36;
   --ko-surface: #2f313f;
@@ -40,6 +42,7 @@
   --ko-text-muted: #bcbed1;
   --ko-accent: #bd93f9;
 }
+
 [data-theme="solarized"] {
   --ko-bg: #fdf6e3;
   --ko-surface: #eee8d5;
@@ -49,6 +52,7 @@
   --ko-text-muted: #586e75;
   --ko-accent: #268bd2;
 }
+
 [data-theme="forest"] {
   --ko-bg: #0f1a14;
   --ko-surface: #14241b;
@@ -58,6 +62,7 @@
   --ko-text-muted: #8fb39a;
   --ko-accent: #6fcf97;
 }
+
 [data-theme="ocean"] {
   --ko-bg: #0d1b2a;
   --ko-surface: #112236;

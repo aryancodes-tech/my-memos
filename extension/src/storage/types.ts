@@ -46,8 +46,8 @@ export interface ImageBlob {
 }
 
 export type BuiltInThemeName =
-  | "notion-light"
-  | "notion-dark"
+  | "light"
+  | "dark"
   | "midnight"
   | "dracula"
   | "solarized"

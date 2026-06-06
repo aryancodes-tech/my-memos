@@ -93,7 +93,7 @@ function Index() {
             dividers — auto-saved, keyboard-first.
           </Feature>
           <Feature title="Themes">
-            7 built-in themes — Notion Light/Dark, Midnight, Dracula, Solarized,
+            7 built-in themes — Light/Dark, Midnight, Dracula, Solarized,
             Forest, Ocean — switched via CSS variables.
           </Feature>
           <Feature title="Future-ready">

@@ -14,8 +14,8 @@ export const SIDEBAR_INDENT_PX = 16;
 
 /** Theme options shown in the appearance dropdown. */
 export const BUILT_IN_THEME_OPTIONS: { id: BuiltInThemeName; label: string }[] = [
-  { id: "notion-light", label: "Notion Light" },
-  { id: "notion-dark", label: "Notion Dark" },
+  { id: "light", label: "Light" },
+  { id: "dark", label: "Dark" },
   { id: "midnight", label: "Midnight" },
   { id: "dracula", label: "Dracula" },
   { id: "solarized", label: "Solarized" },
@@ -25,8 +25,8 @@ export const BUILT_IN_THEME_OPTIONS: { id: BuiltInThemeName; label: string }[] =
 
 /** Swatch colors for built-in themes in the theme picker preview. */
 export const BUILT_IN_THEME_SWATCHES: Record<BuiltInThemeName, CustomThemeColors> = {
-  "notion-light": { bg: "#ffffff", text: "#1f1f1e", accent: "#2f80ed" },
-  "notion-dark": { bg: "#191919", text: "#e8e8e8", accent: "#6aa9ff" },
+  "light": { bg: "#ffffff", text: "#1f1f1e", accent: "#2f80ed" },
+  "dark": { bg: "#191919", text: "#e8e8e8", accent: "#6aa9ff" },
   midnight: { bg: "#0b0d12", text: "#e6e9ef", accent: "#7aa2f7" },
   dracula: { bg: "#282a36", text: "#f8f8f2", accent: "#bd93f9" },
   solarized: { bg: "#fdf6e3", text: "#073642", accent: "#268bd2" },
@@ -48,7 +48,7 @@ export const CUSTOM_THEME_DEFAULT_COLORS: CustomThemeColors = {
 };
 
 /** Fallback theme when the active custom theme is removed. */
-export const DEFAULT_THEME: BuiltInThemeName = "notion-light";
+export const DEFAULT_THEME: BuiltInThemeName = "light";
 
 /** Minimum width of the theme picker panel in pixels. */
 export const THEME_MENU_MIN_WIDTH_PX = 248;
