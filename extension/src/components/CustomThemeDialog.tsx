@@ -35,6 +35,7 @@ function ColorField({ id, label, value, fallback, onChange }: ColorFieldProps) {
           type="text"
           className="ko-dialog-input ko-theme-color-text"
           value={value}
+          placeholder={fallback}
           spellCheck={false}
           onChange={(event) => onChange(normalizeHexColor(event.target.value, value))}
         />

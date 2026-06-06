@@ -33,6 +33,7 @@ import {
   EDITOR_TEXT_COLORS
 } from "@/lib/constants";
 import { useStore } from "@/store/useStore";
+import { len } from "@/lib/text";
 
 type BlockKind = "paragraph" | "h1" | "h2" | "h3" | "h4";
 type AlignKind = "left" | "center" | "right" | "justify";
@@ -456,6 +457,3 @@ function getActiveAlign(editor: Editor): AlignKind {
   return "left";
 }
 
-function len(value: string): number {
-  return value.length;
-}

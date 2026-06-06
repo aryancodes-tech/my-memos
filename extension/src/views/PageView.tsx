@@ -1,12 +1,14 @@
 import { useStore } from "@/store/useStore";
 import Editor from "@/editor/Editor";
 import {
-  PAGE_CONTENT_MAX_WIDTH_PX,
+  CONTENT_MAX_WIDTH_PX,
+  DEFAULT_PAGE_TITLE,
+  EDITOR_SAVE_DEBOUNCE_MS,
   PAGE_CONTENT_PADDING_TOP_PX,
   PAGE_CONTENT_PADDING_X_PX
 } from "@/lib/constants";
 import { Star, Trash2 } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 /** Formats a page updated timestamp for the page header metadata row. */
 function formatPageEditedAt(timestamp: number): string {
@@ -22,6 +24,18 @@ function formatPageEditedAt(timestamp: number): string {
 export default function PageView({ id }: { id: string }) {
   const { pages, updatePage, requestDelete } = useStore();
   const page = useMemo(() => pages.find((p) => p.id === id), [pages, id]);
+  const [titleDraft, setTitleDraft] = useState(page?.title ?? "");
+  const titleDebounceRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    setTitleDraft(page?.title ?? "");
+  }, [page?.id, page?.title]);
+
+  useEffect(() => {
+    return () => {
+      if (titleDebounceRef.current) window.clearTimeout(titleDebounceRef.current);
+    };
+  }, []);
 
   if (!page) {
     return (
@@ -41,7 +55,7 @@ export default function PageView({ id }: { id: string }) {
     <article
       className="ko-page-view mx-auto pb-16"
       style={{
-        maxWidth: PAGE_CONTENT_MAX_WIDTH_PX,
+        maxWidth: CONTENT_MAX_WIDTH_PX,
         paddingLeft: PAGE_CONTENT_PADDING_X_PX,
         paddingRight: PAGE_CONTENT_PADDING_X_PX,
         paddingTop: PAGE_CONTENT_PADDING_TOP_PX
@@ -50,9 +64,16 @@ export default function PageView({ id }: { id: string }) {
       <header className="ko-page-header group">
         <div className="ko-page-title-row">
           <input
-            value={page.title}
-            onChange={(event) => updatePage(id, { title: event.target.value })}
-            placeholder="Untitled"
+            value={titleDraft}
+            onChange={(event) => {
+              const nextTitle = event.target.value;
+              setTitleDraft(nextTitle);
+              if (titleDebounceRef.current) window.clearTimeout(titleDebounceRef.current);
+              titleDebounceRef.current = window.setTimeout(() => {
+                void updatePage(id, { title: nextTitle });
+              }, EDITOR_SAVE_DEBOUNCE_MS);
+            }}
+            placeholder={DEFAULT_PAGE_TITLE}
             aria-label="Page title"
             className="ko-page-title"
           />

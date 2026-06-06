@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { SLASH_MENU_PLACEHOLDER, SLASH_MENU_SECTION } from "@/lib/constants";
+import { len } from "@/lib/text";
 import { DEFAULT_CODE_LANGUAGE } from "@/editor/codeLowlight";
 import {
   applyCodeBlock,
@@ -227,9 +228,6 @@ function filterCommands(query: string): SlashCommand[] {
   });
 }
 
-function len(value: string): number {
-  return value.length;
-}
 
 function menuCoords(editor: Editor, range: SlashRange): { top: number; left: number } {
   const coords = editor.view.coordsAtPos(range.from);

@@ -1,7 +1,7 @@
 import { PageIcon } from "@/components/PageIcon";
 import { useEffect, useMemo, useRef, useState } from "react";
 import FlexSearch from "flexsearch";
-import { useStore } from "@/store/useStore";
+import { selectSearchablePages, useStore } from "@/store/useStore";
 import { extractPlainText } from "@/lib/text";
 import { WORKSPACE_SECTION } from "@/lib/constants";
 import type { Page } from "@/storage/types";
@@ -30,10 +30,7 @@ export default function SearchPalette() {
   const [q, setQ] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const searchablePages = useMemo(
-    () => pages.filter((page) => page.kind !== "directory" && !page.archived),
-    [pages]
-  );
+  const searchablePages = useMemo(() => selectSearchablePages(pages), [pages]);
 
   const index = useMemo(() => {
     const idx = new FlexSearch.Document({

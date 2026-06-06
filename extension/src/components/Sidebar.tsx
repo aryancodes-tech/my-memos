@@ -142,7 +142,7 @@ function NavItem({
 }: {
   icon: ReactNode;
   label: string;
-  /** Keyboard shortcut hint shown on the right (e.g. ⌘K). */
+  /** Keyboard shortcut hint shown on the right (e.g. ⌘ K). */
   shortcut?: string;
   active?: boolean;
   onClick?: () => void;

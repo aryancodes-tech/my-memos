@@ -1,7 +1,7 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { useEffect, useRef } from "react";
 import type { BlockDoc } from "@/storage/types";
-import { EDITOR_TAB_INSERT } from "@/lib/constants";
+import { EDITOR_SAVE_DEBOUNCE_MS, EDITOR_TAB_INSERT } from "@/lib/constants";
 import { useStore } from "@/store/useStore";
 import { createEditorExtensions } from "@/editor/editorExtensions";
 import { indentSelectedText } from "@/editor/tabIndent";
@@ -50,7 +50,7 @@ export default function Editor({ docKey, initial, onChange }: Props) {
         if (debounceRef.current) window.clearTimeout(debounceRef.current);
         debounceRef.current = window.setTimeout(() => {
           onChange(ed.getJSON() as BlockDoc);
-        }, 250);
+        }, EDITOR_SAVE_DEBOUNCE_MS);
       }
     },
     [docKey]

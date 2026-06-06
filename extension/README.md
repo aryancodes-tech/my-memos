@@ -1,13 +1,13 @@
 # KnowledgeOS — Chrome Extension
 
-Notion-inspired personal knowledge management, study tracker, and learning dashboard that **replaces your New Tab page**. Local-first, offline-only, MV3, zero backend required.
+Notion-inspired personal knowledge management and learning dashboard that **replaces your New Tab page**. Local-first, offline-only, MV3, zero backend required.
 
 ## Architecture highlights
 
 - **Manifest V3** — service worker (`background.js`), `chrome_url_overrides.newtab` → `newtab.html`.
 - **Block-based storage** — every page is a Tiptap/ProseMirror JSON `doc`. We **never** persist rendered HTML or markdown. Plain text is extracted on the fly for the search index.
 - **Compact, compressed JSON** — documents are LZString-compressed before being written to IndexedDB. Schema is versioned via the IDB upgrade hook so future fields (AI metadata, backlinks, version history) can be added without migrations.
-- **Two-tier storage** — IndexedDB for documents / images / study DB; `chrome.storage.local` for lightweight settings (theme, last opened view, custom sections).
+- **Two-tier storage** — IndexedDB for documents and images; `chrome.storage.local` for lightweight settings (theme, last opened view, custom themes).
 - **Images stored separately** from documents in their own object store, referenced by id. No base64 inside the doc.
 - **In-memory FlexSearch index** — rebuilt on demand, never persisted (no duplicate data on disk).
 - **Themes via CSS variables** — 7 built-in themes, switched by toggling `data-theme` on `<html>`.
@@ -25,7 +25,7 @@ extension/
 │   ├── App.tsx           ← root, keyboard shortcuts, view router
 │   ├── components/       ← Sidebar, SearchPalette
 │   ├── editor/           ← Tiptap editor + slash menu
-│   ├── views/            ← Dashboard, StudyView, PageView
+│   ├── views/            ← Dashboard, PageView
 │   ├── store/            ← Zustand store
 │   ├── storage/          ← IndexedDB + LZString + chrome.storage
 │   └── lib/              ← helpers

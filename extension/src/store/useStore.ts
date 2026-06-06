@@ -8,6 +8,7 @@ import {
   CUSTOM_THEMES_SETTING,
   DEFAULT_THEME,
   RECENT_PAGE_LIMIT,
+  SETTINGS_KEYS,
   WORKSPACE_SECTION
 } from "@/lib/constants";
 import { len } from "@/lib/text";
@@ -144,10 +145,10 @@ export const useStore = create<State>((set, get) => ({
   async init() {
     const [rawPages, theme, customThemes, collapsedDirs, lastView] = await Promise.all([
       db.listPages(),
-      db.getSetting<ThemeName>("theme"),
+      db.getSetting<ThemeName>(SETTINGS_KEYS.theme),
       db.getSetting<CustomTheme[]>(CUSTOM_THEMES_SETTING),
       db.getSetting<Record<string, boolean>>(COLLAPSED_DIRS_SETTING),
-      db.getSetting<View>("lastView")
+      db.getSetting<View>(SETTINGS_KEYS.lastView)
     ]);
 
     const savedCustomThemes = customThemes ?? [];
@@ -179,10 +180,10 @@ export const useStore = create<State>((set, get) => ({
     });
     applyThemeToDocument(resolvedTheme, savedCustomThemes);
     if (themeIsMissingCustom) {
-      void db.setSetting("theme", resolvedTheme);
+      void db.setSetting(SETTINGS_KEYS.theme, resolvedTheme);
     }
     if (lastView && resolvedView !== lastView) {
-      void db.setSetting("lastView", resolvedView);
+      void db.setSetting(SETTINGS_KEYS.lastView, resolvedView);
     }
   },
 
@@ -192,13 +193,13 @@ export const useStore = create<State>((set, get) => ({
       pageEditor: v.kind === "page" ? get().pageEditor : null,
       pendingLink: v.kind === "page" ? get().pendingLink : null
     });
-    void db.setSetting("lastView", v);
+    void db.setSetting(SETTINGS_KEYS.lastView, v);
   },
   setTheme(t) {
     const { customThemes } = get();
     set({ theme: t });
     applyThemeToDocument(t, customThemes);
-    void db.setSetting("theme", t);
+    void db.setSetting(SETTINGS_KEYS.theme, t);
   },
 
   openCustomThemeDialog() {
@@ -400,18 +401,32 @@ export function selectFavoritePages(pages: Page[]): Page[] {
   return pages.filter((p) => isSidebarPage(p) && p.favorite);
 }
 
+/** Pages eligible for sidebar lists, search, and dashboard. */
+export function selectSearchablePages(pages: Page[]): Page[] {
+  return pages.filter(isSidebarPage);
+}
+
+function selectRecentSorted(pages: Page[]): Page[] {
+  return [...selectSearchablePages(pages)].sort(
+    (a, b) => b.updated_at - a.updated_at
+  );
+}
+
+/** Recent pages for the sidebar, capped at RECENT_PAGE_LIMIT. */
 export function selectRecentPages(pages: Page[]): Page[] {
-  return [...pages]
-    .filter(isSidebarPage)
-    .sort((a, b) => b.updated_at - a.updated_at)
-    .slice(0, RECENT_PAGE_LIMIT);
+  return selectRecentSorted(pages).slice(0, RECENT_PAGE_LIMIT);
 }
 
 /** All recent pages for the dashboard, sorted by last activity. */
 export function selectDashboardRecentPages(pages: Page[]): Page[] {
-  return [...pages]
-    .filter(isSidebarPage)
-    .sort((a, b) => b.updated_at - a.updated_at);
+  return selectRecentSorted(pages);
+}
+
+function sortWorkspaceItems(a: Page, b: Page): number {
+  if (a.kind !== b.kind) {
+    return a.kind === "directory" ? -1 : 1;
+  }
+  return b.updated_at - a.updated_at;
 }
 
 export function selectWorkspaceRoots(pages: Page[]): Page[] {
@@ -422,12 +437,7 @@ export function selectWorkspaceRoots(pages: Page[]): Page[] {
         p.section === WORKSPACE_SECTION &&
         p.parent_id === null
     )
-    .sort((a, b) => {
-      if (a.kind !== b.kind) {
-        return a.kind === "directory" ? -1 : 1;
-      }
-      return b.updated_at - a.updated_at;
-    });
+    .sort(sortWorkspaceItems);
 }
 
 export function selectWorkspaceChildren(pages: Page[], parentId: string): Page[] {
@@ -438,10 +448,5 @@ export function selectWorkspaceChildren(pages: Page[], parentId: string): Page[]
         p.section === WORKSPACE_SECTION &&
         p.parent_id === parentId
     )
-    .sort((a, b) => {
-      if (a.kind !== b.kind) {
-        return a.kind === "directory" ? -1 : 1;
-      }
-      return b.updated_at - a.updated_at;
-    });
+    .sort(sortWorkspaceItems);
 }

@@ -1,6 +1,7 @@
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import type { EditorState, Transaction } from "@tiptap/pm/state";
 import { TextSelection } from "@tiptap/pm/state";
+import { len } from "@/lib/text";
 
 /**
  * Inserts a tab character at the start of every text block touched by the selection.
@@ -61,6 +62,3 @@ function collectIndentPositions(
   return [...new Set(positions)].sort((a, b) => b - a);
 }
 
-function len(value: string): number {
-  return value.length;
-}
