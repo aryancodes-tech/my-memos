@@ -106,11 +106,10 @@ export default function Sidebar() {
           )}
         </Section>
 
-        <Section title={WORKSPACE_SECTION}>
+        <Section title={WORKSPACE_SECTION} action={<WorkspaceAddButton />}>
           {workspaceRoots.map((item) => (
             <WorkspaceTreeItem key={item.id} item={item} depth={0} />
           ))}
-          <AddNewRow />
         </Section>
       </div>
     </aside>
@@ -161,16 +160,28 @@ function NavItem({
   );
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+function Section({
+  title,
+  action,
+  children
+}: {
+  title: string;
+  action?: ReactNode;
+  children: ReactNode;
+}) {
   return (
     <div className="mt-5 first:mt-0">
-      <div className="ko-sidebar-section-title">{title}</div>
+      <div className="ko-sidebar-section-header">
+        <div className="ko-sidebar-section-title">{title}</div>
+        {action}
+      </div>
       <div className="space-y-0.5">{children}</div>
     </div>
   );
 }
 
-function AddNewRow() {
+/** Permanent add control beside the Pages section title. */
+function WorkspaceAddButton() {
   const { createPage, createDirectory } = useStore();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -178,13 +189,18 @@ function AddNewRow() {
   useClickOutside(ref, () => setOpen(false));
 
   return (
-    <div className="relative mt-0.5" ref={ref}>
-      <button className="ko-sidebar-add-row" onClick={() => setOpen((value) => !value)}>
-        <Plus size={14} strokeWidth={1.75} />
-        <span>Add new</span>
+    <div className="ko-sidebar-section-action relative" ref={ref}>
+      <button
+        type="button"
+        className="ko-icon-btn !p-1"
+        title="Add new"
+        aria-label="Add new page or folder"
+        onClick={() => setOpen((value) => !value)}
+      >
+        <Plus size={13} strokeWidth={1.75} />
       </button>
       {open && (
-        <div className="ko-sidebar-menu left-2 right-auto">
+        <div className="ko-sidebar-menu">
           <MenuItem
             icon={<FileText size={14} strokeWidth={1.75} />}
             label="New page"

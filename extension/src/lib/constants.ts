@@ -107,6 +107,18 @@ export const EDITOR_TEXT_COLORS: { id: string; label: string; value: string }[] 
   { id: "purple", label: "Purple", value: "#7d3c98" }
 ];
 
+/** Label for the custom color picker row in toolbar color menus. */
+export const EDITOR_CUSTOM_COLOR_LABEL = "Custom color";
+
+/** Default hex value shown in the text custom color picker. */
+export const EDITOR_TEXT_CUSTOM_DEFAULT = "#2f80ed";
+
+/** Default hex value shown in the highlight custom color picker. */
+export const EDITOR_HIGHLIGHT_CUSTOM_DEFAULT = "#fff3b0";
+
+/** Default hex value shown in the background custom color picker. */
+export const EDITOR_BACKGROUND_CUSTOM_DEFAULT = "#e3f2fd";
+
 /** Preset highlight colors for the editor formatting toolbar. */
 export const EDITOR_HIGHLIGHT_COLORS: { id: string; label: string; value: string }[] = [
   { id: "none", label: "None", value: "" },
