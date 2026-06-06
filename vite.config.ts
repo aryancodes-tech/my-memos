@@ -7,7 +7,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "VITE_");
   const envDefine = Object.fromEntries(
-    Object.entries(env).map(([key, value]) => [`import.meta.env.${key}`, JSON.stringify(value)])
+    Object.entries(env).map(([key, value]) => [`import.meta.env.${key}`, JSON.stringify(value)]),
   );
 
   return {
@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
     css: { transformer: "lightningcss" },
     resolve: {
       alias: {
-        "@": `${process.cwd()}/src`
+        "@": `${process.cwd()}/src`,
       },
       dedupe: [
         "react",
@@ -23,12 +23,12 @@ export default defineConfig(({ mode }) => {
         "react/jsx-runtime",
         "react/jsx-dev-runtime",
         "@tanstack/react-query",
-        "@tanstack/query-core"
-      ]
+        "@tanstack/query-core",
+      ],
     },
     server: {
       host: "::",
-      port: 8080
+      port: 8080,
     },
     plugins: [
       tailwindcss(),
@@ -38,13 +38,13 @@ export default defineConfig(({ mode }) => {
           behavior: "error",
           client: {
             files: ["**/server/**"],
-            specifiers: ["server-only"]
-          }
+            specifiers: ["server-only"],
+          },
         },
         // Use src/server.ts as the SSR entry (error wrapper around the default handler).
-        server: { entry: "server" }
+        server: { entry: "server" },
       }),
-      react()
-    ]
+      react(),
+    ],
   };
 });

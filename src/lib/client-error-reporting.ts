@@ -8,7 +8,7 @@ type ClientErrorReporter = {
   captureException?: (
     error: unknown,
     context?: Record<string, unknown>,
-    options?: ClientErrorOptions
+    options?: ClientErrorOptions,
   ) => void;
 };
 
@@ -27,12 +27,12 @@ export function reportClientError(error: unknown, context: Record<string, unknow
     {
       source: "react_error_boundary",
       route: window.location.pathname,
-      ...context
+      ...context,
     },
     {
       mechanism: "react_error_boundary",
       handled: false,
-      severity: "error"
-    }
+      severity: "error",
+    },
   );
 }
