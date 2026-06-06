@@ -54,10 +54,10 @@ Keep `npm run dev` running. UI changes should hot-reload in open tabs. If they d
 
 ### Important: dev vs production `dist/`
 
-| Command | What lands in `dist/` | Chrome extension name |
-|---------|----------------------|-------------------------|
-| `npm run dev` | Dev build (loads from `localhost:5173`, HMR) | **KnowledgeOS (Dev)** |
-| `npm run build` | Production bundle (static files, no HMR) | **KnowledgeOS** |
+| Command         | What lands in `dist/`                        | Chrome extension name |
+| --------------- | -------------------------------------------- | --------------------- |
+| `npm run dev`   | Dev build (loads from `localhost:5173`, HMR) | **KnowledgeOS (Dev)** |
+| `npm run build` | Production bundle (static files, no HMR)     | **KnowledgeOS**       |
 
 **Do not run `npm run build` while developing.** It replaces the dev `dist/` output. After a production build, extension reload only shows old bundled code until you rebuild again — that is the issue most people hit.
 
@@ -100,6 +100,10 @@ Stop `npm run dev` first. Reload the unpacked extension after a production build
 ```bash
 npm run package   # produces extension/knowledgeos-extension.zip
 ```
+
+## Contributing
+
+See the root [CONTRIBUTING.md](../CONTRIBUTING.md) for setup, conventions, and the PR checklist. Run `npm run ci` from the repo root before opening a pull request.
 
 ## Roadmap-ready
 

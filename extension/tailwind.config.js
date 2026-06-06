@@ -11,11 +11,11 @@ export default {
           "Inter",
           "Segoe UI",
           "Roboto",
-          "sans-serif"
+          "sans-serif",
         ],
-        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"]
-      }
-    }
+        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"],
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };

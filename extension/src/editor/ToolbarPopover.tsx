@@ -16,7 +16,7 @@ export function ToolbarPopover({
   onClose,
   anchorRef,
   children,
-  align = "left"
+  align = "left",
 }: ToolbarPopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
@@ -72,7 +72,7 @@ export function ToolbarPopover({
     >
       {children}
     </div>,
-    document.body
+    document.body,
   );
 }
 

@@ -5,7 +5,7 @@ import {
   DEFAULT_PAGE_TITLE,
   EDITOR_SAVE_DEBOUNCE_MS,
   PAGE_CONTENT_PADDING_TOP_PX,
-  PAGE_CONTENT_PADDING_X_PX
+  PAGE_CONTENT_PADDING_X_PX,
 } from "@/lib/constants";
 import { Star, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -18,7 +18,7 @@ function formatPageEditedAt(timestamp: number): string {
     year: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    hour12: true
+    hour12: true,
   });
 }
 
@@ -39,9 +39,7 @@ export default function PageView({ id }: { id: string }) {
   }, []);
 
   if (!page) {
-    return (
-      <div className="p-10 text-[var(--ko-text-muted)]">Page not found.</div>
-    );
+    return <div className="p-10 text-[var(--ko-text-muted)]">Page not found.</div>;
   }
 
   if (page.kind === "directory") {
@@ -59,7 +57,7 @@ export default function PageView({ id }: { id: string }) {
         maxWidth: CONTENT_MAX_WIDTH_PX,
         paddingLeft: PAGE_CONTENT_PADDING_X_PX,
         paddingRight: PAGE_CONTENT_PADDING_X_PX,
-        paddingTop: PAGE_CONTENT_PADDING_TOP_PX
+        paddingTop: PAGE_CONTENT_PADDING_TOP_PX,
       }}
     >
       <header className="ko-page-header group">
@@ -105,16 +103,10 @@ export default function PageView({ id }: { id: string }) {
           </div>
         </div>
 
-        <p className="ko-page-meta">
-          Last edited {formatPageEditedAt(page.updated_at)}
-        </p>
+        <p className="ko-page-meta">Last edited {formatPageEditedAt(page.updated_at)}</p>
       </header>
 
-      <Editor
-        docKey={page.id}
-        initial={page.doc}
-        onChange={(doc) => updatePage(id, { doc })}
-      />
+      <Editor docKey={page.id} initial={page.doc} onChange={(doc) => updatePage(id, { doc })} />
     </article>
   );
 }

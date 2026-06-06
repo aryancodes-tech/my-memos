@@ -10,7 +10,8 @@
   --ko-text: #1f1f1e;
   --ko-text-muted: #6b6b6b;
   --ko-accent: #2f80ed;
-  --ko-font: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  --ko-font:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
 
 [data-theme="dark"] {
@@ -73,12 +74,27 @@
   --ko-accent: #4cc9f0;
 }
 
-html, body, #root { height: 100%; }
-body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03"; }
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  font-family: var(--ko-font);
+  font-feature-settings: "cv11", "ss01", "ss03";
+}
 
-.ko-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
-.ko-scroll::-webkit-scrollbar-thumb { background: var(--ko-border); border-radius: 4px; }
-.ko-scroll::-webkit-scrollbar-track { background: transparent; }
+.ko-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.ko-scroll::-webkit-scrollbar-thumb {
+  background: var(--ko-border);
+  border-radius: 4px;
+}
+.ko-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 /* Tiptap */
 .ProseMirror {
@@ -104,24 +120,47 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
 .ProseMirror p.is-editor-empty:first-child::before {
   color: var(--ko-text-muted);
   content: attr(data-placeholder);
-  float: left; height: 0; pointer-events: none;
+  float: left;
+  height: 0;
+  pointer-events: none;
 }
-.ProseMirror h1 { font-size: 2rem; font-weight: 700; margin: 1rem 0 .5rem; letter-spacing: -0.02em; }
-.ProseMirror h2 { font-size: 1.5rem; font-weight: 700; margin: .9rem 0 .4rem; letter-spacing: -0.01em; }
-.ProseMirror h3 { font-size: 1.2rem; font-weight: 600; margin: .8rem 0 .3rem; }
-.ProseMirror h4 { font-size: 1.05rem; font-weight: 600; margin: .7rem 0 .25rem; }
-.ProseMirror p { line-height: 1.7; margin: .25rem 0; }
+.ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0.9rem 0 0.4rem;
+  letter-spacing: -0.01em;
+}
+.ProseMirror h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.8rem 0 0.3rem;
+}
+.ProseMirror h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0.7rem 0 0.25rem;
+}
+.ProseMirror p {
+  line-height: 1.7;
+  margin: 0.25rem 0;
+}
 .ProseMirror ul:not([data-type="taskList"]) {
   list-style-type: disc;
   list-style-position: outside;
   padding-left: 1.5rem;
-  margin: .25rem 0;
+  margin: 0.25rem 0;
 }
 .ProseMirror ol {
   list-style-type: decimal;
   list-style-position: outside;
   padding-left: 1.5rem;
-  margin: .25rem 0;
+  margin: 0.25rem 0;
 }
 .ProseMirror li {
   display: list-item;
@@ -130,11 +169,15 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
 .ProseMirror li p {
   margin: 0;
 }
-.ProseMirror ul[data-type="taskList"] { list-style: none; padding-left: 0; margin: .25rem 0; }
+.ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.25rem 0;
+}
 .ProseMirror ul[data-type="taskList"] li {
   display: flex;
   align-items: flex-start;
-  gap: .55rem;
+  gap: 0.55rem;
   list-style: none;
 }
 .ProseMirror ul[data-type="taskList"] li > label {
@@ -187,7 +230,12 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   color: var(--ko-text-muted);
   text-decoration: line-through;
 }
-.ProseMirror blockquote { border-left: 3px solid var(--ko-border); padding-left: .9rem; color: var(--ko-text-muted); margin: .5rem 0; }
+.ProseMirror blockquote {
+  border-left: 3px solid var(--ko-border);
+  padding-left: 0.9rem;
+  color: var(--ko-text-muted);
+  margin: 0.5rem 0;
+}
 .ProseMirror :not(pre) > code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   background: var(--ko-surface-2);
@@ -257,10 +305,27 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
 .ProseMirror pre code .hljs-punctuation {
   color: var(--ko-text-muted);
 }
-.ProseMirror hr { border: 0; border-top: 1px solid var(--ko-border); margin: 1rem 0; }
-.ProseMirror a { color: var(--ko-accent); text-decoration: underline; text-underline-offset: 2px; cursor: crosshair; }
-.ProseMirror mark { background: #fff3b0; color: inherit; padding: 0 1px; border-radius: 2px; }
-.ProseMirror u { text-decoration: underline; text-underline-offset: 2px; }
+.ProseMirror hr {
+  border: 0;
+  border-top: 1px solid var(--ko-border);
+  margin: 1rem 0;
+}
+.ProseMirror a {
+  color: var(--ko-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: crosshair;
+}
+.ProseMirror mark {
+  background: #fff3b0;
+  color: inherit;
+  padding: 0 1px;
+  border-radius: 2px;
+}
+.ProseMirror u {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 
 /* Page view header */
 .ko-page-view {
@@ -357,7 +422,10 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   background: transparent;
   text-align: left;
   color: var(--ko-text);
-  transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease,
+    transform 0.12s ease;
 }
 .ko-dashboard-create-action:hover {
   background: var(--ko-surface);
@@ -485,7 +553,9 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   border-radius: 6px;
   color: var(--ko-text-muted);
   background: transparent;
-  transition: background 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
   flex-shrink: 0;
 }
 .ko-toolbar-btn:hover:not(:disabled) {
@@ -657,9 +727,8 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   flex: 1;
   min-width: 0;
   width: calc(
-    var(--ko-toolbar-color-grid-width) -
-    var(--ko-toolbar-color-picker-size) -
-    var(--ko-toolbar-color-custom-gap)
+    var(--ko-toolbar-color-grid-width) - var(--ko-toolbar-color-picker-size) -
+      var(--ko-toolbar-color-custom-gap)
   );
   height: var(--ko-toolbar-color-picker-size);
   padding: 0 8px;
@@ -768,7 +837,9 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   font-size: 13px;
   color: var(--ko-text-muted);
   background: transparent;
-  transition: background 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
 }
 .ko-slash-menu-close:hover {
   background: var(--ko-surface-2);
@@ -949,12 +1020,18 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
 }
 
 .ko-btn {
-  display: inline-flex; align-items: center; gap: .4rem;
-  padding: .35rem .6rem; border-radius: 6px;
-  color: var(--ko-text); background: transparent;
-  transition: background .12s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  color: var(--ko-text);
+  background: transparent;
+  transition: background 0.12s ease;
 }
-.ko-btn:hover { background: var(--ko-surface-2); }
+.ko-btn:hover {
+  background: var(--ko-surface-2);
+}
 .ko-icon-btn {
   display: inline-flex;
   align-items: center;
@@ -963,7 +1040,9 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   border-radius: 5px;
   color: var(--ko-text-muted);
   background: transparent;
-  transition: color 0.12s ease, background 0.12s ease;
+  transition:
+    color 0.12s ease,
+    background 0.12s ease;
 }
 .ko-icon-btn:hover {
   color: var(--ko-text);
@@ -1126,7 +1205,9 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   background: var(--ko-surface);
   color: var(--ko-text);
   font-size: 13px;
-  transition: background 0.12s ease, border-color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
 }
 .ko-theme-trigger:hover {
   background: var(--ko-surface-2);
@@ -1230,7 +1311,10 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   border-radius: 6px;
   color: var(--ko-text-muted);
   opacity: 0;
-  transition: opacity 0.12s ease, background 0.12s ease, color 0.12s ease;
+  transition:
+    opacity 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease;
 }
 .ko-theme-option:hover .ko-theme-option-delete,
 .ko-theme-option:focus-within .ko-theme-option-delete {
@@ -1354,7 +1438,9 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   padding: 4px;
   border-radius: 6px;
   color: var(--ko-text-muted);
-  transition: background 0.1s ease, color 0.1s ease;
+  transition:
+    background 0.1s ease,
+    color 0.1s ease;
 }
 .ko-dialog-close:hover {
   background: var(--ko-surface-2);
@@ -1418,7 +1504,9 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   color: var(--ko-text-muted);
   background: transparent;
   border: 1px solid var(--ko-border);
-  transition: background 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
 }
 .ko-dialog-btn-delete:hover {
   background: var(--ko-surface-2);
@@ -1443,7 +1531,9 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
   color: var(--ko-text);
   background: var(--ko-surface);
   border: 1px solid var(--ko-border);
-  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
 }
 .ko-dialog-input:focus {
   outline: none;
@@ -1469,7 +1559,12 @@ body { font-family: var(--ko-font); font-feature-settings: "cv11","ss01","ss03";
 .ko-input {
   background: var(--ko-surface);
   border: 1px solid var(--ko-border);
-  border-radius: 8px; padding: .5rem .7rem;
-  color: var(--ko-text); width: 100%;
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  color: var(--ko-text);
+  width: 100%;
 }
-.ko-input:focus { outline: 2px solid var(--ko-accent); outline-offset: 1px; }
+.ko-input:focus {
+  outline: 2px solid var(--ko-accent);
+  outline-offset: 1px;
+}

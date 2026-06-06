@@ -19,12 +19,14 @@ const isDev =
 
 if (!isDev) {
   console.error("\n[KnowledgeOS] dist/ contains a PRODUCTION build.");
-  console.error("Chrome is loading static bundled files, so edits will NOT appear until you rebuild.");
+  console.error(
+    "Chrome is loading static bundled files, so edits will NOT appear until you rebuild.",
+  );
   console.error("This usually happens after running npm run build while developing.");
   console.error("\nFix (one-time):");
   console.error("  1. Stop npm run dev if running (Ctrl+C)");
   console.error("  2. npm run dev:reset");
-  console.error("  3. In chrome://extensions → Reload (name must be \"KnowledgeOS (Dev)\")");
+  console.error('  3. In chrome://extensions → Reload (name must be "KnowledgeOS (Dev)")');
   console.error("  4. Open a NEW tab");
   console.error("\nDaily workflow:");
   console.error("  - Keep `npm run dev` running in extension/");
@@ -44,7 +46,9 @@ try {
 }
 
 if (!devServerUp) {
-  console.error("\n[KnowledgeOS] Dev manifest is correct, but the Vite dev server is not reachable.");
+  console.error(
+    "\n[KnowledgeOS] Dev manifest is correct, but the Vite dev server is not reachable.",
+  );
   console.error(`Start it with: npm run dev`);
   console.error("Then reload the extension in chrome://extensions.\n");
   process.exit(1);

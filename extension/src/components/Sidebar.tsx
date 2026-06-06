@@ -3,10 +3,16 @@ import {
   selectFavoritePages,
   selectRecentPages,
   selectWorkspaceRoots,
-  selectWorkspaceChildren
+  selectWorkspaceChildren,
 } from "@/store/useStore";
 import type { Page } from "@/storage/types";
-import { SIDEBAR_INDENT_PX, SIDEBAR_MENU_MIN_WIDTH_PX, SIDEBAR_WIDTH_PX, SEARCH_SHORTCUT_LABEL, WORKSPACE_SECTION } from "@/lib/constants";
+import {
+  SIDEBAR_INDENT_PX,
+  SIDEBAR_MENU_MIN_WIDTH_PX,
+  SIDEBAR_WIDTH_PX,
+  SEARCH_SHORTCUT_LABEL,
+  WORKSPACE_SECTION,
+} from "@/lib/constants";
 import { len } from "@/lib/text";
 import { PageIcon } from "@/components/PageIcon";
 import {
@@ -19,19 +25,12 @@ import {
   Plus,
   Search,
   Star,
-  Trash2
+  Trash2,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 export default function Sidebar() {
-  const {
-    pages,
-    sidebarCollapsed,
-    toggleSidebar,
-    view,
-    setView,
-    setSearchOpen
-  } = useStore();
+  const { pages, sidebarCollapsed, toggleSidebar, view, setView, setSearchOpen } = useStore();
 
   const favorites = useMemo(() => selectFavoritePages(pages), [pages]);
   const recent = useMemo(() => selectRecentPages(pages), [pages]);
@@ -43,7 +42,10 @@ export default function Sidebar() {
         <IconRailButton title="Expand sidebar" onClick={toggleSidebar}>
           <ChevronRight size={16} strokeWidth={1.75} />
         </IconRailButton>
-        <IconRailButton title={`Search (${SEARCH_SHORTCUT_LABEL})`} onClick={() => setSearchOpen(true)}>
+        <IconRailButton
+          title={`Search (${SEARCH_SHORTCUT_LABEL})`}
+          onClick={() => setSearchOpen(true)}
+        >
           <Search size={16} strokeWidth={1.75} />
         </IconRailButton>
         <IconRailButton title="Dashboard" onClick={() => setView({ kind: "dashboard" })}>
@@ -58,7 +60,7 @@ export default function Sidebar() {
       className="ko-sidebar shrink-0 border-r flex flex-col"
       style={{
         width: SIDEBAR_WIDTH_PX,
-        ["--ko-sidebar-menu-min-width" as string]: `${SIDEBAR_MENU_MIN_WIDTH_PX}px`
+        ["--ko-sidebar-menu-min-width" as string]: `${SIDEBAR_MENU_MIN_WIDTH_PX}px`,
       }}
     >
       <div className="flex items-center justify-between px-3 py-3">
@@ -90,9 +92,7 @@ export default function Sidebar() {
           {favorites.length === 0 ? (
             <p className="ko-sidebar-empty">Star a page to add it here.</p>
           ) : (
-            favorites.map((page) => (
-              <PageRow key={page.id} page={page} menuVariant="favorites" />
-            ))
+            favorites.map((page) => <PageRow key={page.id} page={page} menuVariant="favorites" />)
           )}
         </Section>
 
@@ -100,9 +100,7 @@ export default function Sidebar() {
           {recent.length === 0 ? (
             <p className="ko-sidebar-empty">Recently opened pages appear here.</p>
           ) : (
-            recent.map((page) => (
-              <PageRow key={page.id} page={page} menuVariant="recent" />
-            ))
+            recent.map((page) => <PageRow key={page.id} page={page} menuVariant="recent" />)
           )}
         </Section>
 
@@ -119,14 +117,18 @@ export default function Sidebar() {
 function IconRailButton({
   title,
   onClick,
-  children
+  children,
 }: {
   title: string;
   onClick: () => void;
   children: ReactNode;
 }) {
   return (
-    <button className="ko-icon-btn !p-1.5 text-[var(--ko-text-muted)]" title={title} onClick={onClick}>
+    <button
+      className="ko-icon-btn !p-1.5 text-[var(--ko-text-muted)]"
+      title={title}
+      onClick={onClick}
+    >
       {children}
     </button>
   );
@@ -137,7 +139,7 @@ function NavItem({
   label,
   shortcut,
   active,
-  onClick
+  onClick,
 }: {
   icon: ReactNode;
   label: string;
@@ -147,15 +149,10 @@ function NavItem({
   onClick?: () => void;
 }) {
   return (
-    <button
-      onClick={onClick}
-      className={`ko-sidebar-row w-full ${active ? "is-active" : ""}`}
-    >
+    <button onClick={onClick} className={`ko-sidebar-row w-full ${active ? "is-active" : ""}`}>
       <span className="text-[var(--ko-text-muted)]">{icon}</span>
       <span className="flex-1 min-w-0 truncate text-left">{label}</span>
-      {shortcut && len(shortcut) > 0 && (
-        <span className="ko-sidebar-shortcut">{shortcut}</span>
-      )}
+      {shortcut && len(shortcut) > 0 && <span className="ko-sidebar-shortcut">{shortcut}</span>}
     </button>
   );
 }
@@ -163,7 +160,7 @@ function NavItem({
 function Section({
   title,
   action,
-  children
+  children,
 }: {
   title: string;
   action?: ReactNode;
@@ -254,7 +251,7 @@ function DirectoryRow({
   depth,
   expanded,
   childCount,
-  onToggle
+  onToggle,
 }: {
   item: Page;
   depth: number;
@@ -385,7 +382,7 @@ function DirectoryRow({
 function PageRow({
   page,
   depth = 0,
-  menuVariant = "none"
+  menuVariant = "none",
 }: {
   page: Page;
   depth?: number;
@@ -466,7 +463,7 @@ function MenuItem({
   icon,
   label,
   danger,
-  onClick
+  onClick,
 }: {
   icon?: ReactNode;
   label: string;
@@ -474,10 +471,7 @@ function MenuItem({
   onClick: () => void;
 }) {
   return (
-    <button
-      className={`ko-sidebar-menu-item ${danger ? "is-danger" : ""}`}
-      onClick={onClick}
-    >
+    <button className={`ko-sidebar-menu-item ${danger ? "is-danger" : ""}`} onClick={onClick}>
       {icon}
       <span className="ko-sidebar-menu-item-label">{label}</span>
     </button>

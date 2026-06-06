@@ -12,7 +12,7 @@ export interface SlashRange {
 export function applyListBlock(
   editor: Editor,
   range: SlashRange,
-  listType: "bulletList" | "orderedList"
+  listType: "bulletList" | "orderedList",
 ): void {
   const chain = editor.chain().focus().deleteRange(range).clearNodes();
   if (listType === "bulletList") {

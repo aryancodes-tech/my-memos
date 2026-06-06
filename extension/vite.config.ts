@@ -13,9 +13,9 @@ export default defineConfig({
     crx({
       manifest,
       contentScripts: {
-        hmrTimeout: 10000
-      }
-    })
+        hmrTimeout: 10000,
+      },
+    }),
   ],
   resolve: {
     alias: { "@": path.resolve(__dirname, "src") },

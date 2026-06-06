@@ -17,14 +17,14 @@ export function createEditorExtensions() {
   return [
     StarterKit.configure({
       heading: { levels: [1, 2, 3, 4] },
-      codeBlock: false
+      codeBlock: false,
     }),
     CodeBlockLowlight.configure({
       lowlight: codeLowlight,
-      defaultLanguage: "typescript"
+      defaultLanguage: "typescript",
     }),
     Placeholder.configure({
-      placeholder: "Type '/' for commands, or just start writing…"
+      placeholder: "Type '/' for commands, or just start writing…",
     }),
     TaskList,
     TaskItem.configure({ nested: true }),
@@ -35,7 +35,7 @@ export function createEditorExtensions() {
     BackgroundColor,
     Highlight.configure({ multicolor: true }),
     TextAlign.configure({
-      types: ["heading", "paragraph"]
-    })
+      types: ["heading", "paragraph"],
+    }),
   ];
 }

@@ -9,7 +9,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
+import { reportClientError } from "../lib/client-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -37,7 +37,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    reportClientError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
   return (
@@ -80,13 +80,12 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Notion-inspired personal knowledge management and learning dashboard that replaces your New Tab page."
+          "Notion-inspired personal knowledge management and learning dashboard that replaces your New Tab page.",
       },
       { property: "og:title", content: "KnowledgeOS" },
       {
         property: "og:description",
-        content:
-          "Personal knowledge management Chrome extension — local-first, offline-only."
+        content: "Personal knowledge management Chrome extension — local-first, offline-only.",
       },
       { property: "og:type", content: "website" },
     ],

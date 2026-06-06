@@ -11,7 +11,7 @@ import {
   ListOrdered,
   Minus,
   Quote,
-  Type
+  Type,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { SLASH_MENU_PLACEHOLDER, SLASH_MENU_SECTION } from "@/lib/constants";
@@ -21,7 +21,7 @@ import {
   applyCodeBlock,
   applyListBlock,
   applyTaskListBlock,
-  type SlashRange
+  type SlashRange,
 } from "@/editor/slashBlock";
 
 interface SlashCommand {
@@ -52,7 +52,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "text",
     run: (editor, range) => {
       editor.chain().focus().deleteRange(range).setParagraph().run();
-    }
+    },
   },
   {
     id: "h1",
@@ -67,7 +67,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     headingLevel: 1,
     run: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHeading({ level: 1 }).run();
-    }
+    },
   },
   {
     id: "h2",
@@ -82,7 +82,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     headingLevel: 2,
     run: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHeading({ level: 2 }).run();
-    }
+    },
   },
   {
     id: "h3",
@@ -97,7 +97,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     headingLevel: 3,
     run: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHeading({ level: 3 }).run();
-    }
+    },
   },
   {
     id: "h4",
@@ -112,7 +112,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     headingLevel: 4,
     run: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHeading({ level: 4 }).run();
-    }
+    },
   },
   {
     id: "bullet",
@@ -126,7 +126,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "bullet",
     run: (editor, range) => {
       applyListBlock(editor, range, "bulletList");
-    }
+    },
   },
   {
     id: "numbered",
@@ -140,7 +140,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "numbered",
     run: (editor, range) => {
       applyListBlock(editor, range, "orderedList");
-    }
+    },
   },
   {
     id: "todo",
@@ -154,7 +154,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "todo",
     run: (editor, range) => {
       applyTaskListBlock(editor, range);
-    }
+    },
   },
   {
     id: "quote",
@@ -168,7 +168,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "quote",
     run: (editor, range) => {
       editor.chain().focus().deleteRange(range).toggleBlockquote().run();
-    }
+    },
   },
   {
     id: "code",
@@ -182,7 +182,7 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "code",
     run: (editor, range) => {
       applyCodeBlock(editor, range, DEFAULT_CODE_LANGUAGE);
-    }
+    },
   },
   {
     id: "divider",
@@ -195,8 +195,8 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "divider",
     run: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHorizontalRule().run();
-    }
-  }
+    },
+  },
 ];
 
 /** Returns slash trigger metadata when the cursor sits inside `/query` at block start. */
@@ -213,7 +213,7 @@ function getSlashState(editor: Editor): { range: SlashRange; query: string } | n
   const slashFrom = blockStart + (match.index ?? 0);
   return {
     range: { from: slashFrom, to: from },
-    query: match[1]
+    query: match[1],
   };
 }
 
@@ -227,7 +227,6 @@ function filterCommands(query: string): SlashCommand[] {
     return cmd.keywords.some((keyword) => keyword.includes(q));
   });
 }
-
 
 function menuCoords(editor: Editor, range: SlashRange): { top: number; left: number } {
   const coords = editor.view.coordsAtPos(range.from);
@@ -283,7 +282,7 @@ export default function SlashMenu({ editor }: { editor: Editor }) {
       command.run(editor, slash.range);
       closeMenu();
     },
-    [closeMenu, editor, query, range]
+    [closeMenu, editor, query, range],
   );
 
   useEffect(() => {
@@ -358,7 +357,11 @@ export default function SlashMenu({ editor }: { editor: Editor }) {
       <div className="ko-slash-menu">
         <div className="ko-slash-menu-search">
           <span className="ko-slash-menu-search-prefix">/</span>
-          <span className={len(query) > 0 ? "ko-slash-menu-search-value" : "ko-slash-menu-search-placeholder"}>
+          <span
+            className={
+              len(query) > 0 ? "ko-slash-menu-search-value" : "ko-slash-menu-search-placeholder"
+            }
+          >
             {len(query) > 0 ? query : SLASH_MENU_PLACEHOLDER}
           </span>
         </div>
@@ -366,9 +369,7 @@ export default function SlashMenu({ editor }: { editor: Editor }) {
         <div className="ko-slash-menu-section">{SLASH_MENU_SECTION}</div>
 
         <div className="ko-slash-menu-list ko-scroll">
-          {filtered.length === 0 && (
-            <div className="ko-slash-menu-empty">No results</div>
-          )}
+          {filtered.length === 0 && <div className="ko-slash-menu-empty">No results</div>}
           {filtered.map((command, index) => (
             <SlashMenuItem
               key={command.id}
@@ -387,9 +388,7 @@ export default function SlashMenu({ editor }: { editor: Editor }) {
         </button>
       </div>
 
-      {previewCommand && (
-        <SlashMenuPreview command={previewCommand} />
-      )}
+      {previewCommand && <SlashMenuPreview command={previewCommand} />}
     </div>
   );
 }
@@ -399,7 +398,7 @@ function SlashMenuItem({
   active,
   onHover,
   onLeave,
-  onSelect
+  onSelect,
 }: {
   command: SlashCommand;
   active: boolean;
@@ -528,13 +527,7 @@ function SlashMenuPreviewContent({ command }: { command: SlashCommand }) {
   return <p className="ko-slash-preview-text">{command.previewTitle}</p>;
 }
 
-function PreviewHeading({
-  level,
-  children
-}: {
-  level: 1 | 2 | 3 | 4;
-  children: ReactNode;
-}) {
+function PreviewHeading({ level, children }: { level: 1 | 2 | 3 | 4; children: ReactNode }) {
   if (level === 1) return <h1 className="ko-slash-preview-h1">{children}</h1>;
   if (level === 2) return <h2 className="ko-slash-preview-h2">{children}</h2>;
   if (level === 3) return <h3 className="ko-slash-preview-h3">{children}</h3>;

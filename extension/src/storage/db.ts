@@ -1,6 +1,7 @@
 import { openDB, type IDBPDatabase } from "idb";
-import LZString from "lz-string";
-import type { Page, ImageBlob, BlockDoc } from "./types";
+import { decodeDoc, encodeDoc } from "./codec";
+import type { BlockDoc, ImageBlob, Page } from "./types";
+import { len } from "@/lib/text";
 
 /**
  * KnowledgeOS storage layer.
@@ -32,28 +33,10 @@ function db() {
         if (!d.objectStoreNames.contains("images")) {
           d.createObjectStore("images", { keyPath: "id" });
         }
-      }
+      },
     });
   }
   return dbPromise;
-}
-
-// --- Compression helpers ----------------------------------------------------
-
-function encodeDoc(doc: BlockDoc): string {
-  // Store compressed JSON; LZString UTF16 is friendly to IndexedDB string values.
-  return LZString.compressToUTF16(JSON.stringify(doc));
-}
-function decodeDoc(s: string | undefined | null): BlockDoc {
-  if (!s) return { type: "doc", content: [] };
-  try {
-    const raw = LZString.decompressFromUTF16(s);
-    if (!raw) return { type: "doc", content: [] };
-    return JSON.parse(raw) as BlockDoc;
-  } catch (error) {
-    console.warn("[KnowledgeOS] Failed to decode page document; using empty doc.", error);
-    return { type: "doc", content: [] };
-  }
 }
 
 // --- Pages ------------------------------------------------------------------
@@ -125,10 +108,42 @@ export async function setSetting<T = unknown>(key: string, value: T): Promise<vo
 
 // --- Export / Import --------------------------------------------------------
 
+/** Validates that an unknown value is a well-formed page for import. */
+export function isValidImportPage(value: unknown): value is Page {
+  if (!value || typeof value !== "object") return false;
+  const page = value as Page;
+  const doc = page.doc as BlockDoc | undefined;
+  return (
+    typeof page.id === "string" &&
+    len(page.id) > 0 &&
+    typeof page.title === "string" &&
+    typeof page.updated_at === "number" &&
+    typeof page.created_at === "number" &&
+    typeof page.section === "string" &&
+    (page.parent_id === null || typeof page.parent_id === "string") &&
+    (page.kind === "page" || page.kind === "directory") &&
+    typeof page.favorite === "boolean" &&
+    typeof page.archived === "boolean" &&
+    Array.isArray(page.tags) &&
+    doc?.type === "doc" &&
+    Array.isArray(doc.content)
+  );
+}
+
 export async function exportWorkspace() {
   const pages = await listPages();
   return { version: 1, exported_at: Date.now(), pages };
 }
-export async function importWorkspace(data: { pages?: Page[] }) {
-  if (data.pages) for (const p of data.pages) await putPage(p);
+
+/** Imports pages from an exported workspace payload. Rejects malformed data. */
+export async function importWorkspace(data: { pages?: unknown[] }) {
+  if (!data?.pages || !Array.isArray(data.pages)) {
+    throw new Error("Invalid workspace import: expected a pages array");
+  }
+  for (const page of data.pages) {
+    if (!isValidImportPage(page)) {
+      throw new Error("Invalid workspace import: malformed page entry");
+    }
+    await putPage(page);
+  }
 }

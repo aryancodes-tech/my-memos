@@ -35,14 +35,14 @@ export default function SearchPalette() {
   const index = useMemo(() => {
     const idx = new FlexSearch.Document({
       tokenize: "forward",
-      document: { id: "id", index: ["title", "text", "tags"] }
+      document: { id: "id", index: ["title", "text", "tags"] },
     });
     for (const p of searchablePages) {
       idx.add({
         id: p.id,
         title: p.title,
         text: extractPlainText(p.doc),
-        tags: p.tags.join(" ")
+        tags: p.tags.join(" "),
       });
     }
     return idx;

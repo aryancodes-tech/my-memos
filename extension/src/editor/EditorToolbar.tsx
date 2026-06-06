@@ -22,7 +22,7 @@ import {
   Strikethrough,
   Type,
   Underline,
-  Undo2
+  Undo2,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { DEFAULT_CODE_LANGUAGE } from "@/editor/codeLowlight";
@@ -34,7 +34,7 @@ import {
   EDITOR_HIGHLIGHT_COLORS,
   EDITOR_HIGHLIGHT_CUSTOM_DEFAULT,
   EDITOR_TEXT_COLORS,
-  EDITOR_TEXT_CUSTOM_DEFAULT
+  EDITOR_TEXT_CUSTOM_DEFAULT,
 } from "@/lib/constants";
 import { normalizeHexColor } from "@/lib/themes";
 import { useStore } from "@/store/useStore";
@@ -48,14 +48,14 @@ const BLOCK_OPTIONS: { id: BlockKind; label: string }[] = [
   { id: "h1", label: "Heading 1" },
   { id: "h2", label: "Heading 2" },
   { id: "h3", label: "Heading 3" },
-  { id: "h4", label: "Heading 4" }
+  { id: "h4", label: "Heading 4" },
 ];
 
 const ALIGN_OPTIONS: { id: AlignKind; label: string; icon: ReactNode }[] = [
   { id: "left", label: "Align left", icon: <AlignLeft size={14} strokeWidth={1.75} /> },
   { id: "center", label: "Align center", icon: <AlignCenter size={14} strokeWidth={1.75} /> },
   { id: "right", label: "Align right", icon: <AlignRight size={14} strokeWidth={1.75} /> },
-  { id: "justify", label: "Justify", icon: <AlignJustify size={14} strokeWidth={1.75} /> }
+  { id: "justify", label: "Justify", icon: <AlignJustify size={14} strokeWidth={1.75} /> },
 ];
 
 interface EditorToolbarProps {
@@ -90,7 +90,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
       const level = Number(kind.slice(1)) as 1 | 2 | 3 | 4;
       chain.setHeading({ level }).run();
     },
-    [editor]
+    [editor],
   );
 
   const openLinkDialog = useCallback(() => {
@@ -277,7 +277,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 
 function AlignSelect({
   value,
-  onChange
+  onChange,
 }: {
   value: AlignKind;
   onChange: (align: AlignKind) => void;
@@ -328,7 +328,7 @@ function ColorMenu({
   onPick,
   align = "left",
   allowCustom = false,
-  customDefault = "#000000"
+  customDefault = "#000000",
 }: {
   title: string;
   icon: ReactNode;
@@ -345,12 +345,10 @@ function ColorMenu({
   const anchorRef = useRef<HTMLDivElement>(null);
   const presetValues = useMemo(
     () => new Set(colors.map((color) => color.value).filter((value) => len(value) > 0)),
-    [colors]
+    [colors],
   );
   const isCustomActive = len(activeColor) > 0 && !presetValues.has(activeColor);
-  const [customColor, setCustomColor] = useState(
-    isCustomActive ? activeColor : customDefault
-  );
+  const [customColor, setCustomColor] = useState(isCustomActive ? activeColor : customDefault);
 
   useEffect(() => {
     if (!open) return;
@@ -363,7 +361,7 @@ function ColorMenu({
       setCustomColor(normalized);
       onPick(normalized);
     },
-    [customDefault, onPick]
+    [customDefault, onPick],
   );
   const customInputId = `${title.toLowerCase().replace(/\s+/g, "-")}-custom`;
 
@@ -376,7 +374,12 @@ function ColorMenu({
       >
         {icon}
       </ToolbarButton>
-      <ToolbarPopover open={open} onClose={() => setOpen(false)} anchorRef={anchorRef} align={align}>
+      <ToolbarPopover
+        open={open}
+        onClose={() => setOpen(false)}
+        anchorRef={anchorRef}
+        align={align}
+      >
         <div className="ko-toolbar-color-popover-inner">
           <div className="ko-toolbar-color-popover-title">{title}</div>
           <div className="ko-toolbar-color-grid">
@@ -441,7 +444,7 @@ function ColorMenu({
 
 function BlockTypeSelect({
   value,
-  onChange
+  onChange,
 }: {
   value: BlockKind;
   onChange: (kind: BlockKind) => void;
@@ -495,7 +498,7 @@ function ToolbarButton({
   active,
   disabled,
   onClick,
-  children
+  children,
 }: {
   title: string;
   active?: boolean;
@@ -531,4 +534,3 @@ function getActiveAlign(editor: Editor): AlignKind {
   if (editor.isActive({ textAlign: "justify" })) return "justify";
   return "left";
 }
-

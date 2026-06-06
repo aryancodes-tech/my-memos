@@ -7,10 +7,7 @@ import { len } from "@/lib/text";
  * Inserts a tab character at the start of every text block touched by the selection.
  * Returns null when the selection is empty.
  */
-export function indentSelectedText(
-  state: EditorState,
-  tabInsert: string
-): Transaction | null {
+export function indentSelectedText(state: EditorState, tabInsert: string): Transaction | null {
   const { from, to, empty } = state.selection;
   if (empty || from === to) return null;
 
@@ -24,22 +21,15 @@ export function indentSelectedText(
     tr = tr.insertText(tabInsert, pos, pos);
   }
 
-  const shiftFor = (anchor: number) =>
-    positions.filter((pos) => pos <= anchor).length * tabLength;
+  const shiftFor = (anchor: number) => positions.filter((pos) => pos <= anchor).length * tabLength;
 
-  tr.setSelection(
-    TextSelection.create(tr.doc, from + shiftFor(from), to + shiftFor(to))
-  );
+  tr.setSelection(TextSelection.create(tr.doc, from + shiftFor(from), to + shiftFor(to)));
 
   return tr;
 }
 
 /** Collects document positions to indent, from last to first. */
-function collectIndentPositions(
-  doc: ProseMirrorNode,
-  from: number,
-  to: number
-): number[] {
+function collectIndentPositions(doc: ProseMirrorNode, from: number, to: number): number[] {
   const positions: number[] = [];
   let isFirstBlock = true;
 
@@ -61,4 +51,3 @@ function collectIndentPositions(
 
   return [...new Set(positions)].sort((a, b) => b - a);
 }
-

@@ -2,7 +2,7 @@ import { useStore } from "@/store/useStore";
 import {
   BUILT_IN_THEME_OPTIONS,
   BUILT_IN_THEME_SWATCHES,
-  THEME_MENU_MIN_WIDTH_PX
+  THEME_MENU_MIN_WIDTH_PX,
 } from "@/lib/constants";
 import { getThemeLabel, getThemeSwatchColors, toCustomThemeName } from "@/lib/themes";
 import type { CustomThemeColors, ThemeName } from "@/storage/types";
@@ -33,22 +33,14 @@ interface ThemeOptionRowProps {
 }
 
 /** Single selectable theme row in the picker menu. */
-function ThemeOptionRow({
-  label,
-  colors,
-  active,
-  onSelect,
-  onDelete
-}: ThemeOptionRowProps) {
+function ThemeOptionRow({ label, colors, active, onSelect, onDelete }: ThemeOptionRowProps) {
   return (
     <li role="option" aria-selected={active}>
       <div className={`ko-theme-option ${active ? "is-active" : ""}`}>
         <button type="button" className="ko-theme-option-main" onClick={onSelect}>
           <ThemeSwatch colors={colors} />
           <span className="ko-theme-option-label">{label}</span>
-          {active && (
-            <Check size={14} strokeWidth={2} className="ko-theme-option-check" />
-          )}
+          {active && <Check size={14} strokeWidth={2} className="ko-theme-option-check" />}
         </button>
         {onDelete && (
           <button
@@ -68,13 +60,7 @@ function ThemeOptionRow({
 
 /** Appearance picker shown in the app header (top-right). */
 export default function ThemeDropdown() {
-  const {
-    theme,
-    customThemes,
-    setTheme,
-    openCustomThemeDialog,
-    removeCustomTheme
-  } = useStore();
+  const { theme, customThemes, setTheme, openCustomThemeDialog, removeCustomTheme } = useStore();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -123,10 +109,7 @@ export default function ThemeDropdown() {
       </button>
 
       {open && (
-        <div
-          className="ko-theme-panel"
-          style={{ minWidth: THEME_MENU_MIN_WIDTH_PX }}
-        >
+        <div className="ko-theme-panel" style={{ minWidth: THEME_MENU_MIN_WIDTH_PX }}>
           <div className="ko-theme-panel-section">Built-in</div>
           <ul className="ko-theme-menu" role="listbox" aria-label="Built-in themes">
             {BUILT_IN_THEME_OPTIONS.map((option) => (

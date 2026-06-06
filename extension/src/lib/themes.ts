@@ -2,15 +2,10 @@ import {
   BUILT_IN_THEME_OPTIONS,
   BUILT_IN_THEME_SWATCHES,
   CUSTOM_THEME_ID_PREFIX,
-  DEFAULT_THEME
+  DEFAULT_THEME,
 } from "@/lib/constants";
 import { len } from "@/lib/text";
-import type {
-  BuiltInThemeName,
-  CustomTheme,
-  CustomThemeColors,
-  ThemeName
-} from "@/storage/types";
+import type { BuiltInThemeName, CustomTheme, CustomThemeColors, ThemeName } from "@/storage/types";
 
 /** CSS variable names applied to the document root for theming. */
 export const THEME_CSS_VARS = [
@@ -20,7 +15,7 @@ export const THEME_CSS_VARS = [
   "--ko-border",
   "--ko-text",
   "--ko-text-muted",
-  "--ko-accent"
+  "--ko-accent",
 ] as const;
 
 export type ThemeCssVar = (typeof THEME_CSS_VARS)[number];
@@ -63,7 +58,7 @@ export function getThemeLabel(theme: ThemeName, customThemes: CustomTheme[]): st
 /** Returns swatch colors for built-in or custom themes. */
 export function getThemeSwatchColors(
   theme: ThemeName,
-  customThemes: CustomTheme[]
+  customThemes: CustomTheme[],
 ): CustomThemeColors {
   if (isBuiltInTheme(theme)) {
     return BUILT_IN_THEME_SWATCHES[theme];
@@ -81,14 +76,14 @@ function parseHex(hex: string): { r: number; g: number; b: number } | null {
     return {
       r: parseInt(normalized[0] + normalized[0], 16),
       g: parseInt(normalized[1] + normalized[1], 16),
-      b: parseInt(normalized[2] + normalized[2], 16)
+      b: parseInt(normalized[2] + normalized[2], 16),
     };
   }
   if (len(normalized) === 6) {
     return {
       r: parseInt(normalized.slice(0, 2), 16),
       g: parseInt(normalized.slice(2, 4), 16),
-      b: parseInt(normalized.slice(4, 6), 16)
+      b: parseInt(normalized.slice(4, 6), 16),
     };
   }
   return null;
@@ -97,7 +92,11 @@ function parseHex(hex: string): { r: number; g: number; b: number } | null {
 /** Converts RGB channels to a hex color string. */
 function toHex(r: number, g: number, b: number): string {
   return `#${[r, g, b]
-    .map((channel) => Math.max(0, Math.min(255, Math.round(channel))).toString(16).padStart(2, "0"))
+    .map((channel) =>
+      Math.max(0, Math.min(255, Math.round(channel)))
+        .toString(16)
+        .padStart(2, "0"),
+    )
     .join("")}`;
 }
 
@@ -106,11 +105,7 @@ function mixHex(first: string, second: string, weight: number): string {
   const a = parseHex(first);
   const b = parseHex(second);
   if (!a || !b) return second;
-  return toHex(
-    a.r + (b.r - a.r) * weight,
-    a.g + (b.g - a.g) * weight,
-    a.b + (b.b - a.b) * weight
-  );
+  return toHex(a.r + (b.r - a.r) * weight, a.g + (b.g - a.g) * weight, a.b + (b.b - a.b) * weight);
 }
 
 /** Lightens or darkens a hex color by a signed amount. */
@@ -122,7 +117,7 @@ function shiftHex(hex: string, amount: number): string {
   return toHex(
     rgb.r + (factor - rgb.r) * strength,
     rgb.g + (factor - rgb.g) * strength,
-    rgb.b + (factor - rgb.b) * strength
+    rgb.b + (factor - rgb.b) * strength,
   );
 }
 
@@ -152,7 +147,7 @@ export function deriveThemeTokens(colors: CustomThemeColors): ThemeTokenMap {
     "--ko-border": shiftHex(colors.bg, dark ? 0.16 : -0.1),
     "--ko-text": colors.text,
     "--ko-text-muted": mixHex(colors.text, colors.bg, 0.45),
-    "--ko-accent": colors.accent
+    "--ko-accent": colors.accent,
   };
 }
 
