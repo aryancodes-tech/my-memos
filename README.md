@@ -153,7 +153,7 @@ The two apps are intentionally separate today - no shared workspace packages yet
 
 | Requirement       | Version / notes                                       |
 | ----------------- | ----------------------------------------------------- |
-| **Node.js**       | `>= 24.16.0` (see [`.nvmrc`](.nvmrc))                 |
+| **Node.js**       | `>= 20.19.0` (recommended: [`.nvmrc`](.nvmrc) → `24.16.0`) |
 | **npm**           | Canonical package manager for this repo               |
 | **Google Chrome** | For loading the unpacked extension during development |
 
