@@ -5,7 +5,7 @@ import {
   PAGE_CONTENT_PADDING_X_PX,
   PAGE_CONTENT_PADDING_TOP_PX,
 } from "@/lib/constants";
-import { FileText, Folder, Plus } from "lucide-react";
+import { FileText, Folder, ChevronRight, Plus } from "lucide-react";
 import { useMemo } from "react";
 import type { Page } from "@/storage/types";
 
@@ -55,14 +55,19 @@ export default function Dashboard() {
       />
 
       <section className="ko-dashboard-recent" aria-labelledby="ko-dashboard-recent-title">
-        <h2 id="ko-dashboard-recent-title" className="ko-dashboard-recent-title">
-          Recent pages
-        </h2>
+        <div className="ko-dashboard-recent-header">
+          <h2 id="ko-dashboard-recent-title" className="ko-dashboard-recent-title">
+            Recent
+          </h2>
+          {recent.length > 0 && (
+            <span className="ko-dashboard-recent-count">{recent.length}</span>
+          )}
+        </div>
 
         {recent.length === 0 ? (
-          <p className="ko-dashboard-recent-empty">
-            Pages you open or edit will show up here, newest first.
-          </p>
+          <div className="ko-dashboard-recent-empty">
+            <p>Pages you open or edit will show up here, newest first.</p>
+          </div>
         ) : (
           <ul className="ko-dashboard-recent-list">
             {recent.map((page) => (
@@ -123,11 +128,14 @@ function RecentPageRow({ page, onOpen }: RecentPageRowProps) {
   return (
     <li>
       <button type="button" className="ko-dashboard-recent-row" onClick={onOpen}>
-        <PageIcon kind="page" size={18} />
+        <span className="ko-dashboard-recent-row-icon" aria-hidden>
+          <PageIcon kind={page.kind} size={16} />
+        </span>
         <span className="ko-dashboard-recent-row-title">{page.title || "Untitled"}</span>
         <span className="ko-dashboard-recent-row-meta">
           {formatRecentActivity(page.updated_at)}
         </span>
+        <ChevronRight size={15} strokeWidth={1.75} className="ko-dashboard-recent-row-chevron" />
       </button>
     </li>
   );
