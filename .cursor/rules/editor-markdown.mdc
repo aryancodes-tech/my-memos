@@ -1,0 +1,66 @@
+---
+description: Tiptap editor, slash menu, markdown paste, and task list behavior
+globs: extension/src/editor/**/*
+alwaysApply: false
+---
+
+# Editor & Markdown Rules
+
+## Stack
+
+- **Tiptap 2** + ProseMirror
+- **lowlight** for code blocks
+- **tiptap-markdown** for paste serialization (v0.8.x — peer compatibility)
+- Custom extensions in `extension/src/editor/`
+
+## Save path
+
+```
+Editor onUpdate → debounce (EDITOR_SAVE_DEBOUNCE_MS)
+  → store updatePage → encode doc → IndexedDB
+```
+
+Never bypass store to write IDB directly from editor components.
+
+## Markdown paste
+
+Key modules:
+
+- `markdownPaste.ts` — detection + conversion
+- `taskListMarkdown.ts` — `- [x]` input rules
+- `HighlightWithMarkdown.ts` — highlight syntax
+- `markdownPaste.test.ts` — regression tests
+
+### Task list vs bullet list
+
+`- [ ]` and `- [x]` must become **task items**, not bullet lists.
+
+- Bullet input rule must **skip** lines matching `- [`
+- Task item rule handles `- [x] ` explicitly
+- Order of input rules matters — task before bullet
+
+### Supported paste features
+
+Headings, GFM task lists, tables, links, images, highlights, code fences.
+
+## Slash menu
+
+- `SlashMenu.tsx` — command palette inside editor
+- Add commands via existing extension patterns
+- Keyboard-first UX — preserve ⌘/Ctrl bindings
+
+## Toolbar
+
+- `Toolbar.tsx` — inline formatting
+- Color presets from `constants.ts` (`TEXT_COLOR_PRESETS`, etc.)
+
+## Adding editor features
+
+1. Check if Tiptap extension already exists in `package.json`
+2. Register in editor setup file alongside peers
+3. Add markdown paste handling if feature has text syntax
+4. Add test case in `markdownPaste.test.ts` for paste scenarios
+
+## Manual verification
+
+Paste from external sources (Notion export, GitHub markdown, VS Code) after changes.

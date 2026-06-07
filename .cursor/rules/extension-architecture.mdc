@@ -1,0 +1,77 @@
+---
+description: Chrome extension and web demo — Zustand, views, platform, components
+globs: extension/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Extension Architecture
+
+## Entry points
+
+| Mode | HTML | Vite config | Output |
+|------|------|-------------|--------|
+| Chrome MV3 | `newtab.html` | `vite.config.ts` | `extension/dist/` |
+| Web demo | `index.html` | `vite.web.config.ts` | `public/demo/` |
+
+Manifest source of truth: `extension/manifest.config.ts` (CRXJS).
+
+## Platform branching
+
+```typescript
+// extension/src/lib/platform.ts
+isExtensionContext()  // chrome.runtime?.id
+isWebAppContext()     // standalone /demo SPA
+```
+
+- **Extension:** `chrome.storage.local` for settings
+- **Web:** `localStorage` for settings
+- **Both:** IndexedDB for pages (separate origins → separate data)
+
+Web-only components: `WebInstallBanner`, `MobileExperienceNotice` (viewport < 768px).
+
+## Zustand store (`useStore.ts`)
+
+Single store owns pages, view routing, theme, dialogs, sidebar, search.
+
+| Action category | Examples |
+|-----------------|----------|
+| Page CRUD | `createPage`, `updatePage`, `requestDelete` |
+| Workspace | `moveWorkspaceItem`, `createDirectory` |
+| Navigation | `openPage`, `openDashboard` |
+| Theme | `setTheme`, custom theme CRUD |
+
+Use exported **selectors** for derived lists — do not rebuild tree logic in components.
+
+## Views
+
+- `Dashboard` — recent pages, quick create
+- `PageView` — title + editor, debounced save
+
+View type: `{ kind: "dashboard" }` | `{ kind: "page"; id: string }`
+
+## Components conventions
+
+- `extension/src/components/Sidebar.tsx` — workspace tree, DnD, folders
+- `SearchPalette.tsx` — ⌘K, FlexSearch (ephemeral index)
+- `ThemeDropdown.tsx` — built-in + custom themes
+- Dialogs — delete confirm, etc.
+
+CSS: `ko-` classes, theme via `data-theme` + `--ko-*` variables from `extension/src/styles/`.
+
+## Keyboard shortcuts
+
+Defined in `App.tsx` — check existing bindings before adding new global listeners.
+
+## Build guards
+
+- `guard-production-build.mjs` — blocks prod build during dev
+- `clean-dev-artifacts.mjs` — clears stale `dist/`
+- Use `npm run dev:reset --prefix extension` if HMR breaks
+
+## Tests
+
+Co-located `*.test.ts` under `extension/src/`. Run:
+
+```bash
+npm run test -- extension/src/store/
+```

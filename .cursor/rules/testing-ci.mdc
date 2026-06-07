@@ -1,0 +1,92 @@
+---
+description: Vitest, CI pipeline, lint, and release packaging expectations
+globs: "{**/*.test.ts,**/*.test.tsx,.github/**/*.yml,vitest.config.ts,eslint.config.js}"
+alwaysApply: false
+---
+
+# Testing & CI Rules
+
+## CI pipeline (`.github/workflows/ci.yml`)
+
+Mirrored locally by:
+
+```bash
+npm run ci
+```
+
+Steps in order:
+
+1. `npm ci` (root + extension)
+2. `npm run lint`
+3. `npm run format:check`
+4. `npm run typecheck`
+5. `npm run test`
+6. `npm run build:extension`
+7. `npm run build:web`
+
+**All must pass** before merge.
+
+## Test stack
+
+- **Vitest 3** + **happy-dom**
+- Config: `vitest.config.ts` (root)
+- Tests live only under `extension/src/**` today
+
+## When to add tests
+
+| Change | Test |
+|--------|------|
+| `codec.ts` | `codec.test.ts` |
+| `db.ts` | `db.test.ts` |
+| `workspace-tree.ts` | `workspace-tree.test.ts` |
+| `useStore` logic | `useStore.test.ts` |
+| Markdown paste | `markdownPaste.test.ts` |
+| `text.ts` helpers | `text.test.ts` |
+
+Co-locate as `*.test.ts` next to source.
+
+## Running tests
+
+```bash
+npm run test                              # all
+npm run test:watch                        # watch mode
+npm run test -- extension/src/editor/     # scoped
+```
+
+## Lint & format
+
+```bash
+npm run lint
+npm run format        # write
+npm run format:check  # CI
+```
+
+ESLint 9 flat config. Unused vars → prefix `_`.
+
+## Typecheck
+
+```bash
+npm run typecheck
+# root tsconfig + extension tsconfig
+```
+
+## Extension packaging
+
+```bash
+npm run package:extension
+# → public/mymemos-extension.zip
+```
+
+Required for landing download button. Warn in UI if missing.
+
+## Build guards
+
+- Do not run `build:extension` during `npm run dev` — kills HMR
+- `npm run build:web` builds demo + landing — required for deploy
+
+## PR expectations
+
+- Summary of why (not just what)
+- Test plan checklist
+- Screenshots for UI changes
+- Note storage/schema impact if applicable

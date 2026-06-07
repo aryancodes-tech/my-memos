@@ -1,6 +1,5 @@
 # MyMemos
 
-[![CI](https://github.com/aryancodes-tech/my-memos/actions/workflows/ci.yml/badge.svg)](https://github.com/aryancodes-tech/my-memos/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **A Notion-style notes app that replaces your Chrome New Tab.** Local-first, offline, no account.
@@ -13,6 +12,8 @@ Same React UI in two places:
 | **Live demo** | `/demo/` on the landing site | IndexedDB + `localStorage` |
 
 Extension data and demo data are separate (different origins).
+
+**Contributing / AI agents:** See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`AGENTS.md`](AGENTS.md) for architecture invariants, scoped Cursor rules (`.cursor/rules/`), and skill routing (`.cursor/SKILLS.md`).
 
 ---
 

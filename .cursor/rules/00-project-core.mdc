@@ -1,0 +1,55 @@
+---
+description: Core MyMemos invariants — surfaces, artifacts, constants, and scope discipline
+alwaysApply: true
+---
+
+# MyMemos Core Rules
+
+## Product identity
+
+- **Product name:** MyMemos (`mymemos` in package.json)
+- **CSS prefix** `ko-` is legacy but still canonical for extension UI
+
+## Three surfaces — never conflate
+
+| Surface | Path | React | Constants file |
+|---------|------|-------|----------------|
+| Landing | `src/` | 19 | `src/lib/constants.ts` |
+| Extension | `extension/src/` | 18 | `extension/src/lib/constants.ts` |
+| Web demo | `extension/src/` (web build) | 18 | extension constants |
+
+`@/` alias points to different roots per package. Check `tsconfig.json` before importing.
+
+## Generated artifacts — do not edit
+
+- `public/demo/**`
+- `public/mymemos-extension.zip`
+- `src/routeTree.gen.ts`
+- `extension/dist/**` (dev build output)
+
+Regenerate via `npm run build:web`, `npm run package:extension`, or `npm run dev`.
+
+## Constants & literals
+
+- Hardcoded values → named export in the correct `constants.ts` with JSDoc
+- Extension empty-string checks → `len(value) === 0` from `@/lib/text`
+- Landing and extension constants are **intentionally separate** — do not create shared package without explicit request
+
+## Change discipline
+
+- Smallest correct diff; no drive-by refactors
+- Match sibling file patterns (imports, error handling, naming)
+- Run `npm run ci` before declaring PR-ready
+- Do not commit unless user explicitly asks
+
+## Dev server selection
+
+- Extension UI → `npm run dev` (never `build:extension` during active dev)
+- Landing + demo → `npm run dev:web`
+- Demo only → `npm run dev:app`
+
+## When stuck
+
+1. Read `AGENTS.md` decision trees (§4)
+2. Route via `.cursor/SKILLS.md`
+3. Grep for an existing pattern before inventing one

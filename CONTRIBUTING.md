@@ -82,9 +82,22 @@ Individual commands:
 | `npm run build:extension` | Production extension build    |
 | `npm run build:web`       | Production landing site build |
 
+## AI-assisted development
+
+This repo includes structured agent documentation for Cursor and other AI coding tools:
+
+| Doc | Purpose |
+| --- | ------- |
+| [`AGENTS.md`](AGENTS.md) | Architecture invariants, decision trees, verification contracts |
+| [`.cursor/SKILLS.md`](.cursor/SKILLS.md) | Task → skill routing (extension, storage, editor, landing, CI) |
+| [`.cursor/rules/`](.cursor/rules/) | Scoped rules injected by file type (`.mdc`) |
+| [`.cursor/README.md`](.cursor/README.md) | Index of the above |
+
+Human contributors benefit from the same docs — especially `AGENTS.md` §3 (storage invariants) before your first storage or editor PR.
+
 ## Code conventions
 
-- **Constants** - put magic values in `extension/src/lib/constants.ts`
+- **Constants** - put magic values in `extension/src/lib/constants.ts` (landing copy in `src/lib/constants.ts`)
 - **Empty strings** - use `len(value) > 0` from `extension/src/lib/text.ts`
 - **Storage** - persist block JSON only; never store rendered HTML or markdown
 - **Types** - keep domain models in `extension/src/storage/types.ts`
