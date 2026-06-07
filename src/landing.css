@@ -1003,19 +1003,36 @@
 }
 
 @media (max-width: 768px) {
+  .landing-video-runway,
   .landing-video-runway--mobile {
-    height: auto;
+    height: auto !important;
   }
 
+  .landing-video-runway > .sticky {
+    position: relative !important;
+    height: auto !important;
+    min-height: unset !important;
+    overflow: visible !important;
+  }
+
+  .landing-video-backdrop,
+  .landing-video-frame,
+  .landing-video-hold-hint,
+  .landing-video-scroll-hint {
+    display: none !important;
+  }
+
+  .landing-video-runway .landing-hero-overlay,
   .landing-video-runway--mobile .landing-hero-overlay {
-    position: relative;
-    height: auto;
-    opacity: 1;
-    visibility: visible;
+    position: relative !important;
+    height: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
+  .landing-video-runway .landing-hero-shell,
   .landing-video-runway--mobile .landing-hero-shell {
-    height: auto;
+    height: auto !important;
     padding-bottom: 2rem;
   }
 

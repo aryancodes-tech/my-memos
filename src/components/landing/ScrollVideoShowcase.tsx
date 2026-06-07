@@ -121,7 +121,10 @@ function useScrollProgress(containerRef: React.RefObject<HTMLElement | null>) {
  * Tracks whether the viewport is below the launch video hide breakpoint.
  */
 function useIsMobileViewport(maxWidthPx: number) {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia(`(max-width: ${maxWidthPx}px)`).matches;
+  });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(`(max-width: ${maxWidthPx}px)`);
