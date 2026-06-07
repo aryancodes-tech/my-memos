@@ -7,6 +7,7 @@ import {
   LANDING_LAUNCH_VIDEO_INITIAL_HEIGHT_PERCENT,
   LANDING_LAUNCH_VIDEO_INITIAL_TOP_PERCENT,
   LANDING_LAUNCH_VIDEO_INITIAL_WIDTH_PERCENT,
+  LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX,
   LANDING_LAUNCH_VIDEO_POSTER,
   LANDING_LAUNCH_VIDEO_SRC,
   LANDING_VIDEO_EXPAND_END,
@@ -117,6 +118,23 @@ function useScrollProgress(containerRef: React.RefObject<HTMLElement | null>) {
 }
 
 /**
+ * Tracks whether the viewport is below the launch video hide breakpoint.
+ */
+function useIsMobileViewport(maxWidthPx: number) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(`(max-width: ${maxWidthPx}px)`);
+    const update = () => setIsMobile(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, [maxWidthPx]);
+
+  return isMobile;
+}
+
+/**
  * Sticky scroll section: launch video starts in the bottom half of the viewport,
  * expands to fullscreen, then shrinks to the top half as the user keeps scrolling.
  */
@@ -127,6 +145,7 @@ export function ScrollVideoShowcase({
   posterSrc = LANDING_LAUNCH_VIDEO_POSTER,
   label = "Product launch video",
 }: ScrollVideoShowcaseProps) {
+  const isMobileViewport = useIsMobileViewport(LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX);
   const runwayRef = useRef<HTMLElement>(null);
   const progress = useScrollProgress(runwayRef);
   const frameStyle = getVideoFrameStyle(progress);
@@ -142,10 +161,29 @@ export function ScrollVideoShowcase({
   }, [isFullscreen, onVideoFullscreenChange]);
 
   useEffect(() => {
+    if (isMobileViewport) {
+      onVideoFullscreenChange?.(false);
+    }
+  }, [isMobileViewport, onVideoFullscreenChange]);
+
+  useEffect(() => {
     return () => {
       onVideoFullscreenChange?.(false);
     };
   }, [onVideoFullscreenChange]);
+
+  if (isMobileViewport) {
+    return (
+      <section
+        className="landing-video-runway landing-video-runway--mobile relative"
+        aria-label="Product introduction"
+      >
+        <div className="landing-hero-overlay pointer-events-auto relative inset-x-0 top-0 z-10">
+          <div className="landing-hero-shell">{hero}</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

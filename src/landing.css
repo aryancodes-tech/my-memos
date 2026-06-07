@@ -1002,6 +1002,28 @@
   color: var(--ko-text-muted);
 }
 
+@media (max-width: 768px) {
+  .landing-video-runway--mobile {
+    height: auto;
+  }
+
+  .landing-video-runway--mobile .landing-hero-overlay {
+    position: relative;
+    height: auto;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .landing-video-runway--mobile .landing-hero-shell {
+    height: auto;
+    padding-bottom: 2rem;
+  }
+
+  .landing-main {
+    margin-top: 0 !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .landing-video-runway {
     height: auto !important;

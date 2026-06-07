@@ -114,3 +114,6 @@ export const LANDING_LAUNCH_VIDEO_CHROME_LABEL = "My-Memos - New Tab";
 
 /** Fixed height of the caption strip rendered below the launch video at peak scroll. */
 export const LANDING_LAUNCH_VIDEO_CAPTION_HEIGHT_PX = 44;
+
+/** Viewport width below which the landing launch video scroll section is hidden. */
+export const LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX = 768;

@@ -167,6 +167,22 @@ export const COLLAPSED_DIRS_SETTING = "collapsedDirs";
 /** localStorage key for dismissing the standalone web app install banner. */
 export const WEB_INSTALL_BANNER_DISMISS_KEY = "koWebInstallBannerDismissed";
 
+/** Viewport width below which the live demo shows a mobile experience notice. */
+export const MOBILE_EXPERIENCE_MAX_WIDTH_PX = 768;
+
+/** Title for the mobile experience notice on the live demo page. */
+export const MOBILE_EXPERIENCE_NOTICE_TITLE = "Mobile experience notice";
+
+/** Body copy explaining the demo works best on larger screens. */
+export const MOBILE_EXPERIENCE_NOTICE_BODY =
+  "This page is best viewed on a bigger device. For the full MyMemos experience, open the live demo on a desktop or tablet.";
+
+/** CTA label that returns visitors to the marketing home page. */
+export const MOBILE_EXPERIENCE_NOTICE_CTA = "Return to home page";
+
+/** Public path for the marketing home page. */
+export const MARKETING_HOME_PATH = "/";
+
 /** HTML class markdown-it uses for GFM task lists. */
 export const MARKDOWN_TASK_LIST_HTML_CLASS = "contains-task-list";
 
