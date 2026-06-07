@@ -1,4 +1,11 @@
-import { DEMO_PATH, PRODUCT_NAME } from "@/lib/constants";
+import {
+  DEMO_PATH,
+  LANDING_HERO_BADGE,
+  LANDING_HERO_PILLS,
+  LANDING_HERO_SUBTITLE,
+  LANDING_HERO_TITLE_LINE_ONE,
+  LANDING_HERO_TITLE_LINE_TWO,
+} from "@/lib/constants";
 
 type LandingHeroProps = {
   onDownload: () => void;
@@ -6,30 +13,25 @@ type LandingHeroProps = {
   downloadError: string | null;
 };
 
-const HERO_PILLS = ["Local-first", "Offline-only", "Zero backend", "7 themes", "⌘K search"];
-
 /** Hero copy and CTAs rendered over the scroll video section. */
 export function LandingHero({ onDownload, isDownloading, downloadError }: LandingHeroProps) {
   return (
     <div className="landing-hero">
       <div className="landing-hero-badge">
         <span className="landing-hero-badge-dot" aria-hidden />
-        Chrome Extension · Manifest V3
+        {LANDING_HERO_BADGE}
       </div>
 
       <h1 className="landing-hero-title">
-        Your knowledge,
+        {LANDING_HERO_TITLE_LINE_ONE}
         <br />
-        on every new tab.
+        {LANDING_HERO_TITLE_LINE_TWO}
       </h1>
 
-      <p className="landing-hero-subtitle">
-        {PRODUCT_NAME} is a Notion-inspired workspace for learners — nested pages, slash
-        commands, themes, and instant search. Everything stays on your device.
-      </p>
+      <p className="landing-hero-subtitle">{LANDING_HERO_SUBTITLE}</p>
 
       <div className="landing-hero-pills" role="list" aria-label="Product highlights">
-        {HERO_PILLS.map((pill) => (
+        {LANDING_HERO_PILLS.map((pill) => (
           <span key={pill} className="landing-hero-pill" role="listitem">
             {pill}
           </span>
@@ -44,7 +46,7 @@ export function LandingHero({ onDownload, isDownloading, downloadError }: Landin
           className="landing-btn landing-btn-primary landing-btn-lg"
         >
           <DownloadIcon />
-          {isDownloading ? "Downloading…" : "Download extension"}
+          {isDownloading ? "Downloading…" : "Replace your New Tab"}
         </button>
         <a href={DEMO_PATH} className="landing-btn landing-btn-ghost landing-btn-lg">
           Try live demo
@@ -57,11 +59,6 @@ export function LandingHero({ onDownload, isDownloading, downloadError }: Landin
           {downloadError}
         </p>
       )}
-
-      <div className="landing-scroll-cue" aria-hidden>
-        <span>Scroll to watch</span>
-        <span className="landing-scroll-cue-line" />
-      </div>
     </div>
   );
 }

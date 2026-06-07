@@ -6,16 +6,25 @@ import { LandingGetStarted } from "@/components/landing/LandingGetStarted";
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingNav } from "@/components/landing/LandingNav";
 import { ScrollVideoShowcase } from "@/components/landing/ScrollVideoShowcase";
-import { EXTENSION_ZIP_FILENAME } from "@/lib/constants";
+import {
+  EXTENSION_ZIP_FILENAME,
+  LANDING_HERO_SHELL_PADDING_TOP_REM,
+  LANDING_HERO_TITLE_LINE_ONE,
+  LANDING_HERO_TITLE_LINE_TWO,
+  LANDING_MAIN_OVERLAP_VH,
+  LANDING_META_DESCRIPTION,
+  PRODUCT_NAME,
+} from "@/lib/constants";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MyMemos — Your knowledge, on every new tab" },
+      {
+        title: `${PRODUCT_NAME} - ${LANDING_HERO_TITLE_LINE_ONE} ${LANDING_HERO_TITLE_LINE_TWO}`,
+      },
       {
         name: "description",
-        content:
-          "Notion-inspired personal knowledge management, study tracker and learning dashboard that replaces your New Tab page.",
+        content: LANDING_META_DESCRIPTION,
       },
     ],
   }),
@@ -25,6 +34,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [navHidden, setNavHidden] = useState(false);
 
   const download = async () => {
     setDownloadError(null);
@@ -47,10 +57,16 @@ function Index() {
   };
 
   return (
-    <div className="landing-page">
-      <LandingNav onDownload={download} isDownloading={isDownloading} />
+    <div
+      className="landing-page"
+      style={{
+        ["--landing-hero-padding-top" as string]: `${LANDING_HERO_SHELL_PADDING_TOP_REM}rem`,
+      }}
+    >
+      <LandingNav hidden={navHidden} />
 
       <ScrollVideoShowcase
+        onVideoFullscreenChange={setNavHidden}
         hero={
           <LandingHero
             onDownload={download}
@@ -60,7 +76,10 @@ function Index() {
         }
       />
 
-      <main className="landing-main">
+      <main
+        className="landing-main"
+        style={{ marginTop: `-${LANDING_MAIN_OVERLAP_VH}vh` }}
+      >
         <FeatureBentoGrid />
         <LandingGetStarted onDownload={download} isDownloading={isDownloading} />
       </main>

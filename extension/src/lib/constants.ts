@@ -65,8 +65,17 @@ export const THEME_MENU_MIN_WIDTH_PX = 248;
 /** Label shown beside Search for the global search shortcut. */
 export const SEARCH_SHORTCUT_LABEL = "⌘ K";
 
-/** Maximum number of pages shown in the Recent sidebar group. */
+/** Maximum number of pages kept in the Recent sidebar group. */
 export const RECENT_PAGE_LIMIT = 8;
+
+/** Number of recent pages shown before the sidebar expands. */
+export const SIDEBAR_RECENT_VISIBLE_LIMIT = 3;
+
+/** Label for expanding the Recent sidebar list. */
+export const SIDEBAR_RECENT_SHOW_MORE_LABEL = "Show more";
+
+/** Label for collapsing the Recent sidebar list. */
+export const SIDEBAR_RECENT_SHOW_LESS_LABEL = "Show less";
 
 /** Maximum content width for page and dashboard views in pixels. */
 export const CONTENT_MAX_WIDTH_PX = 900;
@@ -157,3 +166,36 @@ export const COLLAPSED_DIRS_SETTING = "collapsedDirs";
 
 /** localStorage key for dismissing the standalone web app install banner. */
 export const WEB_INSTALL_BANNER_DISMISS_KEY = "koWebInstallBannerDismissed";
+
+/** HTML class markdown-it uses for GFM task lists. */
+export const MARKDOWN_TASK_LIST_HTML_CLASS = "contains-task-list";
+
+/** Input rule for GFM task items: `- [x] `, `* [ ] `, etc. */
+export const MARKDOWN_TASK_ITEM_INPUT_REGEX = new RegExp(
+  String.raw`^\s*([-+*])\s+\[([ xX])?\]\s$`,
+);
+
+/**
+ * Bullet list input rule that ignores GFM task checkbox syntax (`- [x]`).
+ * Skips any line where the marker is followed by `[`.
+ */
+export const MARKDOWN_BULLET_LIST_INPUT_REGEX = /^\s*([-+*])\s+(?!\[).+$/;
+
+/** Regex patterns used to detect markdown syntax in pasted plain text. */
+export const MARKDOWN_DETECTION_PATTERNS: RegExp[] = [
+  /^#{1,6}\s/m,
+  /^\s*[-*+]\s+\[[ xX]\]/m,
+  /^\s*[-*+]\s+\S/m,
+  /^\s*\d+\.\s/m,
+  /^\s*>/m,
+  /^```/m,
+  /^(?:-{3,}|\*{3,}|_{3,})\s*$/m,
+  /!\[[^\]]*\]\([^)]+\)/,
+  /\[[^\]]+\]\([^)]+\)/,
+  /\*\*[^*]+\*\*/,
+  /__[^_]+__/,
+  /~~[^~]+~~/,
+  /==[^=]+==/,
+  /\|.+\|/,
+  /`[^`]+`/,
+];

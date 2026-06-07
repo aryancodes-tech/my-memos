@@ -12,6 +12,9 @@ import {
   SIDEBAR_MENU_MIN_WIDTH_PX,
   SIDEBAR_WIDTH_PX,
   SEARCH_SHORTCUT_LABEL,
+  SIDEBAR_RECENT_SHOW_LESS_LABEL,
+  SIDEBAR_RECENT_SHOW_MORE_LABEL,
+  SIDEBAR_RECENT_VISIBLE_LIMIT,
   WORKSPACE_DRAG_MIME,
   WORKSPACE_SECTION,
 } from "@/lib/constants";
@@ -30,6 +33,7 @@ import {
   Folder,
   LayoutDashboard,
   MoreHorizontal,
+  Pencil,
   Plus,
   Search,
   Star,
@@ -137,13 +141,7 @@ export default function Sidebar() {
           )}
         </Section>
 
-        <Section title="Recent">
-          {recent.length === 0 ? (
-            <p className="ko-sidebar-empty">Recently opened pages appear here.</p>
-          ) : (
-            recent.map((page) => <PageRow key={page.id} page={page} menuVariant="recent" />)
-          )}
-        </Section>
+        <RecentSection pages={recent} />
 
         <WorkspaceSection action={<WorkspaceAddButton />}>
           {workspaceRoots.map((item) => (
@@ -215,6 +213,36 @@ function Section({
       </div>
       <div className="space-y-0.5">{children}</div>
     </div>
+  );
+}
+
+/** Recent pages with a collapsed default view and optional show-more control. */
+function RecentSection({ pages }: { pages: Page[] }) {
+  const [expanded, setExpanded] = useState(false);
+  const hasOverflow = pages.length > SIDEBAR_RECENT_VISIBLE_LIMIT;
+  const visiblePages = expanded ? pages : pages.slice(0, SIDEBAR_RECENT_VISIBLE_LIMIT);
+
+  return (
+    <Section title="Recent">
+      {pages.length === 0 ? (
+        <p className="ko-sidebar-empty">Recently opened pages appear here.</p>
+      ) : (
+        <>
+          {visiblePages.map((page) => (
+            <PageRow key={page.id} page={page} menuVariant="recent" />
+          ))}
+          {hasOverflow && (
+            <button
+              type="button"
+              className="ko-sidebar-show-more"
+              onClick={() => setExpanded((value) => !value)}
+            >
+              {expanded ? SIDEBAR_RECENT_SHOW_LESS_LABEL : SIDEBAR_RECENT_SHOW_MORE_LABEL}
+            </button>
+          )}
+        </>
+      )}
+    </Section>
   );
 }
 
@@ -464,6 +492,7 @@ function DirectoryRow({
           {menuOpen && (
             <div className="ko-sidebar-menu">
               <MenuItem
+                icon={<Pencil size={14} strokeWidth={1.75} />}
                 label="Rename"
                 onClick={() => {
                   setEditing(true);

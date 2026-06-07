@@ -449,7 +449,7 @@ function selectRecentSorted(pages: Page[]): Page[] {
   return [...selectSearchablePages(pages)].sort((a, b) => b.updated_at - a.updated_at);
 }
 
-/** Recent pages for the sidebar, capped at RECENT_PAGE_LIMIT. */
+/** Recent pages for the sidebar, capped at RECENT_PAGE_LIMIT (UI may show fewer until expanded). */
 export function selectRecentPages(pages: Page[]): Page[] {
   return selectRecentSorted(pages).slice(0, RECENT_PAGE_LIMIT);
 }
