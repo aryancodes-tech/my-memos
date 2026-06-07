@@ -1,4 +1,4 @@
-# MyMemos — Extension & shared app
+# MyMemos - Extension & shared app
 
 The core product lives here: React UI, editor, storage, and Chrome MV3 packaging. The same `src/` code also builds the **live demo** at `/demo/` on the landing site.
 
@@ -55,15 +55,15 @@ flowchart TB
 
 ### Storage design principles
 
-1. **Block JSON only** — every page is a Tiptap/ProseMirror `doc`. Never persist rendered HTML or duplicate markdown.
-2. **Search index is ephemeral** — FlexSearch is rebuilt in memory on demand, never written to disk.
-3. **Two-tier storage** — heavy page data in IndexedDB; light settings (theme, last view, custom themes, collapsed folders) in `chrome.storage.local` or `localStorage` on web.
+1. **Block JSON only** - every page is a Tiptap/ProseMirror `doc`. Never persist rendered HTML or duplicate markdown.
+2. **Search index is ephemeral** - FlexSearch is rebuilt in memory on demand, never written to disk.
+3. **Two-tier storage** - heavy page data in IndexedDB; light settings (theme, last view, custom themes, collapsed folders) in `chrome.storage.local` or `localStorage` on web.
 
 ### Implementation notes
 
-- **Manifest V3** — service worker (`background.js`), `chrome_url_overrides.newtab` → `newtab.html`.
-- **LZString compression** — documents are compacted before IndexedDB write; schema versioned via `DB_VERSION` for non-destructive upgrades.
-- **Themes** — 7 built-in + custom; switched via `data-theme` on `<html>` and CSS variables.
+- **Manifest V3** - service worker (`background.js`), `chrome_url_overrides.newtab` → `newtab.html`.
+- **LZString compression** - documents are compacted before IndexedDB write; schema versioned via `DB_VERSION` for non-destructive upgrades.
+- **Themes** - 7 built-in + custom; switched via `data-theme` on `<html>` and CSS variables.
 
 ### Tech stack (this package)
 
@@ -78,7 +78,7 @@ flowchart TB
 | Search | FlexSearch (in-memory) |
 | Language | TypeScript 5 |
 
-The landing site (`../src/`) is a separate TanStack Start app — React 19, Tailwind 4, Vite 7.
+The landing site (`../src/`) is a separate TanStack Start app - React 19, Tailwind 4, Vite 7.
 
 ---
 
@@ -119,14 +119,14 @@ Chrome setup (one-time):
 
 1. `chrome://extensions` → **Developer mode**
 2. **Load unpacked** → `extension/dist/`
-3. Name must be **MyMemos (Dev)** — open a **new tab**
+3. Name must be **MyMemos (Dev)** - open a **new tab**
 
 | Command | `dist/` output | Extension name |
 | ------- | -------------- | -------------- |
 | `npm run dev` | Dev bundle (HMR via `localhost:5173`) | **MyMemos (Dev)** |
 | `npm run build` | Static production bundle | **MyMemos** |
 
-Do not run `npm run build` during active dev — it replaces the dev bundle. `predev` clears `dist/` and `.vite/` before each dev start.
+Do not run `npm run build` during active dev - it replaces the dev bundle. `predev` clears `dist/` and `.vite/` before each dev start.
 
 **Stuck?** `npm run dev:reset` → reload extension in Chrome → new tab. Verify with `npm run dev:check`. Fallback: `npm run dev:watch` + manual reload in `chrome://extensions`.
 

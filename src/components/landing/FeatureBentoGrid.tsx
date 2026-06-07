@@ -1,4 +1,9 @@
-import { LANDING_FEATURE_CLIP_BASE } from "@/lib/constants";
+import {
+  LANDING_FEATURES_DESC,
+  LANDING_FEATURES_EYEBROW,
+  LANDING_FEATURES_TITLE,
+  LANDING_FEATURE_CLIP_BASE,
+} from "@/lib/constants";
 
 /** Layout span for a single bento grid cell on a 12-column grid. */
 type BentoSpan = {
@@ -22,24 +27,24 @@ type FeatureTile = {
 const FEATURE_TILES: FeatureTile[] = [
   {
     id: "storage",
-    title: "Block-based storage",
-    description: "Tiptap JSON in IndexedDB, LZ-compressed. No duplicate markdown, ever.",
+    title: "Local block storage",
+    description: "Structured notes in your browser—fast, private, and available offline.",
     tag: "Storage",
     clipFilename: "storage.mp4",
     span: { col: 5, row: 2 },
   },
   {
-    id: "workspace",
-    title: "Workspace + sidebar",
-    description: "Favorites, recents, nested pages — all one click away.",
-    tag: "Navigation",
+    id: "new-tab",
+    title: "Replaces your New Tab",
+    description: "Every ⌘T opens your workspace. Capture a thought before it disappears.",
+    tag: "Core",
     clipFilename: "workspace.mp4",
     span: { col: 4, row: 1 },
   },
   {
     id: "themes",
     title: "7 built-in themes",
-    description: "Light, Dark, Midnight, Dracula, Solarized, Forest, Ocean.",
+    description: "Light, Dark, Midnight, Dracula, Solarized, Forest, and Ocean.",
     tag: "Themes",
     clipFilename: "themes.mp4",
     span: { col: 3, row: 1 },
@@ -47,7 +52,7 @@ const FEATURE_TILES: FeatureTile[] = [
   {
     id: "editor",
     title: "Notion-style editor",
-    description: "Slash commands, headings, lists, code blocks — keyboard-first.",
+    description: "Slash commands, headings, lists, and code blocks—keyboard-first.",
     tag: "Editor",
     clipFilename: "editor.mp4",
     span: { col: 7, row: 2 },
@@ -58,15 +63,15 @@ const FEATURE_TILES: FeatureTile[] = [
     description: "Jump anywhere with ⌘K. Fuzzy match across titles and body text.",
     tag: "Search",
     clipFilename: "search.mp4",
-    span: { col: 2, row: 1 },
+    span: { col: 3, row: 1 },
   },
   {
     id: "offline",
     title: "Local-first & offline",
-    description: "Zero backend. Your notes never leave your device.",
+    description: "No backend. Your notes never leave your device.",
     tag: "Privacy",
     clipFilename: "offline.mp4",
-    span: { col: 3, row: 1 },
+    span: { col: 2, row: 1 },
   },
 ];
 
@@ -82,14 +87,11 @@ export function FeatureBentoGrid({ clipBasePath = LANDING_FEATURE_CLIP_BASE }: F
   return (
     <section className="landing-bento" aria-labelledby="features-heading">
       <div className="landing-section-header">
-        <p className="landing-eyebrow">Features</p>
+        <p className="landing-eyebrow">{LANDING_FEATURES_EYEBROW}</p>
         <h2 id="features-heading" className="landing-section-title">
-          Crafted for deep work, not distraction.
+          {LANDING_FEATURES_TITLE}
         </h2>
-        <p className="landing-section-desc">
-          Every tile is a home for a short screen recording. Drop clips into{" "}
-          <code className="landing-code">{clipBasePath}/</code> — until then, enjoy the previews.
-        </p>
+        <p className="landing-section-desc">{LANDING_FEATURES_DESC}</p>
       </div>
 
       <div className="landing-bento-grid">
@@ -173,10 +175,9 @@ function BentoMock({ tileId }: { tileId: string }) {
           <div className="mock-storage-block mock-storage-block-a" />
           <div className="mock-storage-block mock-storage-block-b" />
           <div className="mock-storage-block mock-storage-block-c" />
-          <span className="mock-storage-label">{"{ blocks: 847 }"}</span>
         </div>
       );
-    case "workspace":
+    case "new-tab":
       return (
         <div className="mock-workspace">
           <div className="mock-workspace-item mock-workspace-item-active" />
@@ -209,7 +210,7 @@ function BentoMock({ tileId }: { tileId: string }) {
     case "search":
       return (
         <div className="mock-search">
-          <div className="mock-search-bar">⌘K — Search pages…</div>
+          <div className="mock-search-bar">⌘K · Search pages…</div>
           <div className="mock-search-result mock-search-result-active" />
           <div className="mock-search-result" />
         </div>

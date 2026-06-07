@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-/** Extension package root — content globs must be absolute (Tailwind resolves from cwd). */
+/** Extension package root - content globs must be absolute (Tailwind resolves from cwd). */
 const extensionRoot = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('tailwindcss').Config} */

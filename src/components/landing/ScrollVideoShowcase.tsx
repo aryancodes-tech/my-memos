@@ -1,20 +1,24 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 import {
+  LANDING_LAUNCH_VIDEO_CAPTION,
+  LANDING_LAUNCH_VIDEO_CHROME_LABEL,
   LANDING_LAUNCH_VIDEO_FULL_WIDTH_PERCENT,
+  LANDING_LAUNCH_VIDEO_INITIAL_HEIGHT_PERCENT,
+  LANDING_LAUNCH_VIDEO_INITIAL_TOP_PERCENT,
   LANDING_LAUNCH_VIDEO_INITIAL_WIDTH_PERCENT,
   LANDING_LAUNCH_VIDEO_POSTER,
   LANDING_LAUNCH_VIDEO_SRC,
+  LANDING_VIDEO_EXPAND_END,
+  LANDING_VIDEO_HOLD_END,
   LANDING_VIDEO_SCROLL_RUNWAY_VH,
 } from "@/lib/constants";
-
-/** Scroll progress thresholds for the launch video animation phases. */
-const EXPAND_END = 0.38;
-const HOLD_END = 0.55;
 
 type ScrollVideoShowcaseProps = {
   /** Hero content rendered in the top half before the video expands on scroll. */
   hero: ReactNode;
+  /** Called when the launch video enters or leaves the fullscreen scroll phase. */
+  onVideoFullscreenChange?: (isFullscreen: boolean) => void;
   /** Optional override for the launch video source URL. */
   videoSrc?: string;
   /** Optional override for the launch video poster image URL. */
@@ -36,31 +40,33 @@ function lerp(start: number, end: number, t: number): number {
 function getVideoFrameStyle(progress: number): CSSProperties {
   const clamped = Math.min(Math.max(progress, 0), 1);
   const initialWidth = LANDING_LAUNCH_VIDEO_INITIAL_WIDTH_PERCENT;
+  const initialTop = LANDING_LAUNCH_VIDEO_INITIAL_TOP_PERCENT;
+  const initialHeight = LANDING_LAUNCH_VIDEO_INITIAL_HEIGHT_PERCENT;
   const fullWidth = LANDING_LAUNCH_VIDEO_FULL_WIDTH_PERCENT;
 
-  let topPercent = 50;
-  let heightPercent = 50;
+  let topPercent = initialTop;
+  let heightPercent = initialHeight;
   let widthPercent = initialWidth;
   let borderRadius = 1.25;
   let shadowStrength = 0.08;
 
-  if (clamped <= EXPAND_END) {
-    const t = clamped / EXPAND_END;
-    topPercent = 50 * (1 - t);
-    heightPercent = 50 + 50 * t;
+  if (clamped <= LANDING_VIDEO_EXPAND_END) {
+    const t = clamped / LANDING_VIDEO_EXPAND_END;
+    topPercent = lerp(initialTop, 0, t);
+    heightPercent = lerp(initialHeight, 100, t);
     widthPercent = lerp(initialWidth, fullWidth, t);
     borderRadius = lerp(1.25, 0.5, t);
     shadowStrength = lerp(0.08, 0.04, t);
-  } else if (clamped <= HOLD_END) {
+  } else if (clamped <= LANDING_VIDEO_HOLD_END) {
     topPercent = 0;
     heightPercent = 100;
     widthPercent = fullWidth;
     borderRadius = 0.5;
     shadowStrength = 0.04;
   } else {
-    const t = (clamped - HOLD_END) / (1 - HOLD_END);
+    const t = (clamped - LANDING_VIDEO_HOLD_END) / (1 - LANDING_VIDEO_HOLD_END);
     topPercent = 0;
-    heightPercent = 100 - 50 * t;
+    heightPercent = lerp(100, initialHeight, t);
     widthPercent = lerp(fullWidth, initialWidth, t);
     borderRadius = lerp(0.5, 1.25, t);
     shadowStrength = lerp(0.04, 0.08, t);
@@ -116,6 +122,7 @@ function useScrollProgress(containerRef: React.RefObject<HTMLElement | null>) {
  */
 export function ScrollVideoShowcase({
   hero,
+  onVideoFullscreenChange,
   videoSrc = LANDING_LAUNCH_VIDEO_SRC,
   posterSrc = LANDING_LAUNCH_VIDEO_POSTER,
   label = "Product launch video",
@@ -123,10 +130,22 @@ export function ScrollVideoShowcase({
   const runwayRef = useRef<HTMLElement>(null);
   const progress = useScrollProgress(runwayRef);
   const frameStyle = getVideoFrameStyle(progress);
-  const isFullscreen = progress > EXPAND_END && progress < HOLD_END;
-  const showChrome = progress < HOLD_END;
-  const heroOpacity = Math.max(1 - progress * 2.2, 0);
-  const heroTranslate = progress * -28;
+  const isFullscreen = progress >= LANDING_VIDEO_EXPAND_END && progress < LANDING_VIDEO_HOLD_END;
+  const showChrome = progress < LANDING_VIDEO_HOLD_END;
+  const showCaption = isFullscreen;
+  const isScrolling = progress > 0.01;
+  const heroOpacity = isScrolling ? 0 : 1;
+  const backdropOpacity = isScrolling ? Math.min(progress * 4, 1) : 0;
+
+  useEffect(() => {
+    onVideoFullscreenChange?.(isFullscreen);
+  }, [isFullscreen, onVideoFullscreenChange]);
+
+  useEffect(() => {
+    return () => {
+      onVideoFullscreenChange?.(false);
+    };
+  }, [onVideoFullscreenChange]);
 
   return (
     <section
@@ -137,13 +156,22 @@ export function ScrollVideoShowcase({
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <div
-          className="landing-hero-overlay pointer-events-none absolute inset-x-0 top-0 z-10 flex h-1/2 items-center"
+          className="landing-video-backdrop"
+          style={{ opacity: backdropOpacity }}
+          aria-hidden
+        />
+
+        <div
+          className="landing-hero-overlay pointer-events-none absolute inset-x-0 top-0 z-10 h-1/2"
           style={{
             opacity: heroOpacity,
-            transform: `translateY(${heroTranslate}px)`,
+            visibility: isScrolling ? "hidden" : "visible",
           }}
+          aria-hidden={isScrolling}
         >
-          <div className="landing-hero-shell pointer-events-auto">{hero}</div>
+          <div className={`landing-hero-shell ${isScrolling ? "pointer-events-none" : "pointer-events-auto"}`}>
+            {hero}
+          </div>
         </div>
 
         <div className="landing-video-frame" style={frameStyle}>
@@ -151,17 +179,23 @@ export function ScrollVideoShowcase({
             videoSrc={videoSrc}
             posterSrc={posterSrc}
             label={label}
-            isFullscreen={isFullscreen}
+            showCaption={showCaption}
             showChrome={showChrome}
           />
         </div>
 
-        {progress > HOLD_END && (
+        {isFullscreen && (
+          <div className="landing-video-hold-hint pointer-events-none absolute inset-x-0 bottom-10 z-20 flex justify-center">
+            <span className="landing-scroll-hint-pill">Keep scrolling to continue</span>
+          </div>
+        )}
+
+        {progress > LANDING_VIDEO_HOLD_END && progress < 0.92 && (
           <div
             className="landing-video-scroll-hint pointer-events-none absolute inset-x-0 bottom-8 z-20 flex justify-center"
-            style={{ opacity: Math.min((progress - HOLD_END) / 0.15, 1) }}
+            style={{ opacity: Math.min((progress - LANDING_VIDEO_HOLD_END) / 0.12, 1) }}
           >
-            <span className="landing-scroll-hint-pill">Keep scrolling — features below</span>
+            <span className="landing-scroll-hint-pill">Keep scrolling - features below</span>
           </div>
         )}
       </div>
@@ -173,7 +207,7 @@ type LaunchVideoFrameProps = {
   videoSrc: string;
   posterSrc: string;
   label: string;
-  isFullscreen: boolean;
+  showCaption: boolean;
   showChrome: boolean;
 };
 
@@ -182,73 +216,60 @@ function LaunchVideoFrame({
   videoSrc,
   posterSrc,
   label,
-  isFullscreen,
+  showCaption,
   showChrome,
 }: LaunchVideoFrameProps) {
   const [mediaReady, setMediaReady] = useState(false);
   const hasVideoSrc = videoSrc.length > 0;
 
   return (
-    <div className="landing-video-inner">
+    <>
       {showChrome && (
         <div className="landing-video-chrome" aria-hidden>
           <span className="landing-video-chrome-dot" data-tone="red" />
           <span className="landing-video-chrome-dot" data-tone="yellow" />
           <span className="landing-video-chrome-dot" data-tone="green" />
-          <span className="landing-video-chrome-url">mymemos — new tab</span>
+          <span className="landing-video-chrome-url">{LANDING_LAUNCH_VIDEO_CHROME_LABEL}</span>
         </div>
       )}
 
-      <div className="landing-video-media">
-        {hasVideoSrc ? (
-          <video
-            className="h-full w-full object-cover"
-            src={videoSrc}
-            poster={posterSrc.length > 0 ? posterSrc : undefined}
-            autoPlay
-            muted
-            loop
-            playsInline
-            onLoadedData={() => setMediaReady(true)}
-            onError={() => setMediaReady(false)}
-          />
-        ) : null}
+      <div className="landing-video-inner">
+        <div className="landing-video-media">
+          {hasVideoSrc ? (
+            <video
+              className="landing-video-element"
+              src={videoSrc}
+              poster={posterSrc.length > 0 ? posterSrc : undefined}
+              autoPlay
+              muted
+              loop
+              playsInline
+              onLoadedData={() => setMediaReady(true)}
+              onError={() => setMediaReady(false)}
+            />
+          ) : null}
 
-        {!mediaReady && (
-          <div className="landing-video-placeholder">
-            <div className="landing-video-placeholder-mesh" aria-hidden />
-            <div className="landing-video-placeholder-ui" aria-hidden>
-              <div className="landing-mock-sidebar">
-                <div className="landing-mock-sidebar-line landing-mock-sidebar-line-accent" />
-                <div className="landing-mock-sidebar-line" />
-                <div className="landing-mock-sidebar-line" />
-                <div className="landing-mock-sidebar-line landing-mock-sidebar-line-short" />
-              </div>
-              <div className="landing-mock-editor">
-                <div className="landing-mock-editor-title" />
-                <div className="landing-mock-editor-line" />
-                <div className="landing-mock-editor-line landing-mock-editor-line-short" />
-                <div className="landing-mock-editor-line" />
+          {!mediaReady && (
+            <div className="landing-video-placeholder">
+              <div className="landing-video-placeholder-mesh" aria-hidden />
+              <div className="landing-video-placeholder-label">
+                <div className="landing-video-play">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+                <p>{label}</p>
               </div>
             </div>
-            <div className="landing-video-placeholder-label">
-              <div className="landing-video-play">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-              <p>{label}</p>
-              <span>Add your video to {videoSrc || "/videos/launch.mp4"}</span>
-            </div>
-          </div>
-        )}
-
-        {isFullscreen && (
-          <div className="landing-video-caption">
-            <p>See MyMemos in action</p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+
+      {showCaption && (
+        <div className="landing-video-caption-strip">
+          <p>{LANDING_LAUNCH_VIDEO_CAPTION}</p>
+        </div>
+      )}
+    </>
   );
 }

@@ -37932,7 +37932,7 @@ const mw = hw(!1, !0),
       };
     },
     addInputRules() {
-      return [pL({ find: /^(?:---|—-|___\s|\*\*\*\s)$/, type: this.type })];
+      return [pL({ find: /^(?:---|--|___\s|\*\*\*\s)$/, type: this.type })];
     },
   }),
   v2 = /(?:^|\s)(\*(?!\s+\*)((?:[^*]+))\*(?!\s+\*))$/,

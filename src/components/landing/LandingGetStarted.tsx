@@ -1,4 +1,4 @@
-import { DEMO_PATH, PRODUCT_NAME } from "@/lib/constants";
+import { DEMO_PATH, LANDING_GET_STARTED_DESC, LANDING_GET_STARTED_SECTION_ID, LANDING_FOOTER_TAGLINE, PRODUCT_NAME } from "@/lib/constants";
 
 const INSTALL_STEPS: Array<{
   title: string;
@@ -24,7 +24,7 @@ const INSTALL_STEPS: Array<{
   },
   {
     title: "Open a new tab",
-    body: `${PRODUCT_NAME} replaces your New Tab — start writing immediately.`,
+    body: `${PRODUCT_NAME} replaces your New Tab - start writing immediately.`,
   },
 ];
 
@@ -39,16 +39,18 @@ type LandingGetStartedProps = {
  */
 export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStartedProps) {
   return (
-    <section className="landing-get-started" aria-labelledby="get-started-heading">
+    <section
+      id={LANDING_GET_STARTED_SECTION_ID}
+      className="landing-get-started"
+      aria-labelledby="get-started-heading"
+    >
       <div className="landing-get-started-panel">
         <div className="landing-get-started-intro">
           <p className="landing-eyebrow">Get started</p>
           <h2 id="get-started-heading" className="landing-section-title">
             Up and running in five steps
           </h2>
-          <p className="landing-section-desc">
-            No account, no server, no config. Load the extension and your workspace is ready.
-          </p>
+          <p className="landing-section-desc">{LANDING_GET_STARTED_DESC}</p>
 
           <div className="landing-get-started-actions">
             <button
@@ -94,7 +96,7 @@ export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStart
         <span className="landing-page-footer-sep" aria-hidden>
           ·
         </span>
-        <span className="landing-page-footer-copy">Local-first · No cloud required</span>
+        <span className="landing-page-footer-copy">{LANDING_FOOTER_TAGLINE}</span>
       </footer>
     </section>
   );

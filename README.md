@@ -33,7 +33,7 @@ Then in Chrome:
 
 1. `chrome://extensions` → **Developer mode** on
 2. **Load unpacked** → select `extension/dist/`
-3. Name should be **MyMemos (Dev)** — open a **new tab**
+3. Name should be **MyMemos (Dev)** - open a **new tab**
 
 Keep `npm run dev` running while you edit. If HMR stalls: `npm run dev:reset --prefix extension`, reload the extension, open a fresh tab.
 
@@ -73,7 +73,7 @@ All commands run from the **repo root** unless noted.
 | `npm run preview` | Preview production landing build |
 | `npm run ci` | Full local CI (lint, test, build) |
 
-**Dev tip:** Don't run `build:extension` while actively developing — it replaces the dev bundle in `dist/`. Use `npm run dev` for day-to-day work.
+**Dev tip:** Don't run `build:extension` while actively developing - it replaces the dev bundle in `dist/`. Use `npm run dev` for day-to-day work.
 
 Extension-only helpers: `npm run dev:reset --prefix extension`, `npm run dev:check --prefix extension`.
 
@@ -81,7 +81,7 @@ Extension-only helpers: `npm run dev:reset --prefix extension`, `npm run dev:che
 
 ## Deploy to Vercel
 
-Landing page + `/demo/` deploy together. The Chrome extension does **not** run on Vercel — only the ZIP download (if you build it).
+Landing page + `/demo/` deploy together. The Chrome extension does **not** run on Vercel - only the ZIP download (if you build it).
 
 **Vercel project settings:**
 
@@ -99,9 +99,9 @@ Enable **Analytics** in the Vercel dashboard if you want traffic on the landing 
 
 ```
 my-memos/
-├── extension/     # Core app — editor, sidebar, storage (Chrome + /demo/)
+├── extension/     # Core app - editor, sidebar, storage (Chrome + /demo/)
 ├── src/           # Landing site (TanStack Start)
-├── public/demo/   # Built web demo (generated — do not edit)
+├── public/demo/   # Built web demo (generated - do not edit)
 └── package.json   # Root scripts
 ```
 
@@ -121,7 +121,7 @@ Architecture, storage design, and extension internals → [`extension/README.md`
 
 ## Privacy
 
-- Notes stay in the browser — no backend, no account
+- Notes stay in the browser - no backend, no account
 - Extension works offline after install (dev mode uses `localhost` for HMR only)
 - Uninstalling removes extension storage
 
@@ -132,7 +132,7 @@ Architecture, storage design, and extension internals → [`extension/README.md`
 | Problem | Fix |
 | ------- | --- |
 | Edits don't show up | `npm run dev:reset --prefix extension` → reload extension → new tab |
-| Extension named **MyMemos** not **(Dev)** | You loaded a prod build — run `npm run dev` again |
+| Extension named **MyMemos** not **(Dev)** | You loaded a prod build - run `npm run dev` again |
 | Download button 404 on landing | Run `npm run package:extension` first |
 
 ---
@@ -145,4 +145,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Run `npm run ci` before opening a PR.
 
 ## License
 
-[MIT](LICENSE) — Copyright (c) 2026 MyMemos Contributors
+[MIT](LICENSE) - Copyright (c) 2026 MyMemos Contributors

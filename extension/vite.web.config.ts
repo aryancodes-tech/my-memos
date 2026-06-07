@@ -30,7 +30,7 @@ export default defineConfig({
     host: "localhost",
     port: 5174,
     strictPort: true,
-    // Standalone `extension dev:web` only — embedded /demo/ HMR is configured in web-app-dev-plugin.ts.
+    // Standalone `extension dev:web` only - embedded /demo/ HMR is configured in web-app-dev-plugin.ts.
     ...(!isEmbeddedDev ? { hmr: { port: 5175 } } : {}),
   },
 });

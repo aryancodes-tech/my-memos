@@ -1,9 +1,24 @@
-import { GITHUB_REPO_URL, PRODUCT_NAME } from "@/lib/constants";
+import {
+  GITHUB_REPO_URL,
+  LANDING_GET_STARTED_SECTION_ID,
+  LANDING_NAV_INSTALL_LINK_LABEL,
+  LANDING_NAV_TAGLINE,
+  PRODUCT_NAME,
+} from "@/lib/constants";
+
+type LandingNavProps = {
+  /** When true, slides the nav off-screen (used during fullscreen launch video). */
+  hidden?: boolean;
+};
 
 /** Fixed glass navigation bar for the landing page. */
-export function LandingNav() {
+export function LandingNav({ hidden = false }: LandingNavProps) {
   return (
-    <nav className="landing-nav" aria-label="Main navigation">
+    <nav
+      className={`landing-nav ${hidden ? "landing-nav-hidden" : ""}`}
+      aria-label="Main navigation"
+      aria-hidden={hidden}
+    >
       <div className="landing-nav-inner">
         <a href="/" className="landing-nav-brand">
           {/* <span className="landing-nav-logo" aria-hidden>
@@ -11,19 +26,25 @@ export function LandingNav() {
           </span> */}
           <span className="landing-nav-brand-copy">
             <span className="landing-nav-brand-name">{PRODUCT_NAME}</span>
-            <span className="landing-nav-brand-tagline">Local-first notes for your New Tab</span>
+            <span className="landing-nav-brand-tagline">{LANDING_NAV_TAGLINE}</span>
           </span>
         </a>
 
-        <a
-          href={GITHUB_REPO_URL}
-          className="landing-nav-github"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub repository"
-        >
-          <GitHubIcon />
-        </a>
+        <div className="landing-nav-actions">
+          <a href={`#${LANDING_GET_STARTED_SECTION_ID}`} className="landing-nav-link">
+            {LANDING_NAV_INSTALL_LINK_LABEL}
+          </a>
+
+          <a
+            href={GITHUB_REPO_URL}
+            className="landing-nav-github"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub repository"
+          >
+            <GitHubIcon />
+          </a>
+        </div>
       </div>
     </nav>
   );
