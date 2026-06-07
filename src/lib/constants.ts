@@ -78,6 +78,15 @@ export const LANDING_LAUNCH_VIDEO_POSTER = "/launch-poster.png";
 /** Base public path for per-feature demo clips in the landing bento grid. */
 export const LANDING_FEATURE_CLIP_BASE = "/videos/features";
 
+/** When false, bento tiles use CSS mockups only and skip loading feature clip videos. */
+export const LANDING_FEATURE_CLIPS_ENABLED = false;
+
+/** Path to the site favicon served from the public directory. */
+export const SITE_FAVICON_PATH = "/app/icons/icon-48.png";
+
+/** Path to the Apple touch icon served from the public directory. */
+export const SITE_APPLE_TOUCH_ICON_PATH = "/app/icons/icon-128.png";
+
 /** Scroll runway height multiplier (viewport heights) for the launch video section. */
 export const LANDING_VIDEO_SCROLL_RUNWAY_VH = 1.55;
 

@@ -118,23 +118,20 @@ function useScrollProgress(containerRef: React.RefObject<HTMLElement | null>) {
 }
 
 /**
- * Tracks whether the viewport is below the launch video hide breakpoint.
+ * Defers launch video loading until after hydration, then disables it on small viewports.
  */
-function useIsMobileViewport(maxWidthPx: number) {
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia(`(max-width: ${maxWidthPx}px)`).matches;
-  });
+function useLaunchVideoEnabled(maxWidthPx: number) {
+  const [loadLaunchVideo, setLoadLaunchVideo] = useState(true);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(`(max-width: ${maxWidthPx}px)`);
-    const update = () => setIsMobile(mediaQuery.matches);
+    const update = () => setLoadLaunchVideo(!mediaQuery.matches);
     update();
     mediaQuery.addEventListener("change", update);
     return () => mediaQuery.removeEventListener("change", update);
   }, [maxWidthPx]);
 
-  return isMobile;
+  return loadLaunchVideo;
 }
 
 /**
@@ -148,7 +145,7 @@ export function ScrollVideoShowcase({
   posterSrc = LANDING_LAUNCH_VIDEO_POSTER,
   label = "Product launch video",
 }: ScrollVideoShowcaseProps) {
-  const isMobileViewport = useIsMobileViewport(LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX);
+  const loadLaunchVideo = useLaunchVideoEnabled(LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX);
   const runwayRef = useRef<HTMLElement>(null);
   const progress = useScrollProgress(runwayRef);
   const frameStyle = getVideoFrameStyle(progress);
@@ -164,29 +161,10 @@ export function ScrollVideoShowcase({
   }, [isFullscreen, onVideoFullscreenChange]);
 
   useEffect(() => {
-    if (isMobileViewport) {
-      onVideoFullscreenChange?.(false);
-    }
-  }, [isMobileViewport, onVideoFullscreenChange]);
-
-  useEffect(() => {
     return () => {
       onVideoFullscreenChange?.(false);
     };
   }, [onVideoFullscreenChange]);
-
-  if (isMobileViewport) {
-    return (
-      <section
-        className="landing-video-runway landing-video-runway--mobile relative"
-        aria-label="Product introduction"
-      >
-        <div className="landing-hero-overlay pointer-events-auto relative inset-x-0 top-0 z-10">
-          <div className="landing-hero-shell">{hero}</div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section
@@ -222,6 +200,7 @@ export function ScrollVideoShowcase({
             label={label}
             showCaption={showCaption}
             showChrome={showChrome}
+            loadVideo={loadLaunchVideo}
           />
         </div>
 
@@ -250,6 +229,7 @@ type LaunchVideoFrameProps = {
   label: string;
   showCaption: boolean;
   showChrome: boolean;
+  loadVideo: boolean;
 };
 
 /** Renders the launch video or a cinematic placeholder when no media file is present yet. */
@@ -259,9 +239,10 @@ function LaunchVideoFrame({
   label,
   showCaption,
   showChrome,
+  loadVideo,
 }: LaunchVideoFrameProps) {
   const [mediaReady, setMediaReady] = useState(false);
-  const hasVideoSrc = videoSrc.length > 0;
+  const hasVideoSrc = videoSrc.length > 0 && loadVideo;
 
   return (
     <>

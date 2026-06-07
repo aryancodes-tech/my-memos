@@ -1003,8 +1003,7 @@
 }
 
 @media (max-width: 768px) {
-  .landing-video-runway,
-  .landing-video-runway--mobile {
+  .landing-video-runway {
     height: auto !important;
   }
 
@@ -1022,16 +1021,14 @@
     display: none !important;
   }
 
-  .landing-video-runway .landing-hero-overlay,
-  .landing-video-runway--mobile .landing-hero-overlay {
+  .landing-video-runway .landing-hero-overlay {
     position: relative !important;
     height: auto !important;
     opacity: 1 !important;
     visibility: visible !important;
   }
 
-  .landing-video-runway .landing-hero-shell,
-  .landing-video-runway--mobile .landing-hero-shell {
+  .landing-video-runway .landing-hero-shell {
     height: auto !important;
     padding-bottom: 2rem;
   }
