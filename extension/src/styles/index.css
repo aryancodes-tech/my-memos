@@ -334,6 +334,31 @@ body {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+.ProseMirror table {
+  width: 100%;
+  margin: 0.75rem 0 1rem;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+.ProseMirror th,
+.ProseMirror td {
+  border: 1px solid var(--ko-border);
+  padding: 0.45rem 0.65rem;
+  vertical-align: top;
+  text-align: left;
+}
+.ProseMirror th {
+  font-weight: 600;
+  background: var(--ko-surface-2);
+}
+.ProseMirror img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.75rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--ko-border);
+}
 
 /* Page view header */
 .ko-page-view {

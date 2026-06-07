@@ -166,3 +166,36 @@ export const COLLAPSED_DIRS_SETTING = "collapsedDirs";
 
 /** localStorage key for dismissing the standalone web app install banner. */
 export const WEB_INSTALL_BANNER_DISMISS_KEY = "koWebInstallBannerDismissed";
+
+/** HTML class markdown-it uses for GFM task lists. */
+export const MARKDOWN_TASK_LIST_HTML_CLASS = "contains-task-list";
+
+/** Input rule for GFM task items: `- [x] `, `* [ ] `, etc. */
+export const MARKDOWN_TASK_ITEM_INPUT_REGEX = new RegExp(
+  String.raw`^\s*([-+*])\s+\[([ xX])?\]\s$`,
+);
+
+/**
+ * Bullet list input rule that ignores GFM task checkbox syntax (`- [x]`).
+ * Skips any line where the marker is followed by `[`.
+ */
+export const MARKDOWN_BULLET_LIST_INPUT_REGEX = /^\s*([-+*])\s+(?!\[).+$/;
+
+/** Regex patterns used to detect markdown syntax in pasted plain text. */
+export const MARKDOWN_DETECTION_PATTERNS: RegExp[] = [
+  /^#{1,6}\s/m,
+  /^\s*[-*+]\s+\[[ xX]\]/m,
+  /^\s*[-*+]\s+\S/m,
+  /^\s*\d+\.\s/m,
+  /^\s*>/m,
+  /^```/m,
+  /^(?:-{3,}|\*{3,}|_{3,})\s*$/m,
+  /!\[[^\]]*\]\([^)]+\)/,
+  /\[[^\]]+\]\([^)]+\)/,
+  /\*\*[^*]+\*\*/,
+  /__[^_]+__/,
+  /~~[^~]+~~/,
+  /==[^=]+==/,
+  /\|.+\|/,
+  /`[^`]+`/,
+];
