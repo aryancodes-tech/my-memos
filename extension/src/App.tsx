@@ -7,13 +7,19 @@ import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
 import CustomThemeDialog from "@/components/CustomThemeDialog";
 import LinkDialog from "@/components/LinkDialog";
 import EditorToolbar from "@/editor/EditorToolbar";
+import MobileExperienceNotice from "@/components/MobileExperienceNotice";
 import WebInstallBanner from "@/components/WebInstallBanner";
+import { MOBILE_EXPERIENCE_MAX_WIDTH_PX } from "@/lib/constants";
 import { isWebAppContext } from "@/lib/platform";
+import { useMobileViewport } from "@/lib/useMobileViewport";
 import Dashboard from "@/views/Dashboard";
 import PageView from "@/views/PageView";
 
 export default function App() {
   const { ready, init, view, setSearchOpen, searchOpen, pageEditor } = useStore();
+  const isDemoWebApp = isWebAppContext();
+  const isMobileViewport = useMobileViewport(MOBILE_EXPERIENCE_MAX_WIDTH_PX, isDemoWebApp);
+  const showMobileNotice = isDemoWebApp && isMobileViewport;
 
   useEffect(() => {
     void init();
@@ -31,6 +37,14 @@ export default function App() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [searchOpen, setSearchOpen]);
+
+  if (showMobileNotice) {
+    return (
+      <div className="ko-mobile-notice-shell">
+        <MobileExperienceNotice />
+      </div>
+    );
+  }
 
   if (!ready) {
     return (

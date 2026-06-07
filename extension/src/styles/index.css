@@ -1545,6 +1545,39 @@ body {
 }
 
 /* Delete confirmation dialog */
+.ko-mobile-notice-shell {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--ko-bg);
+}
+
+.ko-mobile-notice-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 18%, var(--ko-surface) 0%, transparent 58%);
+  pointer-events: none;
+}
+
+.ko-mobile-notice-dialog {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+}
+
+.ko-mobile-notice-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+}
+
 .ko-dialog-overlay {
   position: fixed;
   inset: 0;

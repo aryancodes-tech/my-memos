@@ -3,6 +3,7 @@ import {
   LANDING_FEATURES_EYEBROW,
   LANDING_FEATURES_TITLE,
   LANDING_FEATURE_CLIP_BASE,
+  LANDING_FEATURE_CLIPS_ENABLED,
 } from "@/lib/constants";
 
 /** Layout span for a single bento grid cell on a 12-column grid. */
@@ -111,7 +112,9 @@ type BentoTileProps = {
 /** Single bento cell with UI mockup and optional feature clip. */
 function BentoTile({ tile, clipBasePath }: BentoTileProps) {
   const clipSrc =
-    tile.clipFilename.length > 0 ? `${clipBasePath}/${tile.clipFilename}` : "";
+    LANDING_FEATURE_CLIPS_ENABLED && tile.clipFilename.length > 0
+      ? `${clipBasePath}/${tile.clipFilename}`
+      : "";
 
   return (
     <article

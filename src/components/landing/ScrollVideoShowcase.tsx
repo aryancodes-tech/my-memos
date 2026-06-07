@@ -7,6 +7,7 @@ import {
   LANDING_LAUNCH_VIDEO_INITIAL_HEIGHT_PERCENT,
   LANDING_LAUNCH_VIDEO_INITIAL_TOP_PERCENT,
   LANDING_LAUNCH_VIDEO_INITIAL_WIDTH_PERCENT,
+  LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX,
   LANDING_LAUNCH_VIDEO_POSTER,
   LANDING_LAUNCH_VIDEO_SRC,
   LANDING_VIDEO_EXPAND_END,
@@ -117,6 +118,23 @@ function useScrollProgress(containerRef: React.RefObject<HTMLElement | null>) {
 }
 
 /**
+ * Defers launch video loading until after hydration, then disables it on small viewports.
+ */
+function useLaunchVideoEnabled(maxWidthPx: number) {
+  const [loadLaunchVideo, setLoadLaunchVideo] = useState(true);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(`(max-width: ${maxWidthPx}px)`);
+    const update = () => setLoadLaunchVideo(!mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, [maxWidthPx]);
+
+  return loadLaunchVideo;
+}
+
+/**
  * Sticky scroll section: launch video starts in the bottom half of the viewport,
  * expands to fullscreen, then shrinks to the top half as the user keeps scrolling.
  */
@@ -127,6 +145,7 @@ export function ScrollVideoShowcase({
   posterSrc = LANDING_LAUNCH_VIDEO_POSTER,
   label = "Product launch video",
 }: ScrollVideoShowcaseProps) {
+  const loadLaunchVideo = useLaunchVideoEnabled(LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX);
   const runwayRef = useRef<HTMLElement>(null);
   const progress = useScrollProgress(runwayRef);
   const frameStyle = getVideoFrameStyle(progress);
@@ -181,6 +200,7 @@ export function ScrollVideoShowcase({
             label={label}
             showCaption={showCaption}
             showChrome={showChrome}
+            loadVideo={loadLaunchVideo}
           />
         </div>
 
@@ -209,6 +229,7 @@ type LaunchVideoFrameProps = {
   label: string;
   showCaption: boolean;
   showChrome: boolean;
+  loadVideo: boolean;
 };
 
 /** Renders the launch video or a cinematic placeholder when no media file is present yet. */
@@ -218,9 +239,10 @@ function LaunchVideoFrame({
   label,
   showCaption,
   showChrome,
+  loadVideo,
 }: LaunchVideoFrameProps) {
   const [mediaReady, setMediaReady] = useState(false);
-  const hasVideoSrc = videoSrc.length > 0;
+  const hasVideoSrc = videoSrc.length > 0 && loadVideo;
 
   return (
     <>
