@@ -1168,6 +1168,25 @@ body {
   line-height: 1.4;
   color: var(--ko-text-muted);
 }
+.ko-sidebar-show-more {
+  display: block;
+  width: 100%;
+  margin: 2px 0 0;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ko-text-muted);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+.ko-sidebar-show-more:hover {
+  color: var(--ko-text);
+  background: var(--ko-surface-2);
+}
 .ko-sidebar-row {
   display: flex;
   align-items: center;

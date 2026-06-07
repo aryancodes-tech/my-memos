@@ -1,6 +1,9 @@
 /** Display name of the product shown on the landing site. */
 export const PRODUCT_NAME = "MyMemos";
 
+/** Public GitHub repository URL for the project. */
+export const GITHUB_REPO_URL = "https://github.com/aryancodes-tech/my-memos";
+
 /** URL path for the live browser demo of the MyMemos UI. */
 export const DEMO_PATH = "/demo/";
 

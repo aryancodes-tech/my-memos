@@ -25,6 +25,7 @@
   left: 0;
   right: 0;
   z-index: 50;
+  overflow: visible;
   border-bottom: 1px solid var(--ko-border);
   background: color-mix(in srgb, var(--ko-bg) 92%, transparent);
   backdrop-filter: blur(8px);
@@ -37,16 +38,42 @@
   max-width: 72rem;
   margin: 0 auto;
   padding: 0.75rem 1.5rem;
+  overflow: visible;
 }
 
 .landing-nav-brand {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  font-size: 0.9rem;
-  font-weight: 600;
   color: var(--ko-text);
   text-decoration: none;
+}
+
+.landing-nav-brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  min-width: 0;
+}
+
+.landing-nav-brand-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.landing-nav-brand-tagline {
+  display: none;
+  font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ko-text-muted);
+}
+
+@media (min-width: 768px) {
+  .landing-nav-brand-tagline {
+    display: block;
+  }
 }
 
 .landing-nav-logo {
@@ -62,31 +89,29 @@
   color: var(--ko-text);
 }
 
-.landing-nav-actions {
-  display: flex;
+.landing-nav-github {
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-}
-
-.landing-nav-link {
-  display: none;
-  padding: 0.35rem 0.6rem;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0.4rem;
   border-radius: 6px;
-  font-size: 0.85rem;
-  color: var(--ko-text-muted);
+  color: var(--ko-text);
   text-decoration: none;
-  transition: background 0.12s ease, color 0.12s ease;
+  overflow: visible;
+  transition: background 0.12s ease, opacity 0.12s ease;
 }
 
-.landing-nav-link:hover {
-  color: var(--ko-text);
+.landing-nav-github:hover {
   background: var(--ko-surface-2);
 }
 
-@media (min-width: 640px) {
-  .landing-nav-link {
-    display: inline-flex;
-  }
+.landing-nav-github-icon {
+  display: block;
+  width: 1.55rem;
+  height: 1.55rem;
+  flex-shrink: 0;
+  overflow: visible;
 }
 
 /* Buttons */

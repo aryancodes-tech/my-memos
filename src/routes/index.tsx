@@ -48,7 +48,7 @@ function Index() {
 
   return (
     <div className="landing-page">
-      <LandingNav onDownload={download} isDownloading={isDownloading} />
+      <LandingNav />
 
       <ScrollVideoShowcase
         hero={

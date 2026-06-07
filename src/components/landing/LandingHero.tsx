@@ -6,16 +6,16 @@ type LandingHeroProps = {
   downloadError: string | null;
 };
 
-const HERO_PILLS = ["Local-first", "Offline-only", "Zero backend", "7 themes", "⌘K search"];
+const HERO_PILLS = ["Local-first", "Offline-only", "Zero Backend", "7 themes", "⌘ K search"];
 
 /** Hero copy and CTAs rendered over the scroll video section. */
 export function LandingHero({ onDownload, isDownloading, downloadError }: LandingHeroProps) {
   return (
     <div className="landing-hero">
-      <div className="landing-hero-badge">
+      {/* <div className="landing-hero-badge">
         <span className="landing-hero-badge-dot" aria-hidden />
         Chrome Extension · Manifest V3
-      </div>
+      </div> */}
 
       <h1 className="landing-hero-title">
         Your knowledge,
@@ -24,7 +24,7 @@ export function LandingHero({ onDownload, isDownloading, downloadError }: Landin
       </h1>
 
       <p className="landing-hero-subtitle">
-        {PRODUCT_NAME} is a Notion-inspired workspace for learners — nested pages, slash
+        {PRODUCT_NAME} is a Notion-inspired workspace for learners - nested pages, slash
         commands, themes, and instant search. Everything stays on your device.
       </p>
 

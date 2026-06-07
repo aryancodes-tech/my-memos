@@ -65,8 +65,17 @@ export const THEME_MENU_MIN_WIDTH_PX = 248;
 /** Label shown beside Search for the global search shortcut. */
 export const SEARCH_SHORTCUT_LABEL = "⌘ K";
 
-/** Maximum number of pages shown in the Recent sidebar group. */
+/** Maximum number of pages kept in the Recent sidebar group. */
 export const RECENT_PAGE_LIMIT = 8;
+
+/** Number of recent pages shown before the sidebar expands. */
+export const SIDEBAR_RECENT_VISIBLE_LIMIT = 3;
+
+/** Label for expanding the Recent sidebar list. */
+export const SIDEBAR_RECENT_SHOW_MORE_LABEL = "Show more";
+
+/** Label for collapsing the Recent sidebar list. */
+export const SIDEBAR_RECENT_SHOW_LESS_LABEL = "Show less";
 
 /** Maximum content width for page and dashboard views in pixels. */
 export const CONTENT_MAX_WIDTH_PX = 900;
