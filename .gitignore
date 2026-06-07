@@ -20,8 +20,8 @@ dist-ssr
 coverage/
 
 # Built extension artifacts - generate via npm run package:extension
-public/mymemos-extension.zip
-extension/mymemos-extension.zip
+# public/mymemos-extension.zip
+# extension/mymemos-extension.zip
 
 # Standalone web app build - generate via npm run build:app
 public/demo/

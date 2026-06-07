@@ -1,0 +1,85 @@
+---
+description: TanStack Start landing site — routing, marketing, scroll video, download flow
+globs: src/**/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+# Landing Site Rules
+
+## Stack
+
+- **TanStack Start** + **React 19** + **Tailwind 4**
+- **Vite 7** + Nitro for SSR
+- **shadcn/ui** primitives in `src/components/ui/`
+
+## Routing
+
+- File-based routes in `src/routes/`
+- `routeTree.gen.ts` is **generated** — never hand-edit
+- See `src/routes/README.md` for TanStack conventions (not Next.js)
+
+## Constants
+
+All marketing copy and tunables live in `src/lib/constants.ts`:
+
+| Category | Examples |
+|----------|----------|
+| Hero copy | `LANDING_HERO_*` |
+| Features | `LANDING_FEATURES_*` |
+| Scroll video | `LANDING_VIDEO_*`, `LANDING_MAIN_OVERLAP_VH` |
+| Paths | `DEMO_PATH`, `EXTENSION_ZIP_FILENAME` |
+| Favicon | `SITE_FAVICON_PATH`, `SITE_FAVICON_TYPE` |
+
+Do not hardcode strings in components — import from constants.
+
+## Key components
+
+| Component | Role |
+|-----------|------|
+| `LandingHero.tsx` | Headline, CTAs |
+| `ScrollVideoShowcase.tsx` | Sticky scroll launch video |
+| `FeatureBentoGrid.tsx` | Feature cards |
+| `LandingGetStarted.tsx` | Install steps |
+| `LandingNav.tsx` | Nav + GitHub link |
+
+## Scroll video architecture
+
+- Runway height: `LANDING_VIDEO_SCROLL_RUNWAY_VH`
+- Phases: expand → hold → shrink (see `getVideoFrameStyle`)
+- Features overlap: `LANDING_MAIN_OVERLAP_VH` negative margin on `.landing-main`
+- Tunables are sensitive — small constant changes have large UX impact
+
+## Download flow
+
+```typescript
+// Fetches EXTENSION_ZIP_FILENAME from public root
+fetch(`/${EXTENSION_ZIP_FILENAME}`)
+```
+
+ZIP must exist — generate with `npm run package:extension`.
+Show inline error if 404 (do not `alert()`).
+
+## Demo embed
+
+- Dev: `web-app-dev-plugin.ts` proxies `/demo/` to extension Vite
+- Prod: static files in `public/demo/` from `npm run build:web`
+- Do not edit `public/demo/` directly
+
+## SSR errors
+
+- `src/server.ts` — custom handler
+- `error-capture.ts` — swallowed error recovery
+- `__root.tsx` — `ErrorComponent`, favicon links, global CSS
+
+## Styling
+
+- Landing-specific CSS: `src/landing.css`
+- Design tokens: `src/lib/design-tokens.ts`
+- Extension uses separate `ko-` theme — landing does not share CSS
+
+## Verify
+
+```bash
+npm run dev:web
+# /, /demo/, download, mobile breakpoint
+```

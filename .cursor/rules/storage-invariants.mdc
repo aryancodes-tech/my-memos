@@ -1,0 +1,62 @@
+---
+description: IndexedDB, codec, BlockDoc persistence, and settings tier rules
+globs: extension/src/storage/**/*
+alwaysApply: false
+---
+
+# Storage Invariants
+
+## Two-tier model
+
+| Tier | Technology | Contents |
+|------|------------|----------|
+| Heavy | IndexedDB `mymemos` | Pages (`doc_c` compressed), images |
+| Light | chrome.storage / localStorage | theme, lastView, customThemes, collapsedDirs |
+
+## Block JSON only
+
+- Persist Tiptap/ProseMirror `BlockDoc` — never HTML or markdown duplicates
+- Field: `doc_c` (LZString compressed) in IndexedDB
+- Decode failure → return `EMPTY_BLOCK_DOC`, `console.warn`, no UI throw
+
+## Key files
+
+| File | Role |
+|------|------|
+| `db.ts` | IDB schema, CRUD, `DB_VERSION` migrations |
+| `codec.ts` | compress/decompress round-trip |
+| `types.ts` | `Page`, `BlockDoc`, `BlockNode` |
+
+## Schema changes
+
+1. Increment `DB_VERSION` in `db.ts`
+2. Add non-destructive `upgrade` handler
+3. Add tests in `db.test.ts` / `codec.test.ts`
+4. Document migration in PR — user data must survive
+
+## Page model essentials
+
+```typescript
+// parent_id empty string = root — check with len()
+len(page.parent_id ?? "") === 0
+
+// kind
+"page" | "directory"
+
+// section — workspace uses WORKSPACE_SECTION ("Pages")
+```
+
+## Images
+
+- Stored in separate IDB object store
+- Referenced from editor nodes — do not inline large blobs in `doc`
+
+## Search
+
+- **FlexSearch is never persisted**
+- Rebuilt from pages in memory when palette opens
+- If adding indexed fields, update search builder only
+
+## Platform note
+
+IndexedDB is per-origin. Extension `chrome-extension://` ≠ `https://` demo — data is isolated by design.
