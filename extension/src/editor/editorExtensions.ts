@@ -9,6 +9,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { Markdown } from "tiptap-markdown";
 import { BackgroundColor } from "@/editor/backgroundColor";
 import { codeLowlight } from "@/editor/codeLowlight";
 
@@ -36,6 +37,11 @@ export function createEditorExtensions() {
     Highlight.configure({ multicolor: true }),
     TextAlign.configure({
       types: ["heading", "paragraph"],
+    }),
+    Markdown.configure({
+      html: true,
+      transformPastedText: true,
+      transformCopiedText: false,
     }),
   ];
 }
