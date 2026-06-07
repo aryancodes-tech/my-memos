@@ -8,6 +8,9 @@ export const WEB_DEMO_BASE = "/demo/";
 /** When set by web-app-dev-plugin, the demo is mounted under the landing dev server. */
 const isEmbeddedDev = process.env.MYMEMOS_EMBEDDED_DEV === "1";
 
+/** Root-level HMR websocket path — must match web-app-dev-plugin.ts. */
+const EMBEDDED_HMR_PATH = "/__mymemos_demo_hmr";
+
 /**
  * Vite config for the standalone web build of the extension UI.
  * Produces a static SPA in public/demo/ for the TanStack Start site to serve.
@@ -31,6 +34,8 @@ export default defineConfig({
     port: 5174,
     strictPort: true,
     // Standalone `extension dev:web` only - embedded /demo/ HMR is configured in web-app-dev-plugin.ts.
-    ...(!isEmbeddedDev ? { hmr: { port: 5175 } } : {}),
+    ...(isEmbeddedDev
+      ? { hmr: { path: EMBEDDED_HMR_PATH } }
+      : { hmr: { port: 5175 } }),
   },
 });

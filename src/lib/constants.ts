@@ -82,10 +82,13 @@ export const LANDING_FEATURE_CLIP_BASE = "/videos/features";
 export const LANDING_FEATURE_CLIPS_ENABLED = false;
 
 /** Path to the site favicon served from the public directory. */
-export const SITE_FAVICON_PATH = "/app/icons/icon-48.png";
+export const SITE_FAVICON_PATH = "/favicon.svg";
+
+/** MIME type for the site favicon. */
+export const SITE_FAVICON_TYPE = "image/svg+xml";
 
 /** Path to the Apple touch icon served from the public directory. */
-export const SITE_APPLE_TOUCH_ICON_PATH = "/app/icons/icon-128.png";
+export const SITE_APPLE_TOUCH_ICON_PATH = "/apple-touch-icon.png";
 
 /** Scroll runway height multiplier (viewport heights) for the launch video section. */
 export const LANDING_VIDEO_SCROLL_RUNWAY_VH = 1.55;

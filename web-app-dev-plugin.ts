@@ -7,8 +7,24 @@ import { createServer as createViteServer } from "vite";
 /** URL prefix for the embedded live demo. */
 const WEB_DEMO_PREFIX = "/demo";
 
+/**
+ * Root-level HMR websocket path for the embedded demo.
+ * Must not match WEB_DEMO_PREFIX or Vite doubles it with base `/demo/`.
+ */
+const WEB_DEMO_HMR_PATH = "/__mymemos_demo_hmr";
+
 /** Built demo artifacts consumed during preview. */
 const PUBLIC_DEMO_DIR = path.resolve(process.cwd(), "public/demo");
+
+/** Resolves the port the parent dev server is actually listening on. */
+function resolveHttpServerPort(httpServer: HttpServer | undefined, fallback: number): number {
+  const address = httpServer?.address();
+  if (typeof address === "object" && address !== null && "port" in address) {
+    return address.port;
+  }
+
+  return fallback;
+}
 
 /**
  * Mounts the extension Vite app at /demo during landing-site dev.
@@ -39,8 +55,9 @@ export function webAppDevPlugin(): Plugin {
         }
 
         const parentHttpServer = server.httpServer as HttpServer | undefined;
-        const parentPort =
+        const configuredPort =
           typeof server.config.server.port === "number" ? server.config.server.port : 8080;
+        const parentPort = resolveHttpServerPort(parentHttpServer, configuredPort);
 
         // vite.web.config.ts skips its standalone HMR port when this flag is set.
         process.env.MYMEMOS_EMBEDDED_DEV = "1";
@@ -50,11 +67,11 @@ export function webAppDevPlugin(): Plugin {
           root: path.resolve(process.cwd(), "extension"),
           server: {
             middlewareMode: true,
-            // Route HMR through the landing dev server (8080), not a separate port.
+            // Route HMR through the landing dev server on its actual listen port.
             hmr: parentHttpServer
               ? {
                   server: parentHttpServer,
-                  path: WEB_DEMO_PREFIX,
+                  path: WEB_DEMO_HMR_PATH,
                   port: parentPort,
                   clientPort: parentPort,
                 }

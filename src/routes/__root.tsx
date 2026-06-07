@@ -11,7 +11,12 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportClientError } from "../lib/client-error-reporting";
-import { PRODUCT_NAME, SITE_APPLE_TOUCH_ICON_PATH, SITE_FAVICON_PATH } from "../lib/constants";
+import {
+  PRODUCT_NAME,
+  SITE_APPLE_TOUCH_ICON_PATH,
+  SITE_FAVICON_PATH,
+  SITE_FAVICON_TYPE,
+} from "../lib/constants";
 
 function NotFoundComponent() {
   return (
@@ -99,13 +104,11 @@ export const Route = createRootRoute({
       {
         rel: "icon",
         href: SITE_FAVICON_PATH,
-        type: "image/png",
-        sizes: "48x48",
+        type: SITE_FAVICON_TYPE,
       },
       {
         rel: "apple-touch-icon",
         href: SITE_APPLE_TOUCH_ICON_PATH,
-        sizes: "128x128",
       },
     ],
   }),

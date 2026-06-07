@@ -183,6 +183,12 @@ export const MOBILE_EXPERIENCE_NOTICE_CTA = "Return to home page";
 /** Public path for the marketing home page. */
 export const MARKETING_HOME_PATH = "/";
 
+/** Path to the site favicon served from the public directory. */
+export const SITE_FAVICON_PATH = "/favicon.svg";
+
+/** MIME type for the site favicon. */
+export const SITE_FAVICON_TYPE = "image/svg+xml";
+
 /** HTML class markdown-it uses for GFM task lists. */
 export const MARKDOWN_TASK_LIST_HTML_CLASS = "contains-task-list";
 
