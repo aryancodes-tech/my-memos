@@ -12,9 +12,16 @@ import {
   SIDEBAR_MENU_MIN_WIDTH_PX,
   SIDEBAR_WIDTH_PX,
   SEARCH_SHORTCUT_LABEL,
+  WORKSPACE_DRAG_MIME,
   WORKSPACE_SECTION,
 } from "@/lib/constants";
 import { len } from "@/lib/text";
+import {
+  canDropOntoFolder,
+  canDropOntoPage,
+  canMoveWorkspaceItem,
+  resolveFolderDropParentId,
+} from "@/lib/workspace-tree";
 import { PageIcon } from "@/components/PageIcon";
 import {
   ChevronLeft,
@@ -28,10 +35,43 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+
+/** Drag-and-drop props shared by workspace sidebar rows. */
+interface WorkspaceDragProps {
+  dragPageId: string | null;
+  dragPageIdRef: RefObject<string | null>;
+  beginWorkspaceDrag: (pageId: string) => void;
+  endWorkspaceDrag: () => void;
+  finishWorkspaceDrag: () => void;
+}
 
 export default function Sidebar() {
   const { pages, sidebarCollapsed, toggleSidebar, view, setView, setSearchOpen } = useStore();
+  const [dragPageId, setDragPageId] = useState<string | null>(null);
+  const dragPageIdRef = useRef<string | null>(null);
+
+  const beginWorkspaceDrag = (pageId: string) => {
+    dragPageIdRef.current = pageId;
+    setDragPageId(pageId);
+  };
+
+  const endWorkspaceDrag = () => {
+    setDragPageId(null);
+  };
+
+  const finishWorkspaceDrag = () => {
+    dragPageIdRef.current = null;
+    setDragPageId(null);
+  };
+
+  const workspaceDrag: WorkspaceDragProps = {
+    dragPageId,
+    dragPageIdRef,
+    beginWorkspaceDrag,
+    endWorkspaceDrag,
+    finishWorkspaceDrag,
+  };
 
   const favorites = useMemo(() => selectFavoritePages(pages), [pages]);
   const recent = useMemo(() => selectRecentPages(pages), [pages]);
@@ -88,7 +128,7 @@ export default function Sidebar() {
         />
       </div>
 
-      <div className="ko-sidebar-scroll ko-scroll">
+      <div className="ko-sidebar-scroll ko-scroll flex-1 min-h-0">
         <Section title="Favorites">
           {favorites.length === 0 ? (
             <p className="ko-sidebar-empty">Star a page to add it here.</p>
@@ -105,11 +145,11 @@ export default function Sidebar() {
           )}
         </Section>
 
-        <Section title={WORKSPACE_SECTION} action={<WorkspaceAddButton />}>
+        <WorkspaceSection action={<WorkspaceAddButton />}>
           {workspaceRoots.map((item) => (
-            <WorkspaceTreeItem key={item.id} item={item} depth={0} />
+            <WorkspaceTreeItem key={item.id} item={item} depth={0} workspaceDrag={workspaceDrag} />
           ))}
-        </Section>
+        </WorkspaceSection>
       </div>
     </aside>
   );
@@ -178,6 +218,19 @@ function Section({
   );
 }
 
+/** Pages section containing the workspace tree. */
+function WorkspaceSection({ action, children }: { action: ReactNode; children: ReactNode }) {
+  return (
+    <div className="mt-5 first:mt-0 ko-workspace-section">
+      <div className="ko-sidebar-section-header">
+        <div className="ko-sidebar-section-title">{WORKSPACE_SECTION}</div>
+        {action}
+      </div>
+      <div className="ko-workspace-tree">{children}</div>
+    </div>
+  );
+}
+
 /** Permanent add control beside the Pages section title. */
 function WorkspaceAddButton() {
   const { createPage, createDirectory } = useStore();
@@ -221,7 +274,15 @@ function WorkspaceAddButton() {
   );
 }
 
-function WorkspaceTreeItem({ item, depth }: { item: Page; depth: number }) {
+function WorkspaceTreeItem({
+  item,
+  depth,
+  workspaceDrag,
+}: {
+  item: Page;
+  depth: number;
+  workspaceDrag: WorkspaceDragProps;
+}) {
   const { pages, collapsedDirs, toggleDirectory } = useStore();
   const children = useMemo(() => selectWorkspaceChildren(pages, item.id), [pages, item.id]);
   const isCollapsed = collapsedDirs[item.id] === true;
@@ -234,17 +295,25 @@ function WorkspaceTreeItem({ item, depth }: { item: Page; depth: number }) {
           depth={depth}
           expanded={!isCollapsed}
           childCount={children.length}
+          workspaceDrag={workspaceDrag}
           onToggle={() => toggleDirectory(item.id)}
         />
         {!isCollapsed &&
           children.map((child) => (
-            <WorkspaceTreeItem key={child.id} item={child} depth={depth + 1} />
+            <WorkspaceTreeItem
+              key={child.id}
+              item={child}
+              depth={depth + 1}
+              workspaceDrag={workspaceDrag}
+            />
           ))}
       </div>
     );
   }
 
-  return <PageRow page={item} depth={depth} menuVariant="workspace" />;
+  return (
+    <PageRow page={item} depth={depth} menuVariant="workspace" workspaceDrag={workspaceDrag} />
+  );
 }
 
 function DirectoryRow({
@@ -253,17 +322,23 @@ function DirectoryRow({
   expanded,
   childCount,
   onToggle,
+  workspaceDrag,
 }: {
   item: Page;
   depth: number;
   expanded: boolean;
   childCount: number;
   onToggle: () => void;
+  workspaceDrag: WorkspaceDragProps;
 }) {
-  const { updatePage, requestDelete, createPage, createDirectory } = useStore();
+  const { pages, updatePage, requestDelete, createPage, createDirectory, moveWorkspaceItem } =
+    useStore();
+  const { dragPageId, dragPageIdRef, beginWorkspaceDrag, endWorkspaceDrag, finishWorkspaceDrag } =
+    workspaceDrag;
   const [editing, setEditing] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [dropTarget, setDropTarget] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useClickOutside(ref, () => {
@@ -274,11 +349,43 @@ function DirectoryRow({
   return (
     <div
       ref={ref}
-      className="ko-sidebar-row group relative"
+      className={`ko-sidebar-row group relative ${dropTarget ? "is-drop-target" : ""} ${dragPageId === item.id ? "is-dragging" : ""}`}
       style={{ paddingLeft: `${depth * SIDEBAR_INDENT_PX + 6}px` }}
+      draggable={!editing}
+      onDragStart={(event) => startWorkspaceRowDrag(event, item.id, beginWorkspaceDrag)}
+      onDragEnd={() => {
+        endWorkspaceDrag();
+        setDropTarget(false);
+        scheduleWorkspaceDragCleanup(finishWorkspaceDrag, dragPageIdRef);
+      }}
+      onDragOver={(event) => {
+        const draggedId = dragPageIdRef.current;
+        if (len(draggedId ?? "") === 0 || !canDropOntoFolder(pages, draggedId!, item)) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        event.dataTransfer.dropEffect = "move";
+        setDropTarget(true);
+      }}
+      onDragLeave={() => setDropTarget(false)}
+      onDrop={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const pageId = resolveDragPageId(event, dragPageId, dragPageIdRef);
+        const targetParentId = resolveFolderDropParentId(pages, pageId, item);
+        if (len(pageId) === 0 || !canMoveWorkspaceItem(pages, pageId, targetParentId)) {
+          setDropTarget(false);
+          return;
+        }
+        void moveWorkspaceItem(pageId, targetParentId);
+        finishWorkspaceDrag();
+        setDropTarget(false);
+      }}
     >
       <button
         className="ko-sidebar-chevron"
+        draggable={false}
         title={expanded ? "Collapse" : "Expand"}
         onClick={onToggle}
       >
@@ -302,13 +409,13 @@ function DirectoryRow({
           placeholder="Untitled folder"
         />
       ) : (
-        <button
-          className="ko-sidebar-row-label"
+        <div
+          className="ko-sidebar-row-label cursor-pointer"
           onDoubleClick={() => setEditing(true)}
           onClick={onToggle}
         >
           {item.title || "Untitled folder"}
-        </button>
+        </div>
       )}
       <div className="ko-sidebar-row-actions">
         <div className="relative">
@@ -384,32 +491,87 @@ function PageRow({
   page,
   depth = 0,
   menuVariant = "none",
+  workspaceDrag,
 }: {
   page: Page;
   depth?: number;
   menuVariant?: "none" | "favorites" | "recent" | "workspace";
+  workspaceDrag?: WorkspaceDragProps;
 }) {
-  const { setView, view, updatePage, requestDelete } = useStore();
+  const { pages, setView, view, updatePage, requestDelete, moveWorkspaceItem } = useStore();
   const active = view.kind === "page" && view.id === page.id;
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropTarget, setDropTarget] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const hasMenu = menuVariant !== "none";
+  const isWorkspace = menuVariant === "workspace";
+  const dragPageId = workspaceDrag?.dragPageId ?? null;
+  const dragPageIdRef = workspaceDrag?.dragPageIdRef ?? { current: null };
 
   useClickOutside(ref, () => setMenuOpen(false));
 
   return (
     <div
       ref={ref}
-      className={`ko-sidebar-row group relative ${active ? "is-active" : ""}`}
+      className={`ko-sidebar-row group relative ${active ? "is-active" : ""} ${dropTarget ? "is-drop-target" : ""} ${dragPageId === page.id ? "is-dragging" : ""}`}
       style={{ paddingLeft: `${depth * SIDEBAR_INDENT_PX + (depth > 0 ? 24 : 6)}px` }}
+      draggable={isWorkspace && !menuOpen}
+      onDragStart={
+        isWorkspace && workspaceDrag
+          ? (event) => startWorkspaceRowDrag(event, page.id, workspaceDrag.beginWorkspaceDrag)
+          : undefined
+      }
+      onDragEnd={
+        isWorkspace && workspaceDrag
+          ? () => {
+              workspaceDrag.endWorkspaceDrag();
+              setDropTarget(false);
+              scheduleWorkspaceDragCleanup(
+                workspaceDrag.finishWorkspaceDrag,
+                workspaceDrag.dragPageIdRef,
+              );
+            }
+          : undefined
+      }
+      onDragOver={
+        isWorkspace
+          ? (event) => {
+              const draggedId = dragPageIdRef.current;
+              if (len(draggedId ?? "") === 0 || !canDropOntoPage(pages, draggedId!, page)) {
+                return;
+              }
+              event.preventDefault();
+              event.stopPropagation();
+              event.dataTransfer.dropEffect = "move";
+              setDropTarget(true);
+            }
+          : undefined
+      }
+      onDragLeave={isWorkspace ? () => setDropTarget(false) : undefined}
+      onDrop={
+        isWorkspace
+          ? (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              const pageId = resolveDragPageId(event, dragPageId, dragPageIdRef);
+              if (len(pageId) === 0 || !canDropOntoPage(pages, pageId, page)) {
+                setDropTarget(false);
+                return;
+              }
+              void moveWorkspaceItem(pageId, page.parent_id);
+              workspaceDrag?.finishWorkspaceDrag();
+              setDropTarget(false);
+            }
+          : undefined
+      }
     >
-      <button
-        className="flex flex-1 min-w-0 items-center gap-2 text-left"
+      <div
+        className="flex flex-1 min-w-0 items-center gap-2 text-left cursor-pointer"
         onClick={() => setView({ kind: "page", id: page.id })}
       >
         <PageIcon kind="page" size={15} />
         <span className="ko-sidebar-row-label">{page.title || "Untitled"}</span>
-      </button>
+      </div>
       {hasMenu && (
         <div className="ko-sidebar-row-actions">
           <div className="relative">
@@ -477,6 +639,66 @@ function MenuItem({
       <span className="ko-sidebar-menu-item-label">{label}</span>
     </button>
   );
+}
+
+/** Starts a workspace row drag unless the pointer is on an interactive child. */
+function startWorkspaceRowDrag(
+  event: React.DragEvent<HTMLElement>,
+  pageId: string,
+  onBegin: (pageId: string) => void,
+) {
+  if (!shouldStartWorkspaceRowDrag(event.target)) {
+    event.preventDefault();
+    return;
+  }
+
+  event.dataTransfer.setData(WORKSPACE_DRAG_MIME, pageId);
+  event.dataTransfer.setData("text/plain", pageId);
+  event.dataTransfer.effectAllowed = "move";
+  onBegin(pageId);
+}
+
+/** Returns false when the event target is a button, menu, or other non-drag control. */
+function shouldStartWorkspaceRowDrag(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return true;
+  }
+
+  return target.closest(".ko-sidebar-row-actions, .ko-sidebar-menu, .ko-sidebar-chevron, input") === null;
+}
+
+/** Clears the drag ref after drop runs; no-op when drop already finished the drag. */
+function scheduleWorkspaceDragCleanup(
+  finishWorkspaceDrag: () => void,
+  dragPageIdRef: RefObject<string | null>,
+) {
+  window.setTimeout(() => {
+    if (len(dragPageIdRef.current ?? "") > 0) {
+      finishWorkspaceDrag();
+    }
+  }, 0);
+}
+
+/** Prefers the live drag ref/state; falls back to dataTransfer on drop. */
+function resolveDragPageId(
+  event: React.DragEvent,
+  dragPageId: string | null,
+  dragPageIdRef: RefObject<string | null>,
+): string {
+  if (len(dragPageIdRef.current ?? "") > 0) {
+    return dragPageIdRef.current!;
+  }
+
+  if (len(dragPageId ?? "") > 0) {
+    return dragPageId!;
+  }
+
+  const fromMime = event.dataTransfer.getData(WORKSPACE_DRAG_MIME);
+  if (len(fromMime) > 0) {
+    return fromMime;
+  }
+
+  return event.dataTransfer.getData("text/plain");
 }
 
 function useClickOutside(ref: React.RefObject<HTMLElement | null>, onClose: () => void) {

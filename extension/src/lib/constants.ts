@@ -9,6 +9,9 @@ export const DB_NAME = "mymemos";
 /** Sidebar label for the user-managed pages and directories section. */
 export const WORKSPACE_SECTION = "Pages";
 
+/** `dataTransfer` type used when dragging workspace pages and folders in the sidebar. */
+export const WORKSPACE_DRAG_MIME = "application/x-mymemos-page-id";
+
 /** Sidebar width in pixels. */
 export const SIDEBAR_WIDTH_PX = 272;
 
@@ -31,13 +34,13 @@ export const BUILT_IN_THEME_OPTIONS: { id: BuiltInThemeName; label: string }[] =
 
 /** Swatch colors for built-in themes in the theme picker preview. */
 export const BUILT_IN_THEME_SWATCHES: Record<BuiltInThemeName, CustomThemeColors> = {
-  light: { bg: "#ffffff", text: "#1f1f1e", accent: "#2f80ed" },
-  dark: { bg: "#191919", text: "#e8e8e8", accent: "#6aa9ff" },
-  midnight: { bg: "#0b0d12", text: "#e6e9ef", accent: "#7aa2f7" },
-  dracula: { bg: "#282a36", text: "#f8f8f2", accent: "#bd93f9" },
-  solarized: { bg: "#fdf6e3", text: "#073642", accent: "#268bd2" },
-  forest: { bg: "#0f1a14", text: "#e3f0e6", accent: "#6fcf97" },
-  ocean: { bg: "#0d1b2a", text: "#e6f0fa", accent: "#4cc9f0" },
+  light: { bg: "#ffffff", text: "#1f1f1e", accent: "#1f1f1e" },
+  dark: { bg: "#191919", text: "#e8e8e8", accent: "#e8e8e8" },
+  midnight: { bg: "#0b0d12", text: "#e6e9ef", accent: "#e6e9ef" },
+  dracula: { bg: "#282a36", text: "#f8f8f2", accent: "#f8f8f2" },
+  solarized: { bg: "#fdf6e3", text: "#073642", accent: "#073642" },
+  forest: { bg: "#0f1a14", text: "#e3f0e6", accent: "#e3f0e6" },
+  ocean: { bg: "#0d1b2a", text: "#e6f0fa", accent: "#e6f0fa" },
 };
 
 /** chrome.storage key for user-created themes. */
@@ -50,7 +53,7 @@ export const CUSTOM_THEME_ID_PREFIX = "custom-";
 export const CUSTOM_THEME_DEFAULT_COLORS: CustomThemeColors = {
   bg: "#ffffff",
   text: "#1f1f1e",
-  accent: "#2f80ed",
+  accent: "#1f1f1e",
 };
 
 /** Fallback theme when the active custom theme is removed. */
@@ -109,7 +112,7 @@ export const EDITOR_TEXT_COLORS: { id: string; label: string; value: string }[] 
   { id: "orange", label: "Orange", value: "#d35400" },
   { id: "yellow", label: "Yellow", value: "#b7950b" },
   { id: "green", label: "Green", value: "#1e8449" },
-  { id: "blue", label: "Blue", value: "#2874a6" },
+  { id: "charcoal", label: "Charcoal", value: "#4a4a4a" },
   { id: "purple", label: "Purple", value: "#7d3c98" },
 ];
 
@@ -117,13 +120,13 @@ export const EDITOR_TEXT_COLORS: { id: string; label: string; value: string }[] 
 export const EDITOR_CUSTOM_COLOR_LABEL = "Custom color";
 
 /** Default hex value shown in the text custom color picker. */
-export const EDITOR_TEXT_CUSTOM_DEFAULT = "#2f80ed";
+export const EDITOR_TEXT_CUSTOM_DEFAULT = "#6b6b6b";
 
 /** Default hex value shown in the highlight custom color picker. */
 export const EDITOR_HIGHLIGHT_CUSTOM_DEFAULT = "#fff3b0";
 
 /** Default hex value shown in the background custom color picker. */
-export const EDITOR_BACKGROUND_CUSTOM_DEFAULT = "#e3f2fd";
+export const EDITOR_BACKGROUND_CUSTOM_DEFAULT = "#f2f2f2";
 
 /** Preset highlight colors for the editor formatting toolbar. */
 export const EDITOR_HIGHLIGHT_COLORS: { id: string; label: string; value: string }[] = [
@@ -132,7 +135,7 @@ export const EDITOR_HIGHLIGHT_COLORS: { id: string; label: string; value: string
   { id: "orange", label: "Orange", value: "#fdebd0" },
   { id: "red", label: "Red", value: "#fadbd8" },
   { id: "green", label: "Green", value: "#d5f5e3" },
-  { id: "blue", label: "Blue", value: "#d6eaf8" },
+  { id: "slate", label: "Slate", value: "#e0e0e0" },
   { id: "purple", label: "Purple", value: "#ebdef0" },
   { id: "gray", label: "Gray", value: "#eaecee" },
 ];
@@ -146,7 +149,7 @@ export const EDITOR_BACKGROUND_COLORS: { id: string; label: string; value: strin
   { id: "orange", label: "Orange", value: "#fff8e1" },
   { id: "yellow", label: "Yellow", value: "#fffde7" },
   { id: "green", label: "Green", value: "#e8f5e9" },
-  { id: "blue", label: "Blue", value: "#e3f2fd" },
+  { id: "slate", label: "Slate", value: "#efeeec" },
 ];
 
 /** Setting key for persisted collapsed directory ids in chrome.storage. */

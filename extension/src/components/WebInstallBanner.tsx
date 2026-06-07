@@ -38,7 +38,7 @@ export default function WebInstallBanner() {
         <a
           href="/"
           className="rounded-md px-3 py-1.5 text-xs font-medium hover:opacity-90"
-          style={{ background: "var(--ko-accent)", color: "#fff" }}
+          style={{ background: "var(--ko-text)", color: "var(--ko-bg)" }}
         >
           Install extension
         </a>

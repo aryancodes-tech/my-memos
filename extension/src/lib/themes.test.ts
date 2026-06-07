@@ -40,7 +40,7 @@ describe("theme id helpers", () => {
 
 describe("getThemeLabel", () => {
   const customThemes: CustomTheme[] = [
-    { id: "focus", name: "Focus Mode", colors: { bg: "#111", text: "#eee", accent: "#4af" } },
+    { id: "focus", name: "Focus Mode", colors: { bg: "#111", text: "#eee", accent: "#888" } },
   ];
 
   it("returns built-in labels", () => {
@@ -55,10 +55,10 @@ describe("getThemeLabel", () => {
 
 describe("deriveThemeTokens", () => {
   it("derives all CSS variables from primary colors", () => {
-    const tokens = deriveThemeTokens({ bg: "#ffffff", text: "#111111", accent: "#2874a6" });
+    const tokens = deriveThemeTokens({ bg: "#ffffff", text: "#111111", accent: "#4a4a4a" });
     expect(tokens["--ko-bg"]).toBe("#ffffff");
     expect(tokens["--ko-text"]).toBe("#111111");
-    expect(tokens["--ko-accent"]).toBe("#2874a6");
+    expect(tokens["--ko-accent"]).toBe("#4a4a4a");
     expect(tokens["--ko-surface"]).toMatch(/^#/);
     expect(tokens["--ko-text-muted"]).toMatch(/^#/);
   });
