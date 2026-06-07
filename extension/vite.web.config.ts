@@ -5,6 +5,9 @@ import { defineConfig } from "vite";
 /** Public URL path where the standalone web app is served (landing site + deploy). */
 export const WEB_DEMO_BASE = "/demo/";
 
+/** When set by web-app-dev-plugin, the demo is mounted under the landing dev server. */
+const isEmbeddedDev = process.env.MYMEMOS_EMBEDDED_DEV === "1";
+
 /**
  * Vite config for the standalone web build of the extension UI.
  * Produces a static SPA in public/demo/ for the TanStack Start site to serve.
@@ -27,8 +30,7 @@ export default defineConfig({
     host: "localhost",
     port: 5174,
     strictPort: true,
-    hmr: {
-      port: 5175,
-    },
+    // Standalone `extension dev:web` only — embedded /demo/ HMR is configured in web-app-dev-plugin.ts.
+    ...(!isEmbeddedDev ? { hmr: { port: 5175 } } : {}),
   },
 });

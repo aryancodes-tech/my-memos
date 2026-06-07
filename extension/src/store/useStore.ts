@@ -12,6 +12,7 @@ import {
   WORKSPACE_SECTION,
 } from "@/lib/constants";
 import { len } from "@/lib/text";
+import { canMoveWorkspaceItem } from "@/lib/workspace-tree";
 import {
   applyThemeToDocument,
   getCustomThemeStorageId,
@@ -89,18 +90,26 @@ interface State {
   createPage: (parent_id?: string | null) => Promise<Page>;
   createDirectory: (parent_id?: string | null) => Promise<Page>;
   updatePage: (id: string, patch: Partial<Page>) => Promise<void>;
+  /** Moves a workspace page or folder to a new parent (`null` = root). */
+  moveWorkspaceItem: (pageId: string, newParentId: string | null) => Promise<void>;
   deletePage: (id: string) => Promise<void>;
 
   setPageEditor: (editor: Editor | null) => void;
 }
 
+/** Returns true when a page lives at the workspace root (not inside a folder). */
+export function isWorkspaceRoot(page: Pick<Page, "parent_id">): boolean {
+  return len(page.parent_id ?? "") === 0;
+}
+
 function normalizePage(page: Page): Page {
   const kind: PageKind = page.kind === "directory" ? "directory" : "page";
   const section =
-    LEGACY_SECTIONS.has(page.section) || page.section.length === 0
+    LEGACY_SECTIONS.has(page.section) || len(page.section) === 0
       ? WORKSPACE_SECTION
       : page.section;
-  return { ...page, kind, section };
+  const parent_id = len(page.parent_id ?? "") > 0 ? page.parent_id : null;
+  return { ...page, kind, section, parent_id };
 }
 
 function collectDescendantIds(pages: Page[], rootId: string): string[] {
@@ -354,9 +363,44 @@ export const useStore = create<State>((set, get) => ({
   async updatePage(id, patch) {
     const current = get().pages.find((p) => p.id === id);
     if (!current) return;
-    const next: Page = { ...current, ...patch, updated_at: Date.now() };
+    const next = normalizePage({ ...current, ...patch, updated_at: Date.now() });
     await db.putPage(next);
     set((s) => ({ pages: s.pages.map((p) => (p.id === id ? next : p)) }));
+  },
+
+  async moveWorkspaceItem(pageId, newParentId) {
+    const { pages, collapsedDirs } = get();
+    const resolvedParentId = len(newParentId ?? "") > 0 ? newParentId! : null;
+
+    if (!canMoveWorkspaceItem(pages, pageId, resolvedParentId)) {
+      return;
+    }
+
+    const item = pages.find((page) => page.id === pageId);
+    if (!item) {
+      return;
+    }
+
+    const currentParentId = len(item.parent_id ?? "") > 0 ? item.parent_id : null;
+    if (currentParentId === resolvedParentId) {
+      return;
+    }
+
+    const next = normalizePage({
+      ...item,
+      parent_id: resolvedParentId,
+      updated_at: Date.now(),
+    });
+    await db.putPage(next);
+    set((s) => ({ pages: s.pages.map((p) => (p.id === pageId ? next : p)) }));
+
+    if (resolvedParentId === null) {
+      return;
+    }
+
+    const nextCollapsed = { ...collapsedDirs, [resolvedParentId]: false };
+    set({ collapsedDirs: nextCollapsed });
+    void db.setSetting(COLLAPSED_DIRS_SETTING, nextCollapsed);
   },
 
   async deletePage(id) {
@@ -424,12 +468,18 @@ function sortWorkspaceItems(a: Page, b: Page): number {
 
 export function selectWorkspaceRoots(pages: Page[]): Page[] {
   return pages
-    .filter((p) => !p.archived && p.section === WORKSPACE_SECTION && p.parent_id === null)
+    .filter((p) => !p.archived && p.section === WORKSPACE_SECTION && isWorkspaceRoot(p))
     .sort(sortWorkspaceItems);
 }
 
 export function selectWorkspaceChildren(pages: Page[], parentId: string): Page[] {
   return pages
-    .filter((p) => !p.archived && p.section === WORKSPACE_SECTION && p.parent_id === parentId)
+    .filter(
+      (p) =>
+        !p.archived &&
+        p.section === WORKSPACE_SECTION &&
+        len(p.parent_id ?? "") > 0 &&
+        p.parent_id === parentId,
+    )
     .sort(sortWorkspaceItems);
 }

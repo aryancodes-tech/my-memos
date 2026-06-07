@@ -1,15 +1,86 @@
-# MyMemos - Chrome Extension
+# MyMemos — Extension & shared app
 
-Notion-inspired personal knowledge management and learning dashboard. Ships as a **Chrome extension** (New Tab override) and as a **standalone web app** at `/demo/` using the same `src/` React code.
+The core product lives here: React UI, editor, storage, and Chrome MV3 packaging. The same `src/` code also builds the **live demo** at `/demo/` on the landing site.
 
-## Architecture highlights
+For repo-wide setup, commands, and Vercel deploy → [root README](../README.md).
 
-- **Manifest V3** - service worker (`background.js`), `chrome_url_overrides.newtab` → `newtab.html`.
-- **Block-based storage** - every page is a Tiptap/ProseMirror JSON `doc`. We **never** persist rendered HTML or markdown. Plain text is extracted on the fly for the search index.
-- **Compact, compressed JSON** - documents are LZString-compressed before being written to IndexedDB. Schema is versioned via the IDB upgrade hook so future fields (AI metadata, backlinks, version history) can be added without migrations.
-- **Two-tier storage** - IndexedDB for documents; `chrome.storage.local` for lightweight settings (theme, last opened view, custom themes).
-- **In-memory FlexSearch index** - rebuilt on demand, never persisted (no duplicate data on disk).
-- **Themes via CSS variables** - 7 built-in themes, switched by toggling `data-theme` on `<html>`.
+---
+
+## Architecture
+
+### Two delivery modes
+
+| Mode | Entry | Build | Storage |
+| ---- | ----- | ----- | ------- |
+| **Chrome extension** | `newtab.html` + `manifest.config.ts` | `vite.config.ts` (CRXJS) → `dist/` | IndexedDB + `chrome.storage.local` |
+| **Web demo** | `index.html` | `vite.web.config.ts` → `public/demo/` | IndexedDB + `localStorage` |
+
+Data does not sync between modes (different browser origins).
+
+### System diagram
+
+```mermaid
+flowchart TB
+  subgraph Chrome["Chrome Browser"]
+    NT["New Tab Page"]
+    SW["Service Worker\nbackground.js"]
+    CS["chrome.storage.local\nsettings & themes"]
+    IDB["IndexedDB\npages"]
+  end
+
+  subgraph Extension["extension/ (React + Zustand)"]
+    App["App.tsx\nview router + shortcuts"]
+    SB["Sidebar"]
+    ED["Tiptap Editor\nslash menu + toolbar"]
+    SP["SearchPalette\nFlexSearch"]
+    Store["Zustand store"]
+    DB["storage/db.ts\nencode/decode"]
+  end
+
+  subgraph Landing["Landing site (src/)"]
+    LP["Home page\n/download ZIP"]
+    Demo["/demo/ static SPA\nfrom public/demo/"]
+  end
+
+  NT --> App
+  App --> SB & ED & SP
+  App --> Store
+  Store --> DB
+  DB --> IDB
+  Store --> CS
+  SW -.-> NT
+  LP -.->|"npm run package:extension"| Extension
+  Demo -.->|"npm run build:web"| Extension
+```
+
+### Storage design principles
+
+1. **Block JSON only** — every page is a Tiptap/ProseMirror `doc`. Never persist rendered HTML or duplicate markdown.
+2. **Search index is ephemeral** — FlexSearch is rebuilt in memory on demand, never written to disk.
+3. **Two-tier storage** — heavy page data in IndexedDB; light settings (theme, last view, custom themes, collapsed folders) in `chrome.storage.local` or `localStorage` on web.
+
+### Implementation notes
+
+- **Manifest V3** — service worker (`background.js`), `chrome_url_overrides.newtab` → `newtab.html`.
+- **LZString compression** — documents are compacted before IndexedDB write; schema versioned via `DB_VERSION` for non-destructive upgrades.
+- **Themes** — 7 built-in + custom; switched via `data-theme` on `<html>` and CSS variables.
+
+### Tech stack (this package)
+
+| Layer | Choice |
+| ----- | ------ |
+| UI | React 18 |
+| State | Zustand |
+| Editor | Tiptap 2 + ProseMirror |
+| Styling | Tailwind CSS 3 |
+| Build | Vite 5 + CRXJS (extension), Vite 5 (web demo) |
+| Storage | IndexedDB (`idb`) + LZString |
+| Search | FlexSearch (in-memory) |
+| Language | TypeScript 5 |
+
+The landing site (`../src/`) is a separate TanStack Start app — React 19, Tailwind 4, Vite 7.
+
+---
 
 ## Project layout
 
@@ -17,116 +88,87 @@ Notion-inspired personal knowledge management and learning dashboard. Ships as a
 extension/
 ├── public/
 │   ├── background.js     ← service worker
-│   └── icons/            ← 16/48/128 px PNGs
+│   └── icons/            ← 16 / 48 / 128 px PNGs
 ├── manifest.config.ts    ← MV3 manifest (CRXJS source of truth)
-├── newtab.html           ← Chrome extension entry (new-tab page)
-├── index.html            ← Web app entry (standalone SPA)
+├── newtab.html           ← Chrome extension entry
+├── index.html            ← Web demo entry
 ├── src/
-│   ├── App.tsx           ← root, keyboard shortcuts, view router
-│   ├── components/       ← Sidebar, SearchPalette
-│   ├── editor/           ← Tiptap editor + slash menu
+│   ├── App.tsx           ← root, shortcuts, view router
+│   ├── components/       ← Sidebar, SearchPalette, dialogs
+│   ├── editor/           ← Tiptap, slash menu, toolbar
 │   ├── views/            ← Dashboard, PageView
-│   ├── store/            ← Zustand store
-│   ├── storage/          ← IndexedDB + LZString + chrome.storage
-│   └── lib/              ← helpers
-├── vite.config.ts        ← Chrome extension build (CRXJS)
-├── vite.web.config.ts    ← Web app build → public/demo/
+│   ├── store/            ← Zustand
+│   ├── storage/          ← IndexedDB, codec, types
+│   └── lib/              ← constants, themes, helpers
+├── vite.config.ts        ← Chrome extension build
+├── vite.web.config.ts    ← Web demo → ../public/demo/
 └── package.json
 ```
 
-## Web app (browser, no install)
+---
 
-```bash
-npm run dev:web          # from extension/, or npm run dev:app from repo root
-```
-
-Open `http://localhost:8080/demo/` when the landing site is running (`npm run dev:web` from root), or `http://localhost:5174/demo/` when using `npm run dev:web` from `extension/` alone.
-
-Production build:
-
-```bash
-npm run build:web        # outputs to public/demo/ for the landing site deploy
-```
-
-Settings persist via `localStorage`; pages use the same IndexedDB layer. Web and extension data are separate (different browser origins).
-
-## Develop extension (hot reload)
+## Develop (Chrome, hot reload)
 
 ```bash
 cd extension
 npm install
-npm run dev
+npm run dev          # :5173, HMR
 ```
 
-Then in Chrome (one-time setup):
+Chrome setup (one-time):
 
-1. Visit `chrome://extensions`
-2. Enable **Developer mode** (top-right)
-3. Click **Load unpacked**
-4. Select the `extension/dist/` folder
-5. Confirm the extension name is **MyMemos (Dev)** - not plain "MyMemos"
-6. Open a **new tab** - MyMemos takes over
+1. `chrome://extensions` → **Developer mode**
+2. **Load unpacked** → `extension/dist/`
+3. Name must be **MyMemos (Dev)** — open a **new tab**
 
-Keep `npm run dev` running. UI changes should hot-reload in open tabs. If they do not, open a fresh tab.
+| Command | `dist/` output | Extension name |
+| ------- | -------------- | -------------- |
+| `npm run dev` | Dev bundle (HMR via `localhost:5173`) | **MyMemos (Dev)** |
+| `npm run build` | Static production bundle | **MyMemos** |
 
-### Important: dev vs production `dist/`
+Do not run `npm run build` during active dev — it replaces the dev bundle. `predev` clears `dist/` and `.vite/` before each dev start.
 
-| Command         | What lands in `dist/`                        | Chrome extension name |
-| --------------- | -------------------------------------------- | --------------------- |
-| `npm run dev`   | Dev build (loads from `localhost:5173`, HMR) | **MyMemos (Dev)** |
-| `npm run build` | Production bundle (static files, no HMR)     | **MyMemos**       |
+**Stuck?** `npm run dev:reset` → reload extension in Chrome → new tab. Verify with `npm run dev:check`. Fallback: `npm run dev:watch` + manual reload in `chrome://extensions`.
 
-**Do not run `npm run build` while developing.** It replaces the dev `dist/` output. After a production build, extension reload only shows old bundled code until you rebuild again - that is the issue most people hit.
+---
 
-`npm run dev` now runs `predev`, which clears `dist/` and `.vite/` first so CRXJS always generates a fresh dev build.
-
-### If changes still do not appear
+## Web demo (browser, no install)
 
 ```bash
-# Stop the running dev server (Ctrl+C), then:
-npm run dev:reset
+npm run dev:web      # from extension/, or npm run dev:app from repo root
 ```
 
-Then in Chrome:
+- With landing: `http://localhost:8080/demo/` (`npm run dev:web` from root)
+- Standalone: `http://localhost:5174/demo/` (from `extension/` only)
 
-1. Go to `chrome://extensions`
-2. Click **Reload** on MyMemos **(Dev)** - or Remove and Load unpacked again on `extension/dist/`
-3. Open a **new tab** (existing new tabs may keep old code)
+Production: `npm run build:web` → `../public/demo/` (served by the landing deploy).
 
-Verify setup:
+---
+
+## Production & packaging
 
 ```bash
-npm run dev:check
+npm run build        # production extension → dist/
+npm run package      # zip → mymemos-extension.zip
 ```
 
-This fails if `dist/manifest.json` is a production build.
+From repo root: `npm run build:extension`, `npm run package:extension` (also copies ZIP to `public/` for the download button).
 
-**Fallback (no HMR):** `npm run dev:watch` rebuilds `dist/` on every save; click **Reload** on the extension card after each change.
+Stop `npm run dev` before a production build. Reload the unpacked extension after `build`.
 
-## Production build
-
-```bash
-cd extension
-npm run build
-```
-
-Stop `npm run dev` first. Reload the unpacked extension after a production build. The name will show as **MyMemos** (no Dev suffix).
-
-## Package as a ZIP
-
-```bash
-npm run package   # produces extension/mymemos-extension.zip
-```
-
-## Contributing
-
-See the root [CONTRIBUTING.md](../CONTRIBUTING.md) for setup, conventions, and the PR checklist. Run `npm run ci` from the repo root before opening a pull request.
+---
 
 ## Roadmap-ready
 
-The storage schema and module boundaries are designed so the following can be added without data migrations:
+Storage schema and module boundaries support adding these without data migrations:
 
-- AI search / summaries / flashcards (reads the same block JSON)
-- Backlinks & page mentions (graph built dynamically from blocks)
-- Cloud sync (Google Drive / GitHub / custom) - same block JSON on the wire
+- AI search, summaries, flashcards (same block JSON)
+- Backlinks and page mentions (graph from blocks)
+- Cloud sync (block JSON on the wire)
 - Version history (append-only snapshots in a sibling object store)
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](../CONTRIBUTING.md). Run `npm run ci` from the repo root before opening a PR.

@@ -7,9 +7,6 @@ import { createServer as createViteServer } from "vite";
 /** URL prefix for the embedded live demo. */
 const WEB_DEMO_PREFIX = "/demo";
 
-/** Fallback HMR port when the parent HTTP server is not available yet. */
-const DEMO_HMR_PORT = 5175;
-
 /** Built demo artifacts consumed during preview. */
 const PUBLIC_DEMO_DIR = path.resolve(process.cwd(), "public/demo");
 
@@ -24,24 +21,6 @@ export function webAppDevPlugin(): Plugin {
     name: "mymemos-web-demo-dev",
     enforce: "pre",
     async configureServer(server) {
-      const parentHttpServer = server.httpServer as HttpServer | undefined;
-
-      webAppServer = await createViteServer({
-        configFile: path.resolve(process.cwd(), "extension/vite.web.config.ts"),
-        root: path.resolve(process.cwd(), "extension"),
-        server: {
-          middlewareMode: true,
-          // Vite expects the raw Node HTTP server, not the ViteDevServer wrapper.
-          hmr: parentHttpServer
-            ? { server: parentHttpServer }
-            : { port: DEMO_HMR_PORT },
-        },
-        appType: "spa",
-        optimizeDeps: {
-          entries: [path.resolve(process.cwd(), "extension/index.html")],
-        },
-      });
-
       server.middlewares.use((req, res, next) => {
         const url = (req.url ?? "").split("?")[0];
         if (url === WEB_DEMO_PREFIX) {
@@ -53,7 +32,42 @@ export function webAppDevPlugin(): Plugin {
         next();
       });
 
-      server.middlewares.use(WEB_DEMO_PREFIX, webAppServer.middlewares);
+      // Post hook: parent httpServer is available after internal middleware is installed.
+      return async () => {
+        if (webAppServer) {
+          return;
+        }
+
+        const parentHttpServer = server.httpServer as HttpServer | undefined;
+        const parentPort =
+          typeof server.config.server.port === "number" ? server.config.server.port : 8080;
+
+        // vite.web.config.ts skips its standalone HMR port when this flag is set.
+        process.env.MYMEMOS_EMBEDDED_DEV = "1";
+
+        webAppServer = await createViteServer({
+          configFile: path.resolve(process.cwd(), "extension/vite.web.config.ts"),
+          root: path.resolve(process.cwd(), "extension"),
+          server: {
+            middlewareMode: true,
+            // Route HMR through the landing dev server (8080), not a separate port.
+            hmr: parentHttpServer
+              ? {
+                  server: parentHttpServer,
+                  path: WEB_DEMO_PREFIX,
+                  port: parentPort,
+                  clientPort: parentPort,
+                }
+              : false,
+          },
+          appType: "spa",
+          optimizeDeps: {
+            entries: [path.resolve(process.cwd(), "extension/index.html")],
+          },
+        });
+
+        server.middlewares.use(WEB_DEMO_PREFIX, webAppServer.middlewares);
+      };
     },
     configurePreviewServer(server) {
       server.middlewares.use((req, res, next) => {
