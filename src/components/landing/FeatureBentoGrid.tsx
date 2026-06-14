@@ -29,7 +29,7 @@ const FEATURE_TILES: FeatureTile[] = [
   {
     id: "storage",
     title: "Local block storage",
-    description: "Structured notes in your browser—fast, private, and available offline.",
+    description: "Structured notes in your browser-fast, private, and available offline.",
     tag: "Storage",
     clipFilename: "storage.mp4",
     span: { col: 5, row: 2 },
@@ -53,7 +53,7 @@ const FEATURE_TILES: FeatureTile[] = [
   {
     id: "editor",
     title: "Notion-style editor",
-    description: "Slash commands, headings, lists, and code blocks—keyboard-first.",
+    description: "Slash commands, headings, lists, and code blocks-keyboard-first.",
     tag: "Editor",
     clipFilename: "editor.mp4",
     span: { col: 7, row: 2 },

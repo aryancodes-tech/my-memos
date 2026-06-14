@@ -1,4 +1,11 @@
-import { DEMO_PATH, LANDING_GET_STARTED_DESC, LANDING_GET_STARTED_SECTION_ID, LANDING_FOOTER_TAGLINE, PRODUCT_NAME } from "@/lib/constants";
+import {
+  DEMO_PATH,
+  LANDING_GET_STARTED_DESC,
+  LANDING_GET_STARTED_SECTION_ID,
+  LANDING_FOOTER_TAGLINE,
+  PRODUCT_NAME,
+} from "@/lib/constants";
+import { LandingFaq } from "@/components/landing/LandingFaq";
 
 const INSTALL_STEPS: Array<{
   title: string;
@@ -78,8 +85,7 @@ export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStart
                 <p>
                   {"code" in step && step.code !== undefined && step.code.length > 0 ? (
                     <>
-                      Navigate to <code className="landing-code">{step.code}</code> in your
-                      browser.
+                      Navigate to <code className="landing-code">{step.code}</code> in your browser.
                     </>
                   ) : (
                     step.body
@@ -90,6 +96,8 @@ export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStart
           ))}
         </ol>
       </div>
+
+      <LandingFaq />
 
       <footer className="landing-page-footer">
         <span className="landing-page-footer-brand">{PRODUCT_NAME}</span>

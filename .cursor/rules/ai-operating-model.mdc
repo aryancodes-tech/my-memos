@@ -1,5 +1,5 @@
 ---
-description: How AI agents should operate on this repo — analysis, verification, and communication standards
+description: How AI agents should operate on this repo - analysis, verification, and communication standards
 alwaysApply: true
 ---
 
@@ -7,9 +7,9 @@ alwaysApply: true
 
 ## Before any modification
 
-1. **Classify** the task (extension / landing / storage / editor / CI)
-2. **Read** nearest existing implementation — same directory, same layer
-3. **Trace data flow** — where state is read, written, persisted
+1. **Classify** the task (extension / landing / storage / editor / CI / landing-seo)
+2. **Read** nearest existing implementation - same directory, same layer
+3. **Trace data flow** - where state is read, written, persisted
 4. **State invariants** you must preserve (see `storage-invariants.mdc`)
 
 ## Analysis output (for non-trivial tasks)
@@ -23,10 +23,11 @@ Summarize before coding:
 
 ## Verification is mandatory
 
-- **Run commands** — do not only suggest them
-- **Report results** — pass/fail with relevant output
+- **Run commands** - do not only suggest them
+- **Report results** - pass/fail with relevant output
 - UI changes → `npm run dev` or `npm run dev:web` when feasible
 - Logic changes → `npm run test` for affected modules
+- Landing SEO → `npm run test -- src/lib/seo.test.ts` + `npm run generate:seo` + curl `/llms.txt`
 - Pre-PR → `npm run ci`
 
 ## Code quality bar
@@ -52,7 +53,7 @@ setTimeout(save, 250);
 ## Communication
 
 - Use code citations: ```startLine:endLine:filepath
-- Proportional responses — simple fix ≠ architecture essay
+- Proportional responses - simple fix ≠ architecture essay
 - State blockers explicitly with evidence (logs, test output)
 - Do not claim fixed without verification
 

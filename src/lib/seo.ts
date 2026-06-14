@@ -1,3 +1,4 @@
+import aiContent from "@/lib/ai-content.json";
 import {
   DEMO_PATH,
   GITHUB_REPO_URL,
@@ -8,6 +9,13 @@ import {
   SITE_OG_IMAGE_PATH,
   SITE_ORIGIN,
 } from "@/lib/constants";
+import {
+  flattenFaqAnswerForSchema,
+  resolveLandingFaqItems,
+} from "@/lib/landing-faq-content";
+import { buildAbsoluteUrl } from "@/lib/url";
+
+export { buildAbsoluteUrl };
 
 /** TanStack Router `head()` meta entry. */
 export type SeoMetaTag = {
@@ -42,13 +50,6 @@ export function resolveSiteOrigin(fallbackOrigin?: string): string {
   }
 
   return "http://localhost:8080";
-}
-
-/** Builds an absolute URL from a site origin and path segment. */
-export function buildAbsoluteUrl(origin: string, path: string): string {
-  const normalizedOrigin = origin.replace(/\/$/, "");
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${normalizedOrigin}${normalizedPath}`;
 }
 
 /** Homepage `<head>` meta tags for search and social previews. */
@@ -94,11 +95,15 @@ export function buildLandingJsonLdScripts(origin: string): SeoScriptTag[] {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: PRODUCT_NAME,
+    alternateName: aiContent.alternateNames,
     applicationCategory: "ProductivityApplication",
     operatingSystem: "Chrome",
+    browserRequirements: "Requires Google Chrome",
     description: LANDING_META_DESCRIPTION,
     url: pageUrl,
     image: imageUrl,
+    license: "https://opensource.org/licenses/MIT",
+    isAccessibleForFree: true,
     offers: {
       "@type": "Offer",
       price: "0",
@@ -109,8 +114,11 @@ export function buildLandingJsonLdScripts(origin: string): SeoScriptTag[] {
       "Local-first offline storage",
       "Notion-style block editor",
       "Instant fuzzy search",
+      "Seven built-in themes",
+      "No account required",
     ],
     downloadUrl: pageUrl,
+    sameAs: [GITHUB_REPO_URL],
   };
 
   const webSite = {
@@ -134,7 +142,20 @@ export function buildLandingJsonLdScripts(origin: string): SeoScriptTag[] {
     sameAs: [GITHUB_REPO_URL],
   };
 
-  return [softwareApplication, webSite, organization].map((schema) => ({
+  const faqPage = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: resolveLandingFaqItems(origin).map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: flattenFaqAnswerForSchema(item),
+      },
+    })),
+  };
+
+  return [softwareApplication, webSite, organization, faqPage].map((schema) => ({
     type: "application/ld+json",
     children: JSON.stringify(schema),
   }));
@@ -162,5 +183,39 @@ export function buildSitemapXml(origin: string): string {
     <priority>1.0</priority>
   </url>
 </urlset>
+`;
+}
+
+/**
+ * Builds `/llms.txt` content per the proposed llms.txt standard for AI crawlers.
+ * @see https://llmstxt.org/
+ */
+export function buildLlmsTxt(origin: string): string {
+  const homeUrl = buildAbsoluteUrl(origin, "/");
+  const demoUrl = buildAbsoluteUrl(origin, DEMO_PATH);
+  const faqUrl = `${homeUrl}#faq`;
+
+  const faqLines = resolveLandingFaqItems(origin)
+    .map((item) => `- **${item.question}** ${flattenFaqAnswerForSchema(item)}`)
+    .join("\n");
+
+  return `# ${PRODUCT_NAME}
+
+> ${aiContent.llmsSummary}
+
+## Product
+
+- [Homepage](${homeUrl}): Official site - download the Chrome extension and read feature overview.
+- [Live demo](${demoUrl}): Try the full MyMemos UI in your browser without installing.
+- [GitHub repository](${GITHUB_REPO_URL}): Open-source MIT-licensed codebase.
+
+## FAQ
+
+${faqLines}
+
+## Optional
+
+- [FAQ section](${faqUrl}): Same questions rendered on the homepage for humans and crawlers.
+- [Sitemap](${buildAbsoluteUrl(origin, "/sitemap.xml")}): Indexable URLs for this site.
 `;
 }

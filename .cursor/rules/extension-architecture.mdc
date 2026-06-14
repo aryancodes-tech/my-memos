@@ -1,5 +1,5 @@
 ---
-description: Chrome extension and web demo — Zustand, views, platform, components
+description: Chrome extension and web demo - Zustand, views, platform, components
 globs: extension/**/*.{ts,tsx}
 alwaysApply: false
 ---
@@ -40,32 +40,32 @@ Single store owns pages, view routing, theme, dialogs, sidebar, search.
 | Navigation | `openPage`, `openDashboard` |
 | Theme | `setTheme`, custom theme CRUD |
 
-Use exported **selectors** for derived lists — do not rebuild tree logic in components.
+Use exported **selectors** for derived lists - do not rebuild tree logic in components.
 
 ## Views
 
-- `Dashboard` — recent pages, quick create
-- `PageView` — title + editor, debounced save
+- `Dashboard` - recent pages, quick create
+- `PageView` - title + editor, debounced save
 
 View type: `{ kind: "dashboard" }` | `{ kind: "page"; id: string }`
 
 ## Components conventions
 
-- `extension/src/components/Sidebar.tsx` — workspace tree, DnD, folders
-- `SearchPalette.tsx` — ⌘K, FlexSearch (ephemeral index)
-- `ThemeDropdown.tsx` — built-in + custom themes
-- Dialogs — delete confirm, etc.
+- `extension/src/components/Sidebar.tsx` - workspace tree, DnD, folders
+- `SearchPalette.tsx` - ⌘K, FlexSearch (ephemeral index)
+- `ThemeDropdown.tsx` - built-in + custom themes
+- Dialogs - delete confirm, etc.
 
 CSS: `ko-` classes, theme via `data-theme` + `--ko-*` variables from `extension/src/styles/`.
 
 ## Keyboard shortcuts
 
-Defined in `App.tsx` — check existing bindings before adding new global listeners.
+Defined in `App.tsx` - check existing bindings before adding new global listeners.
 
 ## Build guards
 
-- `guard-production-build.mjs` — blocks prod build during dev
-- `clean-dev-artifacts.mjs` — clears stale `dist/`
+- `guard-production-build.mjs` - blocks prod build during dev
+- `clean-dev-artifacts.mjs` - clears stale `dist/`
 - Use `npm run dev:reset --prefix extension` if HMR breaks
 
 ## Tests

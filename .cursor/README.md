@@ -1,4 +1,4 @@
-# `.cursor/` — AI Engineering Configuration
+# `.cursor/` - AI Engineering Configuration
 
 This directory defines how AI coding agents operate on **MyMemos**. It demonstrates structured, verification-driven AI-assisted development suitable for production codebases and technical review (e.g. Forward Deployed Engineer interviews).
 
@@ -6,9 +6,11 @@ This directory defines how AI coding agents operate on **MyMemos**. It demonstra
 
 | File | Role |
 |------|------|
-| [`../AGENTS.md`](../AGENTS.md) | Master operating manual — architecture, invariants, decision trees |
+| [`../AGENTS.md`](../AGENTS.md) | Master operating manual - architecture, invariants, decision trees |
 | [`SKILLS.md`](SKILLS.md) | Task → skill routing and verification contracts |
 | [`rules/`](rules/) | Scoped Cursor rules (`.mdc`) injected by file pattern |
+
+Notable skills: `landing-seo` (meta, JSON-LD, `llms.txt`, FAQ schema) — see `SKILLS.md` for verify commands.
 
 ## Rules index
 
@@ -26,7 +28,7 @@ This directory defines how AI coding agents operate on **MyMemos**. It demonstra
 
 1. Skim `AGENTS.md` §3 (invariants) before your first PR
 2. Use `SKILLS.md` to find which docs apply to your task
-3. Run `npm run ci` — same gates as GitHub Actions
+3. Run `npm run ci` - same gates as GitHub Actions
 
 ## For reviewers
 
@@ -45,4 +47,4 @@ When architecture changes:
 2. Adjust affected `.mdc` rules
 3. Add skill entries to `SKILLS.md` if new domain emerges
 
-Do not duplicate long prose across files — link and specialize.
+Do not duplicate long prose across files - link and specialize.

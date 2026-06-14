@@ -29,6 +29,7 @@
     "dev": "npm run dev --prefix extension",
     "predev:web": "node scripts/check-node-version.mjs && node scripts/generate-sitemap.mjs",
     "dev:web": "vite dev",
+    "generate:seo": "node scripts/generate-sitemap.mjs",
     "dev:app": "npm run dev:web --prefix extension",
     "dev:extension": "npm run dev --prefix extension",
     "build:app": "npm run build:web --prefix extension",

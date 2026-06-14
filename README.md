@@ -50,12 +50,65 @@ npm run dev:web
 | --- | ---- |
 | http://localhost:8080/ | Marketing page + download button |
 | http://localhost:8080/demo/ | Full app in the browser |
+| http://localhost:8080/robots.txt | Crawler directives (generated) |
+| http://localhost:8080/sitemap.xml | Indexable URLs (generated) |
+| http://localhost:8080/llms.txt | AI crawler summary (server route + generated static copy) |
 
 For the download button to work locally, build the ZIP first:
 
 ```bash
 npm run package:extension
 ```
+
+---
+
+## SEO & AI discoverability
+
+The landing site ships crawler-facing files for search engines and AI systems. **Do not commit or hand-edit** the generated copies in `public/` — they are gitignored and rebuilt automatically.
+
+| URL | Purpose | Source |
+| --- | ------- | ------ |
+| `/robots.txt` | Crawler allow/disallow + sitemap pointer | `scripts/generate-sitemap.mjs` |
+| `/sitemap.xml` | Indexable marketing URLs | `scripts/generate-sitemap.mjs` |
+| `/llms.txt` | Product summary + FAQ for AI crawlers ([llmstxt.org](https://llmstxt.org/)) | `src/routes/llms[.]txt.ts` (dynamic) + static copy from generate script |
+
+**Content sources**
+
+- FAQ copy & llms summary: `src/lib/ai-content.json`
+- Meta tags, JSON-LD, helpers: `src/lib/seo.ts`
+- FAQ UI + link resolution: `src/lib/landing-faq-content.ts`, `src/components/landing/LandingFaq.tsx`
+
+**Generate SEO files locally**
+
+```bash
+npm run generate:seo
+# writes public/robots.txt, public/sitemap.xml, public/llms.txt
+```
+
+This also runs automatically before `npm run dev:web` and `npm run build:web` (`predev:web` / `prebuild:web` hooks).
+
+**Production origin (`VITE_SITE_URL`)**
+
+Set on your **hosting provider** (and locally when testing absolute URLs):
+
+```bash
+VITE_SITE_URL=https://www.mymemos.in
+```
+
+Without it, generated files fall back to `http://localhost:8080`. The `/llms.txt` server route resolves the request origin at runtime when `VITE_SITE_URL` is unset.
+
+**Verify SEO changes**
+
+```bash
+npm run test -- src/lib/seo.test.ts   # meta, JSON-LD, llms.txt builders
+npm run generate:seo
+npm run dev:web
+# curl http://localhost:8080/robots.txt
+# curl http://localhost:8080/sitemap.xml
+# curl http://localhost:8080/llms.txt
+```
+
+After deploy, confirm live URLs (replace with your domain): `https://www.mymemos.in/robots.txt`, `/sitemap.xml`, `/llms.txt`.
 
 ---
 
@@ -67,6 +120,7 @@ All commands run from the **repo root** unless noted.
 | ------- | ------------ |
 | `npm run dev` | Extension dev server (port 5173) |
 | `npm run dev:web` | Landing + `/demo/` (port 8080) |
+| `npm run generate:seo` | Regenerate `public/robots.txt`, `sitemap.xml`, `llms.txt` |
 | `npm run dev:app` | Demo only (port 5174) |
 | `npm run build:extension` | Production extension → `extension/dist/` |
 | `npm run package:extension` | Zip extension → `public/mymemos-extension.zip` |
@@ -80,19 +134,20 @@ Extension-only helpers: `npm run dev:reset --prefix extension`, `npm run dev:che
 
 ---
 
-## Deploy to Vercel
+## Deploy the landing site
 
-Landing page + `/demo/` deploy together. The Chrome extension does **not** run on Vercel - only the ZIP download (if you build it).
+Landing page + `/demo/` deploy together as a Node/SSR app (TanStack Start + Nitro). The Chrome extension does **not** run on your host — only the ZIP download (if you build it).
 
-**Vercel project settings:**
+Works on any hosting provider (Netlify, AWS, Fly.io, a VPS, etc.). Example build settings:
 
 | Setting | Value |
 | ------- | ----- |
 | Install | `npm ci && npm ci --prefix extension` |
 | Build | `npm run package:extension && npm run build:web` |
 | Node | 20.x or 24.x (`>= 20.19.0`) |
+| Env | `VITE_SITE_URL=https://your-domain.example` (canonical origin for SEO files, JSON-LD, FAQ links) |
 
-Enable **Analytics** in the Vercel dashboard if you want traffic on the landing site. The `/demo/` SPA is a separate static bundle and is not tracked by that component.
+The landing site optionally includes web analytics via `@vercel/analytics` in `src/routes/__root.tsx` — remove or swap it if your host uses a different analytics tool. The `/demo/` SPA is a separate static bundle and is not tracked by that component.
 
 ---
 
@@ -135,6 +190,8 @@ Architecture, storage design, and extension internals → [`extension/README.md`
 | Edits don't show up | `npm run dev:reset --prefix extension` → reload extension → new tab |
 | Extension named **MyMemos** not **(Dev)** | You loaded a prod build - run `npm run dev` again |
 | Download button 404 on landing | Run `npm run package:extension` first |
+| Can't find `public/llms.txt` in git | Expected — gitignored; run `npm run generate:seo` or `npm run dev:web` |
+| SEO files show `localhost` URLs | Set `VITE_SITE_URL` and rebuild/redeploy |
 
 ---
 
