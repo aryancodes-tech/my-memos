@@ -9,25 +9,29 @@ import { ScrollVideoShowcase } from "@/components/landing/ScrollVideoShowcase";
 import {
   EXTENSION_ZIP_FILENAME,
   LANDING_HERO_SHELL_PADDING_TOP_REM,
-  LANDING_HERO_TITLE_LINE_ONE,
-  LANDING_HERO_TITLE_LINE_TWO,
   LANDING_MAIN_OVERLAP_VH,
-  LANDING_META_DESCRIPTION,
-  PRODUCT_NAME,
 } from "@/lib/constants";
+import {
+  buildLandingJsonLdScripts,
+  buildLandingLinkTags,
+  buildLandingMetaTags,
+  resolveSiteOrigin,
+} from "@/lib/seo";
+import { getSeoRequestOrigin } from "@/lib/seo-request-origin";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      {
-        title: `${PRODUCT_NAME} - ${LANDING_HERO_TITLE_LINE_ONE} ${LANDING_HERO_TITLE_LINE_TWO}`,
-      },
-      {
-        name: "description",
-        content: LANDING_META_DESCRIPTION,
-      },
-    ],
+  loader: async () => ({
+    requestOrigin: await getSeoRequestOrigin(),
   }),
+  head: ({ loaderData }) => {
+    const origin = resolveSiteOrigin(loaderData?.requestOrigin);
+
+    return {
+      meta: buildLandingMetaTags(origin),
+      links: buildLandingLinkTags(origin),
+      scripts: buildLandingJsonLdScripts(origin),
+    };
+  },
   component: Index,
 });
 
@@ -76,10 +80,7 @@ function Index() {
         }
       />
 
-      <main
-        className="landing-main"
-        style={{ marginTop: `-${LANDING_MAIN_OVERLAP_VH}vh` }}
-      >
+      <main className="landing-main" style={{ marginTop: `-${LANDING_MAIN_OVERLAP_VH}vh` }}>
         <FeatureBentoGrid />
         <LandingGetStarted onDownload={download} isDownloading={isDownloading} />
       </main>

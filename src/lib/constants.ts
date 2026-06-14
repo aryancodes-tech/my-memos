@@ -43,6 +43,24 @@ export const LANDING_LAUNCH_VIDEO_CAPTION = "Your new tab, in action";
 export const LANDING_META_DESCRIPTION =
   "MyMemos replaces your browser New Tab with a local-first notes workspace - capture ideas instantly on every ⌘T, no account required.";
 
+/** `<title>` and Open Graph title for the landing homepage. */
+export const LANDING_PAGE_TITLE = `${PRODUCT_NAME} - Your notes, on every new tab.`;
+
+/**
+ * Canonical site origin without a trailing slash.
+ * Set `VITE_SITE_URL` at build/deploy time (e.g. `https://mymemos.app`).
+ */
+export const SITE_ORIGIN = (import.meta.env.VITE_SITE_URL ?? "").replace(/\/$/, "");
+
+/** Open Graph / Twitter card image path (served from `public/`). */
+export const SITE_OG_IMAGE_PATH = "/launch-poster.png";
+
+/** Mobile browser chrome color for the landing site. */
+export const SITE_THEME_COLOR = "#ffffff";
+
+/** Paths excluded from search indexing via `robots.txt`. */
+export const SEO_ROBOTS_DISALLOW_PATHS = ["/demo/"] as const;
+
 /** Intro copy for the landing get-started section. */
 export const LANDING_GET_STARTED_DESC =
   "Install once. Every new tab becomes your workspace - no account, no server, no config.";
@@ -103,8 +121,7 @@ export const LANDING_VIDEO_EXPAND_END = 0.24;
 export const LANDING_VIDEO_HOLD_SCROLL_RATIO = 0.36;
 
 /** Scroll progress where the fullscreen hold ends and the video begins shrinking. */
-export const LANDING_VIDEO_HOLD_END =
-  LANDING_VIDEO_EXPAND_END + LANDING_VIDEO_HOLD_SCROLL_RATIO;
+export const LANDING_VIDEO_HOLD_END = LANDING_VIDEO_EXPAND_END + LANDING_VIDEO_HOLD_SCROLL_RATIO;
 
 /** Initial width of the launch video frame as a percentage of the viewport (60–70% range). */
 export const LANDING_LAUNCH_VIDEO_INITIAL_WIDTH_PERCENT = 65;
