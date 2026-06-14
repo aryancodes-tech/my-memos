@@ -12,10 +12,10 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportClientError } from "../lib/client-error-reporting";
 import {
-  PRODUCT_NAME,
   SITE_APPLE_TOUCH_ICON_PATH,
   SITE_FAVICON_PATH,
   SITE_FAVICON_TYPE,
+  SITE_THEME_COLOR,
 } from "../lib/constants";
 
 function NotFoundComponent() {
@@ -83,18 +83,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: `${PRODUCT_NAME} - Your knowledge, on every new tab` },
-      {
-        name: "description",
-        content:
-          "Notion-inspired personal knowledge management and learning dashboard that replaces your New Tab page.",
-      },
-      { property: "og:title", content: PRODUCT_NAME },
-      {
-        property: "og:description",
-        content: "Personal knowledge management Chrome extension - local-first, offline-only.",
-      },
-      { property: "og:type", content: "website" },
+      { name: "theme-color", content: SITE_THEME_COLOR },
     ],
     links: [
       {
