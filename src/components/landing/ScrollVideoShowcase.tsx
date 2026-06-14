@@ -8,6 +8,7 @@ import {
   LANDING_LAUNCH_VIDEO_INITIAL_TOP_PERCENT,
   LANDING_LAUNCH_VIDEO_INITIAL_WIDTH_PERCENT,
   LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX,
+  LANDING_LAUNCH_VIDEO_LOAD_SCROLL_PROGRESS,
   LANDING_LAUNCH_VIDEO_POSTER,
   LANDING_LAUNCH_VIDEO_SRC,
   LANDING_VIDEO_EXPAND_END,
@@ -148,6 +149,7 @@ export function ScrollVideoShowcase({
   const loadLaunchVideo = useLaunchVideoEnabled(LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX);
   const runwayRef = useRef<HTMLElement>(null);
   const progress = useScrollProgress(runwayRef);
+  const shouldLoadVideo = loadLaunchVideo && progress > LANDING_LAUNCH_VIDEO_LOAD_SCROLL_PROGRESS;
   const frameStyle = getVideoFrameStyle(progress);
   const isFullscreen = progress >= LANDING_VIDEO_EXPAND_END && progress < LANDING_VIDEO_HOLD_END;
   const showChrome = progress < LANDING_VIDEO_HOLD_END;
@@ -174,11 +176,7 @@ export function ScrollVideoShowcase({
       aria-label="Product launch video"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <div
-          className="landing-video-backdrop"
-          style={{ opacity: backdropOpacity }}
-          aria-hidden
-        />
+        <div className="landing-video-backdrop" style={{ opacity: backdropOpacity }} aria-hidden />
 
         <div
           className="landing-hero-overlay pointer-events-none absolute inset-x-0 top-0 z-10 h-1/2"
@@ -188,14 +186,16 @@ export function ScrollVideoShowcase({
           }}
           aria-hidden={isScrolling}
         >
-          <div className={`landing-hero-shell ${isScrolling ? "pointer-events-none" : "pointer-events-auto"}`}>
+          <div
+            className={`landing-hero-shell ${isScrolling ? "pointer-events-none" : "pointer-events-auto"}`}
+          >
             {hero}
           </div>
         </div>
 
         <div className="landing-video-frame" style={frameStyle}>
           <LaunchVideoFrame
-            videoSrc={videoSrc}
+            videoSrc={shouldLoadVideo ? videoSrc : ""}
             posterSrc={posterSrc}
             label={label}
             showCaption={showCaption}
@@ -242,7 +242,9 @@ function LaunchVideoFrame({
   loadVideo,
 }: LaunchVideoFrameProps) {
   const [mediaReady, setMediaReady] = useState(false);
-  const hasVideoSrc = videoSrc.length > 0 && loadVideo;
+  const [videoFailed, setVideoFailed] = useState(false);
+  const hasVideoElement = loadVideo && !videoFailed;
+  const resolvedVideoSrc = videoSrc.length > 0 ? videoSrc : undefined;
 
   return (
     <>
@@ -257,21 +259,25 @@ function LaunchVideoFrame({
 
       <div className="landing-video-inner">
         <div className="landing-video-media">
-          {hasVideoSrc ? (
+          {hasVideoElement ? (
             <video
               className="landing-video-element"
-              src={videoSrc}
+              src={resolvedVideoSrc}
               poster={posterSrc.length > 0 ? posterSrc : undefined}
               autoPlay
               muted
               loop
               playsInline
+              preload="none"
               onLoadedData={() => setMediaReady(true)}
-              onError={() => setMediaReady(false)}
+              onError={() => {
+                setMediaReady(false);
+                setVideoFailed(true);
+              }}
             />
           ) : null}
 
-          {!mediaReady && (
+          {hasVideoElement && resolvedVideoSrc !== undefined && !mediaReady && !videoFailed && (
             <div className="landing-video-placeholder">
               <div className="landing-video-placeholder-mesh" aria-hidden />
               <div className="landing-video-placeholder-label">
