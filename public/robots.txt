@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /demo/
 
-Sitemap: https://www.mymemos.in/sitemap.xml
+Sitemap: http://localhost:8080/sitemap.xml
