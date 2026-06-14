@@ -1,4 +1,4 @@
-# SKILLS.md — Agent Skill Router for MyMemos
+# SKILLS.md - Agent Skill Router for MyMemos
 
 > Maps **task intent** → **required reading** → **verification steps**.
 > Use this file to choose depth before touching code. Designed for reproducible AI-assisted engineering.
@@ -141,13 +141,54 @@ npm run test -- extension/src/lib/workspace-tree.test.ts extension/src/store/mov
 
 - Marketing copy lives in `src/lib/constants.ts`
 - Scroll video tunables: `LANDING_VIDEO_*`, `LANDING_MAIN_OVERLAP_VH`
-- Download uses `EXTENSION_ZIP_FILENAME` — ZIP must exist (`npm run package:extension`)
+- Download uses `EXTENSION_ZIP_FILENAME` - ZIP must exist (`npm run package:extension`)
 
 **Verify:**
 
 ```bash
 npm run dev:web
 # Check /, /demo/, download button, resize viewports
+```
+
+---
+
+### `landing-seo`
+
+**When:** Meta tags, canonical URLs, JSON-LD, FAQ schema, `robots.txt`, `sitemap.xml`, `llms.txt`, AI crawler content (`ai-content.json`).
+
+**Read:**
+
+- `.cursor/rules/landing-site.mdc` (SEO section)
+- `src/lib/seo.ts`
+- `src/lib/ai-content.json`
+- `src/lib/landing-faq-content.ts`
+- `scripts/generate-sitemap.mjs`
+- `src/routes/llms[.]txt.ts`
+
+**Patterns:**
+
+- `VITE_SITE_URL` → `SITE_ORIGIN` in `src/lib/constants.ts` (no trailing slash)
+- FAQ links use `"path": "/demo/"` in JSON; resolve via `resolveLandingFaqItems()`
+- Static SEO files in `public/` are **gitignored** — run `npm run generate:seo`
+- `/llms.txt` is served dynamically by a TanStack Start server route **and** written statically at build time
+- Keep `buildLlmsTxt()` and `generate-sitemap.mjs` in sync
+
+**Verify:**
+
+```bash
+npm run test -- src/lib/seo.test.ts
+npm run generate:seo
+npm run dev:web
+curl -s http://localhost:8080/robots.txt
+curl -s http://localhost:8080/sitemap.xml
+curl -s http://localhost:8080/llms.txt | head -20
+# After deploy: curl https://<your-domain>/llms.txt
+```
+
+With production URLs locally:
+
+```bash
+VITE_SITE_URL=https://www.mymemos.in npm run generate:seo
 ```
 
 ---
@@ -220,6 +261,7 @@ npm run package:extension   # if download artifact needed
 |---------------|----------------------|
 | Editor feature + persistence | `editor-markdown` → `storage-migration` → `extension-feature` |
 | Landing download + extension build | `ci-release` → `landing-marketing` |
+| SEO / FAQ / llms.txt changes | `landing-seo` → `landing-marketing` |
 | Web demo parity with extension UI | `dual-build-web` → `extension-feature` |
 | Workspace UX + store refactor | `workspace-dnd` → `extension-feature` → `ci-release` |
 
@@ -229,11 +271,11 @@ npm run package:extension   # if download artifact needed
 
 Stop and ask the user when:
 
-- Request requires **cloud sync**, accounts, or backend — out of product scope
+- Request requires **cloud sync**, accounts, or backend - out of product scope
 - Schema migration would **delete user data** without explicit approval
 - Change touches **both** React 18 and 19 component sharing
-- Landing scroll architecture rewrite — confirm UX goal first
-- `npm run ci` fails after 2 distinct fix attempts — report blocker with logs
+- Landing scroll architecture rewrite - confirm UX goal first
+- `npm run ci` fails after 2 distinct fix attempts - report blocker with logs
 
 ---
 
@@ -246,4 +288,5 @@ Stop and ask the user when:
 | `storage-migration` | `storage-invariants.mdc` |
 | `editor-markdown` | `editor-markdown.mdc` |
 | `landing-marketing` | `landing-site.mdc` |
+| `landing-seo` | `landing-site.mdc`, `testing-ci.mdc` |
 | `ci-release` | `testing-ci.mdc` |

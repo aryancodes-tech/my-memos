@@ -79,6 +79,7 @@ Individual commands:
 | `npm run format:check`    | Prettier check (CI)           |
 | `npm run typecheck`       | TypeScript - web + extension  |
 | `npm run test`            | Vitest unit tests             |
+| `npm run generate:seo`    | Regenerate `public/robots.txt`, `sitemap.xml`, `llms.txt` |
 | `npm run build:extension` | Production extension build    |
 | `npm run build:web`       | Production landing site build |
 
@@ -93,7 +94,7 @@ This repo includes structured agent documentation for Cursor and other AI coding
 | [`.cursor/rules/`](.cursor/rules/) | Scoped rules injected by file type (`.mdc`) |
 | [`.cursor/README.md`](.cursor/README.md) | Index of the above |
 
-Human contributors benefit from the same docs — especially `AGENTS.md` §3 (storage invariants) before your first storage or editor PR.
+Human contributors benefit from the same docs - especially `AGENTS.md` §3 (storage invariants) before your first storage or editor PR.
 
 ## Code conventions
 
@@ -112,6 +113,17 @@ Tests live next to the code they cover (`*.test.ts`). Start with pure functions 
 - `extension/src/lib/themes.ts` - hex normalization and theme helpers
 
 Add tests for new logic, especially storage, state management, and parsing.
+
+### Landing SEO
+
+FAQ copy and AI crawler content live in `src/lib/ai-content.json`. SEO helpers are in `src/lib/seo.ts`. Generated crawler files (`public/robots.txt`, `public/sitemap.xml`, `public/llms.txt`) are **gitignored** — regenerate with:
+
+```bash
+npm run generate:seo
+npm run test -- src/lib/seo.test.ts
+```
+
+Set `VITE_SITE_URL` on your hosting provider (e.g. `https://www.mymemos.in`) so canonical URLs are correct in production. See README § SEO & AI discoverability for full details.
 
 ## Pull request checklist
 

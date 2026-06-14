@@ -10,7 +10,7 @@ alwaysApply: false
 
 - **Tiptap 2** + ProseMirror
 - **lowlight** for code blocks
-- **tiptap-markdown** for paste serialization (v0.8.x — peer compatibility)
+- **tiptap-markdown** for paste serialization (v0.8.x - peer compatibility)
 - Custom extensions in `extension/src/editor/`
 
 ## Save path
@@ -26,10 +26,10 @@ Never bypass store to write IDB directly from editor components.
 
 Key modules:
 
-- `markdownPaste.ts` — detection + conversion
-- `taskListMarkdown.ts` — `- [x]` input rules
-- `HighlightWithMarkdown.ts` — highlight syntax
-- `markdownPaste.test.ts` — regression tests
+- `markdownPaste.ts` - detection + conversion
+- `taskListMarkdown.ts` - `- [x]` input rules
+- `HighlightWithMarkdown.ts` - highlight syntax
+- `markdownPaste.test.ts` - regression tests
 
 ### Task list vs bullet list
 
@@ -37,7 +37,7 @@ Key modules:
 
 - Bullet input rule must **skip** lines matching `- [`
 - Task item rule handles `- [x] ` explicitly
-- Order of input rules matters — task before bullet
+- Order of input rules matters - task before bullet
 
 ### Supported paste features
 
@@ -45,13 +45,13 @@ Headings, GFM task lists, tables, links, images, highlights, code fences.
 
 ## Slash menu
 
-- `SlashMenu.tsx` — command palette inside editor
+- `SlashMenu.tsx` - command palette inside editor
 - Add commands via existing extension patterns
-- Keyboard-first UX — preserve ⌘/Ctrl bindings
+- Keyboard-first UX - preserve ⌘/Ctrl bindings
 
 ## Toolbar
 
-- `Toolbar.tsx` — inline formatting
+- `Toolbar.tsx` - inline formatting
 - Color presets from `constants.ts` (`TEXT_COLOR_PRESETS`, etc.)
 
 ## Adding editor features

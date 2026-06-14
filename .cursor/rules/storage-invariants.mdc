@@ -15,7 +15,7 @@ alwaysApply: false
 
 ## Block JSON only
 
-- Persist Tiptap/ProseMirror `BlockDoc` — never HTML or markdown duplicates
+- Persist Tiptap/ProseMirror `BlockDoc` - never HTML or markdown duplicates
 - Field: `doc_c` (LZString compressed) in IndexedDB
 - Decode failure → return `EMPTY_BLOCK_DOC`, `console.warn`, no UI throw
 
@@ -32,24 +32,24 @@ alwaysApply: false
 1. Increment `DB_VERSION` in `db.ts`
 2. Add non-destructive `upgrade` handler
 3. Add tests in `db.test.ts` / `codec.test.ts`
-4. Document migration in PR — user data must survive
+4. Document migration in PR - user data must survive
 
 ## Page model essentials
 
 ```typescript
-// parent_id empty string = root — check with len()
+// parent_id empty string = root - check with len()
 len(page.parent_id ?? "") === 0
 
 // kind
 "page" | "directory"
 
-// section — workspace uses WORKSPACE_SECTION ("Pages")
+// section - workspace uses WORKSPACE_SECTION ("Pages")
 ```
 
 ## Images
 
 - Stored in separate IDB object store
-- Referenced from editor nodes — do not inline large blobs in `doc`
+- Referenced from editor nodes - do not inline large blobs in `doc`
 
 ## Search
 
@@ -59,4 +59,4 @@ len(page.parent_id ?? "") === 0
 
 ## Platform note
 
-IndexedDB is per-origin. Extension `chrome-extension://` ≠ `https://` demo — data is isolated by design.
+IndexedDB is per-origin. Extension `chrome-extension://` ≠ `https://` demo - data is isolated by design.

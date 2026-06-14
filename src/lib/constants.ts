@@ -61,6 +61,19 @@ export const SITE_THEME_COLOR = "#ffffff";
 /** Paths excluded from search indexing via `robots.txt`. */
 export const SEO_ROBOTS_DISALLOW_PATHS = ["/demo/"] as const;
 
+/** DOM id for the landing FAQ section. */
+export const LANDING_FAQ_SECTION_ID = "faq";
+
+/** Eyebrow label for the landing FAQ section. */
+export const LANDING_FAQ_EYEBROW = "FAQ";
+
+/** Heading for the landing FAQ section. */
+export const LANDING_FAQ_TITLE = "Common questions about MyMemos";
+
+/** Description for the landing FAQ section. */
+export const LANDING_FAQ_DESC =
+  "Quick answers for anyone comparing local-first New Tab notes apps.";
+
 /** Intro copy for the landing get-started section. */
 export const LANDING_GET_STARTED_DESC =
   "Install once. Every new tab becomes your workspace - no account, no server, no config.";
@@ -94,7 +107,7 @@ export const LANDING_LAUNCH_VIDEO_CLOUDINARY_ID = "v1780797594/launch_1_wfzltd";
 
 /**
  * Cloudinary transforms applied to the launch video (≈2 MB vs 31 MB original).
- * Served from Cloudinary CDN with edge caching — not downloaded from your origin per visitor.
+ * Served from Cloudinary CDN with edge caching - not downloaded from your origin per visitor.
  */
 export const LANDING_LAUNCH_VIDEO_CLOUDINARY_TRANSFORMS = "q_auto:eco,w_1280,c_limit,f_mp4";
 

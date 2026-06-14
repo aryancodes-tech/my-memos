@@ -867,6 +867,159 @@
   color: var(--ko-text-muted);
 }
 
+/* FAQ - left-aligned header, light theme accordions */
+.landing-faq {
+  margin-top: 3rem;
+  scroll-margin-top: 5rem;
+}
+
+.landing-faq-header {
+  max-width: 38rem;
+  text-align: left;
+}
+
+.landing-faq-eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ko-text-muted);
+}
+
+.landing-faq-title {
+  margin: 0.65rem 0 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ko-text);
+}
+
+.landing-faq-desc {
+  margin: 0.85rem 0 0;
+  max-width: 36rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ko-text-muted);
+}
+
+.landing-faq-accordion {
+  margin-top: 2.25rem;
+  border: 1px solid var(--ko-border);
+  border-radius: 14px;
+  background: var(--ko-surface);
+  overflow: hidden;
+}
+
+.landing-faq-item {
+  border-bottom: 1px solid var(--ko-border);
+}
+
+.landing-faq-item:last-child {
+  border-bottom: none;
+}
+
+.landing-faq-question {
+  margin: 0;
+}
+
+.landing-faq-trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.35rem;
+  border: none;
+  background: transparent;
+  color: var(--ko-text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.landing-faq-trigger:hover {
+  background: color-mix(in srgb, var(--ko-surface2) 70%, transparent);
+}
+
+.landing-faq-trigger[aria-expanded="true"] {
+  padding-bottom: 0.85rem;
+}
+
+.landing-faq-trigger:focus-visible {
+  outline: 2px solid var(--ko-text);
+  outline-offset: -2px;
+}
+
+.landing-faq-icon {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  position: relative;
+}
+
+.landing-faq-icon::before,
+.landing-faq-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.65rem;
+  height: 1.5px;
+  background: var(--ko-text-muted);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.landing-faq-icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.landing-faq-trigger[aria-expanded="true"] .landing-faq-icon::after {
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(90deg) scaleX(0);
+}
+
+.landing-faq-panel {
+  padding: 0 1.35rem 1.25rem;
+  border-top: 1px solid var(--ko-border);
+  background: color-mix(in srgb, var(--ko-bg) 65%, var(--ko-surface));
+}
+
+.landing-faq-panel p {
+  margin: 0;
+  padding-top: 0.85rem;
+  width: 100%;
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--ko-text-muted);
+}
+
+.landing-faq-link {
+  color: var(--ko-text);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.landing-faq-link:hover {
+  color: var(--ko-text);
+  opacity: 0.85;
+}
+
+.landing-faq-link:focus-visible {
+  outline: 2px solid var(--ko-border);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* Get started - install timeline + page footer */
 .landing-get-started {
   margin-top: 5rem;

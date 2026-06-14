@@ -30,7 +30,8 @@ Steps in order:
 
 - **Vitest 3** + **happy-dom**
 - Config: `vitest.config.ts` (root)
-- Tests live only under `extension/src/**` today
+- Extension tests: `extension/src/**`
+- Landing tests: `src/lib/*.test.ts` (e.g. `src/lib/seo.test.ts`)
 
 ## When to add tests
 
@@ -42,6 +43,7 @@ Steps in order:
 | `useStore` logic | `useStore.test.ts` |
 | Markdown paste | `markdownPaste.test.ts` |
 | `text.ts` helpers | `text.test.ts` |
+| `seo.ts` / FAQ content resolution | `seo.test.ts` |
 
 Co-locate as `*.test.ts` next to source.
 
@@ -51,7 +53,25 @@ Co-locate as `*.test.ts` next to source.
 npm run test                              # all
 npm run test:watch                        # watch mode
 npm run test -- extension/src/editor/     # scoped
+npm run test -- src/lib/seo.test.ts       # landing SEO
 ```
+
+## Landing SEO verification
+
+After touching `src/lib/seo.ts`, `ai-content.json`, `generate-sitemap.mjs`, or `llms[.]txt.ts`:
+
+```bash
+npm run test -- src/lib/seo.test.ts
+npm run generate:seo
+npm run dev:web
+curl -s http://localhost:8080/robots.txt
+curl -s http://localhost:8080/sitemap.xml
+curl -s http://localhost:8080/llms.txt | head
+```
+
+Production check (after deploy): `curl https://<VITE_SITE_URL>/llms.txt`
+
+Set `VITE_SITE_URL` on your hosting provider so generated files and JSON-LD use the canonical domain.
 
 ## Lint & format
 
@@ -81,8 +101,8 @@ Required for landing download button. Warn in UI if missing.
 
 ## Build guards
 
-- Do not run `build:extension` during `npm run dev` — kills HMR
-- `npm run build:web` builds demo + landing — required for deploy
+- Do not run `build:extension` during `npm run dev` - kills HMR
+- `npm run build:web` builds demo + landing - required for deploy
 
 ## PR expectations
 

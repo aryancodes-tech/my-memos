@@ -29,6 +29,7 @@ public/demo/
 # Generated SEO files - run scripts/generate-sitemap.mjs (also runs in predev:web / prebuild:web)
 public/robots.txt
 public/sitemap.xml
+public/llms.txt
 
 # Wrangler / Cloudflare
 .wrangler/

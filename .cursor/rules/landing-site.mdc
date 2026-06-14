@@ -1,5 +1,5 @@
 ---
-description: TanStack Start landing site — routing, marketing, scroll video, download flow
+description: TanStack Start landing site - routing, marketing, scroll video, download flow
 globs: src/**/*.{ts,tsx,css}
 alwaysApply: false
 ---
@@ -15,7 +15,7 @@ alwaysApply: false
 ## Routing
 
 - File-based routes in `src/routes/`
-- `routeTree.gen.ts` is **generated** — never hand-edit
+- `routeTree.gen.ts` is **generated** - never hand-edit
 - See `src/routes/README.md` for TanStack conventions (not Next.js)
 
 ## Constants
@@ -30,7 +30,7 @@ All marketing copy and tunables live in `src/lib/constants.ts`:
 | Paths | `DEMO_PATH`, `EXTENSION_ZIP_FILENAME` |
 | Favicon | `SITE_FAVICON_PATH`, `SITE_FAVICON_TYPE` |
 
-Do not hardcode strings in components — import from constants.
+Do not hardcode strings in components - import from constants.
 
 ## Key components
 
@@ -47,7 +47,7 @@ Do not hardcode strings in components — import from constants.
 - Runway height: `LANDING_VIDEO_SCROLL_RUNWAY_VH`
 - Phases: expand → hold → shrink (see `getVideoFrameStyle`)
 - Features overlap: `LANDING_MAIN_OVERLAP_VH` negative margin on `.landing-main`
-- Tunables are sensitive — small constant changes have large UX impact
+- Tunables are sensitive - small constant changes have large UX impact
 
 ## Download flow
 
@@ -56,7 +56,7 @@ Do not hardcode strings in components — import from constants.
 fetch(`/${EXTENSION_ZIP_FILENAME}`)
 ```
 
-ZIP must exist — generate with `npm run package:extension`.
+ZIP must exist - generate with `npm run package:extension`.
 Show inline error if 404 (do not `alert()`).
 
 ## Demo embed
@@ -67,19 +67,48 @@ Show inline error if 404 (do not `alert()`).
 
 ## SSR errors
 
-- `src/server.ts` — custom handler
-- `error-capture.ts` — swallowed error recovery
-- `__root.tsx` — `ErrorComponent`, favicon links, global CSS
+- `src/server.ts` - custom handler
+- `error-capture.ts` - swallowed error recovery
+- `__root.tsx` - `ErrorComponent`, favicon links, global CSS
+
+## SEO & AI discoverability
+
+| Artifact | How it is served | Source |
+|----------|------------------|--------|
+| Meta + JSON-LD | SSR `<head>` on `/` | `src/lib/seo.ts`, `src/routes/index.tsx` |
+| `/robots.txt`, `/sitemap.xml` | Static files in `public/` (gitignored) | `scripts/generate-sitemap.mjs` |
+| `/llms.txt` | TanStack Start server route + static copy | `src/routes/llms[.]txt.ts`, generate script |
+| FAQ UI + schema | Landing page + FAQPage JSON-LD | `src/lib/ai-content.json`, `LandingFaq.tsx` |
+
+**Environment:** `VITE_SITE_URL` (no trailing slash) — canonical origin for SEO. Set as an environment variable on your hosting provider for production.
+
+**Content split:**
+
+- Marketing copy → `src/lib/constants.ts`
+- FAQ / llms summary → `src/lib/ai-content.json`
+- FAQ link paths → `"path": "/demo/"` in JSON; resolved in `landing-faq-content.ts`
+
+**Generate & test:**
+
+```bash
+npm run generate:seo                    # writes public/robots.txt, sitemap.xml, llms.txt
+npm run test -- src/lib/seo.test.ts
+npm run dev:web
+curl http://localhost:8080/llms.txt
+```
+
+Also runs automatically via `predev:web` and `prebuild:web`. Do **not** commit generated `public/*.txt` / `public/*.xml`.
 
 ## Styling
 
 - Landing-specific CSS: `src/landing.css`
 - Design tokens: `src/lib/design-tokens.ts`
-- Extension uses separate `ko-` theme — landing does not share CSS
+- Extension uses separate `ko-` theme - landing does not share CSS
 
 ## Verify
 
 ```bash
 npm run dev:web
 # /, /demo/, download, mobile breakpoint
+# SEO: curl /robots.txt /sitemap.xml /llms.txt
 ```

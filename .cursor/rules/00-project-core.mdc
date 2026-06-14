@@ -1,5 +1,5 @@
 ---
-description: Core MyMemos invariants — surfaces, artifacts, constants, and scope discipline
+description: Core MyMemos invariants - surfaces, artifacts, constants, and scope discipline
 alwaysApply: true
 ---
 
@@ -10,7 +10,7 @@ alwaysApply: true
 - **Product name:** MyMemos (`mymemos` in package.json)
 - **CSS prefix** `ko-` is legacy but still canonical for extension UI
 
-## Three surfaces — never conflate
+## Three surfaces - never conflate
 
 | Surface | Path | React | Constants file |
 |---------|------|-------|----------------|
@@ -20,20 +20,21 @@ alwaysApply: true
 
 `@/` alias points to different roots per package. Check `tsconfig.json` before importing.
 
-## Generated artifacts — do not edit
+## Generated artifacts - do not edit
 
 - `public/demo/**`
 - `public/mymemos-extension.zip`
+- `public/robots.txt`, `public/sitemap.xml`, `public/llms.txt`
 - `src/routeTree.gen.ts`
 - `extension/dist/**` (dev build output)
 
-Regenerate via `npm run build:web`, `npm run package:extension`, or `npm run dev`.
+Regenerate via `npm run build:web`, `npm run package:extension`, `npm run generate:seo`, or `npm run dev:web`.
 
 ## Constants & literals
 
 - Hardcoded values → named export in the correct `constants.ts` with JSDoc
 - Extension empty-string checks → `len(value) === 0` from `@/lib/text`
-- Landing and extension constants are **intentionally separate** — do not create shared package without explicit request
+- Landing and extension constants are **intentionally separate** - do not create shared package without explicit request
 
 ## Change discipline
 

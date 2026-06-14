@@ -4,6 +4,7 @@ import {
   buildAbsoluteUrl,
   buildLandingJsonLdScripts,
   buildLandingMetaTags,
+  buildLlmsTxt,
   buildRobotsTxt,
   buildSitemapXml,
   resolveSiteOrigin,
@@ -47,11 +48,22 @@ describe("buildLandingMetaTags", () => {
 });
 
 describe("buildLandingJsonLdScripts", () => {
-  it("emits SoftwareApplication, WebSite, and Organization schemas", () => {
+  it("emits SoftwareApplication, WebSite, Organization, and FAQPage schemas", () => {
     const scripts = buildLandingJsonLdScripts("https://mymemos.app");
     const types = scripts.map((script) => JSON.parse(script.children)["@type"]);
 
-    expect(types).toEqual(["SoftwareApplication", "WebSite", "Organization"]);
+    expect(types).toEqual(["SoftwareApplication", "WebSite", "Organization", "FAQPage"]);
+  });
+
+  it("resolves FAQ demo links from the site origin", () => {
+    const scripts = buildLandingJsonLdScripts("https://www.mymemos.in");
+    const faqPage = JSON.parse(scripts[3].children);
+    const demoQuestion = faqPage.mainEntity.find(
+      (item: { name: string }) =>
+        item.name === "Can I try MyMemos before installing the Chrome extension?",
+    );
+
+    expect(demoQuestion.acceptedAnswer.text).toContain("https://www.mymemos.in/demo/");
   });
 });
 
@@ -71,5 +83,17 @@ describe("buildSitemapXml", () => {
 
     expect(xml).toContain("<loc>https://mymemos.app/</loc>");
     expect(xml).toContain("<priority>1.0</priority>");
+  });
+});
+
+describe("buildLlmsTxt", () => {
+  it("includes product summary and absolute links for AI crawlers", () => {
+    const llms = buildLlmsTxt("https://www.mymemos.in");
+
+    expect(llms).toContain("# MyMemos");
+    expect(llms).toContain("local-first Chrome extension");
+    expect(llms).toContain("https://www.mymemos.in/");
+    expect(llms).toContain("What is MyMemos?");
+    expect(llms).toContain("https://www.mymemos.in/demo/");
   });
 });

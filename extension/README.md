@@ -2,7 +2,7 @@
 
 The core product lives here: React UI, editor, storage, and Chrome MV3 packaging. The same `src/` code also builds the **live demo** at `/demo/` on the landing site.
 
-For repo-wide setup, commands, and Vercel deploy → [root README](../README.md).
+For repo-wide setup, commands, and hosting deploy → [root README](../README.md).
 
 ---
 
