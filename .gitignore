@@ -26,7 +26,8 @@ coverage/
 # Standalone web app build - generate via npm run build:app
 public/demo/
 
-# Generated SEO sitemap - run scripts/generate-sitemap.mjs (also runs in predev:web / prebuild:web)
+# Generated SEO files - run scripts/generate-sitemap.mjs (also runs in predev:web / prebuild:web)
+public/robots.txt
 public/sitemap.xml
 
 # Wrangler / Cloudflare
