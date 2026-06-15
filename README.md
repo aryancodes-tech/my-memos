@@ -64,7 +64,7 @@ npm run package:extension
 
 ## SEO & AI discoverability
 
-The landing site ships crawler-facing files for search engines and AI systems. **Do not commit or hand-edit** the generated copies in `public/` - they are gitignored and rebuilt automatically.
+The landing site ships crawler-facing files for search engines and AI systems. **Do not commit or hand-edit** the generated copies in `public/` — they are gitignored and rebuilt automatically.
 
 | URL | Purpose | Source |
 | --- | ------- | ------ |
@@ -136,7 +136,7 @@ Extension-only helpers: `npm run dev:reset --prefix extension`, `npm run dev:che
 
 ## Deploy the landing site
 
-Landing page + `/demo/` deploy together as a Node/SSR app (TanStack Start + Nitro). The Chrome extension does **not** run on your host - only the ZIP download (if you build it).
+Landing page + `/demo/` deploy together as a Node/SSR app (TanStack Start + Nitro). The Chrome extension does **not** run on your host — only the ZIP download (if you build it).
 
 Works on any hosting provider (Netlify, AWS, Fly.io, a VPS, etc.). Example build settings:
 
@@ -147,7 +147,7 @@ Works on any hosting provider (Netlify, AWS, Fly.io, a VPS, etc.). Example build
 | Node | 20.x or 24.x (`>= 20.19.0`) |
 | Env | `VITE_SITE_URL=https://your-domain.example` (canonical origin for SEO files, JSON-LD, FAQ links) |
 
-The landing site optionally includes web analytics via `@vercel/analytics` in `src/routes/__root.tsx` - remove or swap it if your host uses a different analytics tool. The `/demo/` SPA is a separate static bundle and is not tracked by that component.
+The landing site optionally includes web analytics via `@vercel/analytics` in `src/routes/__root.tsx` — remove or swap it if your host uses a different analytics tool. The `/demo/` SPA is a separate static bundle and is not tracked by that component.
 
 ---
 
@@ -190,7 +190,7 @@ Architecture, storage design, and extension internals → [`extension/README.md`
 | Edits don't show up | `npm run dev:reset --prefix extension` → reload extension → new tab |
 | Extension named **MyMemos** not **(Dev)** | You loaded a prod build - run `npm run dev` again |
 | Download button 404 on landing | Run `npm run package:extension` first |
-| Can't find `public/llms.txt` in git | Expected - gitignored; run `npm run generate:seo` or `npm run dev:web` |
+| Can't find `public/llms.txt` in git | Expected — gitignored; run `npm run generate:seo` or `npm run dev:web` |
 | SEO files show `localhost` URLs | Set `VITE_SITE_URL` and rebuild/redeploy |
 
 ---

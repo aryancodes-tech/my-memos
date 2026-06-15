@@ -10,7 +10,7 @@ This directory defines how AI coding agents operate on **MyMemos**. It demonstra
 | [`SKILLS.md`](SKILLS.md) | Task → skill routing and verification contracts |
 | [`rules/`](rules/) | Scoped Cursor rules (`.mdc`) injected by file pattern |
 
-Notable skills: `landing-seo` (meta, JSON-LD, `llms.txt`, FAQ schema) - see `SKILLS.md` for verify commands.
+Notable skills: `landing-seo` (meta, JSON-LD, `llms.txt`, FAQ schema) — see `SKILLS.md` for verify commands.
 
 ## Rules index
 

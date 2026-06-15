@@ -8,7 +8,7 @@ export type LandingFaqTextSegment = { type: "text"; text: string };
 /** Link segment in a landing FAQ answer (path resolved to href at runtime). */
 export type LandingFaqLinkSegment = {
   type: "link";
-  /** Site path, e.g. `/demo/` - combined with `VITE_SITE_URL` when set. */
+  /** Site path, e.g. `/demo/` — combined with `VITE_SITE_URL` when set. */
   path: string;
   /** Resolved absolute or relative URL for rendering and schema exports. */
   href: string;

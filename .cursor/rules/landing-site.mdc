@@ -80,7 +80,7 @@ Show inline error if 404 (do not `alert()`).
 | `/llms.txt` | TanStack Start server route + static copy | `src/routes/llms[.]txt.ts`, generate script |
 | FAQ UI + schema | Landing page + FAQPage JSON-LD | `src/lib/ai-content.json`, `LandingFaq.tsx` |
 
-**Environment:** `VITE_SITE_URL` (no trailing slash) - canonical origin for SEO. Set as an environment variable on your hosting provider for production.
+**Environment:** `VITE_SITE_URL` (no trailing slash) — canonical origin for SEO. Set as an environment variable on your hosting provider for production.
 
 **Content split:**
 
