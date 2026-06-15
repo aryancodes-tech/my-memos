@@ -116,7 +116,7 @@ Add tests for new logic, especially storage, state management, and parsing.
 
 ### Landing SEO
 
-FAQ copy and AI crawler content live in `src/lib/ai-content.json`. SEO helpers are in `src/lib/seo.ts`. Generated crawler files (`public/robots.txt`, `public/sitemap.xml`, `public/llms.txt`) are **gitignored** — regenerate with:
+FAQ copy and AI crawler content live in `src/lib/ai-content.json`. SEO helpers are in `src/lib/seo.ts`. Generated crawler files (`public/robots.txt`, `public/sitemap.xml`, `public/llms.txt`) are **gitignored** - regenerate with:
 
 ```bash
 npm run generate:seo
