@@ -185,7 +185,7 @@ Markdown paste: `extension/src/editor/markdownPaste.ts` + tests in `markdownPast
 **Rules:**
 
 - Set `VITE_SITE_URL` at deploy time (no trailing slash). Drives canonical URLs, JSON-LD, FAQ demo links, and generated static SEO files.
-- FAQ link segments in `ai-content.json` use `"path": "/demo/"` — never hardcode production domains in JSON.
+- FAQ link segments in `ai-content.json` use `"path": "/demo/"` - never hardcode production domains in JSON.
 - Keep `scripts/generate-sitemap.mjs` and `buildLlmsTxt()` in `seo.ts` structurally aligned.
 - `/demo/` stays `Disallow` in `robots.txt` (`SEO_ROBOTS_DISALLOW_PATHS`).
 
@@ -336,7 +336,7 @@ Do not share React components across packages without an explicit build boundary
 | **Scroll runway** | Landing sticky-scroll section driving launch video |
 | **Web demo** | Static SPA at `/demo/` for try-before-install |
 | **llms.txt** | Machine-readable product summary for AI crawlers |
-| **GEO** | Generative Engine Optimization — structured FAQ/schema for AI search |
+| **GEO** | Generative Engine Optimization - structured FAQ/schema for AI search |
 
 ---
 
