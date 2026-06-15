@@ -169,7 +169,7 @@ npm run dev:web
 
 - `VITE_SITE_URL` → `SITE_ORIGIN` in `src/lib/constants.ts` (no trailing slash)
 - FAQ links use `"path": "/demo/"` in JSON; resolve via `resolveLandingFaqItems()`
-- Static SEO files in `public/` are **gitignored** — run `npm run generate:seo`
+- Static SEO files in `public/` are **gitignored** - run `npm run generate:seo`
 - `/llms.txt` is served dynamically by a TanStack Start server route **and** written statically at build time
 - Keep `buildLlmsTxt()` and `generate-sitemap.mjs` in sync
 
