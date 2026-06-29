@@ -46,10 +46,16 @@ len(page.parent_id ?? "") === 0
 // section - workspace uses WORKSPACE_SECTION ("Pages")
 ```
 
-## Images
+## Images & attachments
 
-- Stored in separate IDB object store
-- Referenced from editor nodes - do not inline large blobs in `doc`
+- **Legacy images** may still use base64 `src` in block attrs.
+- **New images and all audio** use OPFS via `extension/src/lib/attachments/`:
+  - Paths like `images/img_*.png`, `audio/voice_*.webm` in block attrs
+  - Files under OPFS root `mymemos-attachments/` (see `ATTACHMENT_OPFS_ROOT_DIR`)
+- **Never** embed attachment binaries in `doc_c`.
+- **Recording blocks** (`voiceNote` with `status: "recording"`) are ephemeral — `sanitizeBlockDocForPersistence()` removes them before IndexedDB write.
+- **Page delete** must call `collectOrphanedAttachmentPaths()` and delete unreferenced OPFS files.
+- **IndexedDB `images` store** and **`fs_handles` store** are legacy; new attachment flow uses OPFS only.
 
 ## Search
 

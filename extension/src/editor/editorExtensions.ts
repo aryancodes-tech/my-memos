@@ -3,7 +3,6 @@ import Placeholder from "@tiptap/extension-placeholder";
 import TaskList from "@tiptap/extension-task-list";
 import { MarkdownBulletList, MarkdownTaskItem } from "@/editor/taskListMarkdown";
 import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
@@ -14,6 +13,8 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import { Markdown } from "tiptap-markdown";
+import { AttachmentImage } from "@/editor/attachmentImage";
+import { VoiceNote } from "@/editor/voiceNote";
 import { BackgroundColor } from "@/editor/backgroundColor";
 import { HighlightWithMarkdown } from "@/editor/highlightMarkdown";
 import { MarkdownPaste } from "@/editor/markdownPaste";
@@ -42,7 +43,8 @@ export function createEditorExtensions() {
     TableHeader,
     TableCell,
     Link.configure({ openOnClick: true, autolink: true }),
-    Image.configure({ inline: false, allowBase64: true }),
+    AttachmentImage.configure({ inline: false, allowBase64: true }),
+    VoiceNote,
     Underline,
     TextStyle,
     Color,

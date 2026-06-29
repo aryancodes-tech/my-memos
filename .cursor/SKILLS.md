@@ -54,6 +54,36 @@ npm run test         # if store/tree logic touched
 
 ---
 
+### `attachments-voice-notes`
+
+**When:** Voice notes, image attachments, OPFS storage, inline recording, waveform player, attachment lifecycle.
+
+**Read:**
+
+- `extension/README.md` (Attachments & voice notes section)
+- `.cursor/rules/storage-invariants.mdc` (Attachments section)
+- `extension/src/lib/attachments/attachmentManager.ts`
+- `extension/src/lib/attachments/sanitizeBlockDoc.ts`
+- `extension/src/editor/voiceNote.ts`, `VoiceNoteNodeView.tsx`
+
+**Invariants:**
+
+- Block JSON stores paths/metadata only — never binary blobs in `doc_c`
+- `status: "recording"` is ephemeral; stripped before persist
+- Fresh inserts set `autoStart: true`; reloaded survivors must not request mic
+- Page delete GC uses ref counting across all pages before deleting OPFS files
+- Lazy permissions: mic on record, no folder picker (OPFS)
+
+**Verify:**
+
+```bash
+npm run test -- extension/src/lib/attachments/
+npm run dev
+# Record inline, play with speed cycle, edit label, delete unavailable note, delete page with attachments
+```
+
+---
+
 ### `storage-migration`
 
 **When:** IndexedDB schema, codec, compression, page CRUD, image blobs.
@@ -260,6 +290,7 @@ npm run package:extension   # if download artifact needed
 | Combined task | Apply skills in order |
 |---------------|----------------------|
 | Editor feature + persistence | `editor-markdown` → `storage-migration` → `extension-feature` |
+| Voice notes / attachments | `attachments-voice-notes` → `editor-markdown` → `storage-migration` |
 | Landing download + extension build | `ci-release` → `landing-marketing` |
 | SEO / FAQ / llms.txt changes | `landing-seo` → `landing-marketing` |
 | Web demo parity with extension UI | `dual-build-web` → `extension-feature` |
@@ -287,6 +318,7 @@ Stop and ask the user when:
 | `extension-feature` | `extension-architecture.mdc` |
 | `storage-migration` | `storage-invariants.mdc` |
 | `editor-markdown` | `editor-markdown.mdc` |
+| `attachments-voice-notes` | `storage-invariants.mdc`, `extension-architecture.mdc` |
 | `landing-marketing` | `landing-site.mdc` |
 | `landing-seo` | `landing-site.mdc`, `testing-ci.mdc` |
 | `ci-release` | `testing-ci.mdc` |

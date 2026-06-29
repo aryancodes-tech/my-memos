@@ -58,8 +58,40 @@ flowchart TB
 1. **Block JSON only** - every page is a Tiptap/ProseMirror `doc`. Never persist rendered HTML or duplicate markdown.
 2. **Search index is ephemeral** - FlexSearch is rebuilt in memory on demand, never written to disk.
 3. **Two-tier storage** - heavy page data in IndexedDB; light settings (theme, last view, custom themes, collapsed folders) in `chrome.storage.local` or `localStorage` on web.
+4. **Attachments in OPFS** - images and voice notes store binary files in the browser's Origin Private File System (hidden, per-origin). Block JSON holds only relative paths and metadata (`attachmentPath`, `duration`, `size`, `title`). In-progress voice recordings are **never** persisted.
 
-### Implementation notes
+### Attachments & voice notes
+
+```
+IndexedDB (pages)          OPFS (mymemos-attachments/)
+├── doc_c (BlockDoc)       ├── images/img_*.png
+│   └── voiceNote attrs    └── audio/voice_*.webm
+│       attachmentPath ────────────────┘
+```
+
+| Feature | Entry points | Key modules |
+| ------- | ------------ | ----------- |
+| Inline voice recording | Toolbar mic, `/` → Voice note | `insertVoiceRecording.ts`, `VoiceNoteNodeView.tsx`, `voiceRecorder.ts` |
+| Attach audio file | Toolbar paperclip, `/` → Audio file | `insertAudioFromFile.ts` |
+| Images | Toolbar image, paste | `insertImage.ts`, `AttachmentImageNodeView.tsx` |
+| Delete attachment | Trash on voice note block | `AttachmentDeleteDialog`, `attachmentManager.ts` |
+
+**Permissions:** Microphone is requested only when recording starts. OPFS needs no folder picker.
+
+**Persistence rules:**
+
+- `sanitizeBlockDocForPersistence()` strips `status: "recording"` blocks before save (`Editor.tsx`).
+- Page delete removes orphaned OPFS files when no other page references the path (`sanitizeBlockDoc.ts` + `useStore.deletePage`).
+- Copy/paste duplicate blocks share the same path — deleting one block removes the file for all copies (known limitation).
+
+**Verify:**
+
+```bash
+npm run test -- extension/src/lib/attachments/
+npm run dev   # record, play, rename label, delete, reload page
+```
+
+---
 
 - **Manifest V3** - service worker (`background.js`), `chrome_url_overrides.newtab` → `newtab.html`.
 - **LZString compression** - documents are compacted before IndexedDB write; schema versioned via `DB_VERSION` for non-destructive upgrades.
@@ -99,7 +131,9 @@ extension/
 │   ├── views/            ← Dashboard, PageView
 │   ├── store/            ← Zustand
 │   ├── storage/          ← IndexedDB, codec, types
-│   └── lib/              ← constants, themes, helpers
+│   └── lib/
+│       ├── constants.ts
+│       └── attachments/  ← OPFS manager, voice recorder, sanitize
 ├── vite.config.ts        ← Chrome extension build
 ├── vite.web.config.ts    ← Web demo → ../public/demo/
 └── package.json

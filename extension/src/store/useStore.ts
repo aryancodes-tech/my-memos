@@ -12,6 +12,8 @@ import {
   WORKSPACE_SECTION,
 } from "@/lib/constants";
 import { len } from "@/lib/text";
+import { deleteAttachment } from "@/lib/attachments/attachmentManager";
+import { collectOrphanedAttachmentPaths } from "@/lib/attachments/sanitizeBlockDoc";
 import { canMoveWorkspaceItem } from "@/lib/workspace-tree";
 import {
   applyThemeToDocument,
@@ -49,6 +51,12 @@ export interface PendingLink {
   initialHref: string;
 }
 
+/** Pending attachment delete confirmation shown in the global dialog. */
+export interface PendingAttachmentDelete {
+  attachmentPath: string;
+  onConfirm: () => void | Promise<void>;
+}
+
 interface State {
   ready: boolean;
   pages: Page[];
@@ -66,6 +74,8 @@ interface State {
   pendingDelete: PendingDelete | null;
   /** Link dialog state while adding or editing a hyperlink. */
   pendingLink: PendingLink | null;
+  /** Attachment awaiting delete confirmation. */
+  pendingAttachmentDelete: PendingAttachmentDelete | null;
   /** Active page editor instance, set while a page is open. */
   pageEditor: Editor | null;
 
@@ -86,6 +96,9 @@ interface State {
   cancelLink: () => void;
   applyLink: (href: string) => void;
   removeLink: () => void;
+  requestAttachmentDelete: (payload: PendingAttachmentDelete) => void;
+  cancelAttachmentDelete: () => void;
+  confirmAttachmentDelete: () => Promise<void>;
 
   createPage: (parent_id?: string | null) => Promise<Page>;
   createDirectory: (parent_id?: string | null) => Promise<Page>;
@@ -105,9 +118,7 @@ export function isWorkspaceRoot(page: Pick<Page, "parent_id">): boolean {
 function normalizePage(page: Page): Page {
   const kind: PageKind = page.kind === "directory" ? "directory" : "page";
   const section =
-    LEGACY_SECTIONS.has(page.section) || len(page.section) === 0
-      ? WORKSPACE_SECTION
-      : page.section;
+    LEGACY_SECTIONS.has(page.section) || len(page.section) === 0 ? WORKSPACE_SECTION : page.section;
   const parent_id = len(page.parent_id ?? "") > 0 ? page.parent_id : null;
   return { ...page, kind, section, parent_id };
 }
@@ -149,6 +160,7 @@ export const useStore = create<State>((set, get) => ({
   collapsedDirs: {},
   pendingDelete: null,
   pendingLink: null,
+  pendingAttachmentDelete: null,
   pageEditor: null,
 
   async init() {
@@ -308,6 +320,21 @@ export const useStore = create<State>((set, get) => ({
     pageEditor.chain().focus().extendMarkRange("link").unsetLink().run();
   },
 
+  requestAttachmentDelete(payload) {
+    set({ pendingAttachmentDelete: payload });
+  },
+
+  cancelAttachmentDelete() {
+    set({ pendingAttachmentDelete: null });
+  },
+
+  async confirmAttachmentDelete() {
+    const pending = get().pendingAttachmentDelete;
+    if (!pending) return;
+    set({ pendingAttachmentDelete: null });
+    await pending.onConfirm();
+  },
+
   async createPage(parent_id = null) {
     const now = Date.now();
     const page: Page = {
@@ -415,7 +442,10 @@ export const useStore = create<State>((set, get) => ({
       }
     }
 
+    const orphanedPaths = collectOrphanedAttachmentPaths(pages, removeIds);
+
     await Promise.all([...removeIds].map((pageId) => db.deletePage(pageId)));
+    await Promise.all(orphanedPaths.map((path) => deleteAttachment(path)));
     set((s) => {
       const nextCollapsed = { ...s.collapsedDirs };
       for (const pageId of removeIds) {

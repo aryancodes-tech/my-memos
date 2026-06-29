@@ -45,6 +45,28 @@ export interface ImageBlob {
   created_at: number;
 }
 
+/** Attachment kinds stored in OPFS via the attachment manager. */
+export type AttachmentKind = "image" | "audio";
+
+/**
+ * Relative attachment reference persisted inside editor block attrs.
+ * Binary data lives in Origin Private File System under `images/` or `audio/`.
+ */
+export interface AttachmentRef {
+  /** Attachment category. */
+  type: AttachmentKind;
+  /** Path relative to the attachment root, e.g. `audio/voice_abc.webm`. */
+  path: string;
+  /** Duration in seconds (audio only). */
+  duration?: number;
+  /** File size in bytes. */
+  size?: number;
+  /** ISO timestamp when the attachment was created. */
+  createdAt?: string;
+  /** Optional display title shown in the editor block. */
+  title?: string;
+}
+
 export type BuiltInThemeName =
   | "light"
   | "dark"

@@ -9,11 +9,14 @@ import {
   ChevronDown,
   Code2,
   Highlighter,
+  ImageIcon,
   Italic,
   Link2,
   List,
   ListOrdered,
+  Mic,
   Minus,
+  Paperclip,
   PaintBucket,
   Palette,
   Quote,
@@ -37,6 +40,10 @@ import {
   EDITOR_TEXT_CUSTOM_DEFAULT,
 } from "@/lib/constants";
 import { normalizeHexColor } from "@/lib/themes";
+import { insertImageFromPicker } from "@/lib/attachments/insertImage";
+import { insertAudioFromPicker } from "@/lib/attachments/insertAudioFromFile";
+import { insertInlineVoiceRecording } from "@/lib/attachments/insertVoiceRecording";
+import { ATTACHMENT_FS_UNSUPPORTED_MESSAGE } from "@/lib/constants";
 import { useStore } from "@/store/useStore";
 import { len } from "@/lib/text";
 
@@ -65,7 +72,12 @@ interface EditorToolbarProps {
 /** Compact formatting toolbar shown in the app header while editing a page. */
 export default function EditorToolbar({ editor }: EditorToolbarProps) {
   const [, setRevision] = useState(0);
+  const [attachError, setAttachError] = useState<string | null>(null);
   const requestLink = useStore((state) => state.requestLink);
+
+  const reportAttachError = useCallback((message?: string) => {
+    setAttachError(message || ATTACHMENT_FS_UNSUPPORTED_MESSAGE);
+  }, []);
 
   useEffect(() => {
     const refresh = () => setRevision((value) => value + 1);
@@ -98,179 +110,210 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
     requestLink(previous ?? "");
   }, [editor, requestLink]);
 
+  const openImagePicker = useCallback(() => {
+    setAttachError(null);
+    void insertImageFromPicker(editor, { onError: reportAttachError });
+  }, [editor, reportAttachError]);
+
+  const startVoiceRecording = useCallback(() => {
+    setAttachError(null);
+    insertInlineVoiceRecording(editor, undefined, { onError: reportAttachError });
+  }, [editor, reportAttachError]);
+
+  const attachAudioFile = useCallback(() => {
+    setAttachError(null);
+    insertAudioFromPicker(editor, undefined, { onError: reportAttachError });
+  }, [editor, reportAttachError]);
+
   const textColor = (editor.getAttributes("textStyle").color as string | undefined) ?? "";
   const highlightColor = (editor.getAttributes("highlight").color as string | undefined) ?? "";
   const backgroundColor =
     (editor.getAttributes("textStyle").backgroundColor as string | undefined) ?? "";
 
   return (
-    <div className="ko-editor-toolbar ko-editor-toolbar-header">
-      <ToolbarGroup>
-        <ToolbarButton
-          title="Undo"
-          disabled={!editor.can().undo()}
-          onClick={() => editor.chain().focus().undo().run()}
-        >
-          <Undo2 size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Redo"
-          disabled={!editor.can().redo()}
-          onClick={() => editor.chain().focus().redo().run()}
-        >
-          <Redo2 size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-      </ToolbarGroup>
+    <div className="ko-editor-toolbar-wrap">
+      {attachError && (
+        <p className="ko-editor-toolbar-error" role="alert">
+          {attachError}
+        </p>
+      )}
+      <div className="ko-editor-toolbar ko-editor-toolbar-header">
+        <ToolbarGroup>
+          <ToolbarButton
+            title="Undo"
+            disabled={!editor.can().undo()}
+            onClick={() => editor.chain().focus().undo().run()}
+          >
+            <Undo2 size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton
+            title="Redo"
+            disabled={!editor.can().redo()}
+            onClick={() => editor.chain().focus().redo().run()}
+          >
+            <Redo2 size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+        </ToolbarGroup>
 
-      <ToolbarDivider />
+        <ToolbarDivider />
 
-      <BlockTypeSelect value={activeBlock} onChange={setBlock} />
+        <BlockTypeSelect value={activeBlock} onChange={setBlock} />
 
-      <ToolbarDivider />
+        <ToolbarDivider />
 
-      <ToolbarGroup>
-        <ToolbarButton
-          title="Bold"
-          active={editor.isActive("bold")}
-          onClick={() => editor.chain().focus().toggleBold().run()}
-        >
-          <Bold size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Italic"
-          active={editor.isActive("italic")}
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-        >
-          <Italic size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Underline"
-          active={editor.isActive("underline")}
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-        >
-          <Underline size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Strikethrough"
-          active={editor.isActive("strike")}
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-        >
-          <Strikethrough size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Inline code"
-          active={editor.isActive("code")}
-          onClick={() => editor.chain().focus().toggleCode().run()}
-        >
-          <Code2 size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Code block"
-          active={editor.isActive("codeBlock")}
-          onClick={() =>
-            editor.chain().focus().toggleCodeBlock({ language: DEFAULT_CODE_LANGUAGE }).run()
-          }
-        >
-          <SquareTerminal size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-      </ToolbarGroup>
+        <ToolbarGroup>
+          <ToolbarButton
+            title="Bold"
+            active={editor.isActive("bold")}
+            onClick={() => editor.chain().focus().toggleBold().run()}
+          >
+            <Bold size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton
+            title="Italic"
+            active={editor.isActive("italic")}
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+          >
+            <Italic size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton
+            title="Underline"
+            active={editor.isActive("underline")}
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+          >
+            <Underline size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton
+            title="Strikethrough"
+            active={editor.isActive("strike")}
+            onClick={() => editor.chain().focus().toggleStrike().run()}
+          >
+            <Strikethrough size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton
+            title="Inline code"
+            active={editor.isActive("code")}
+            onClick={() => editor.chain().focus().toggleCode().run()}
+          >
+            <Code2 size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton
+            title="Code block"
+            active={editor.isActive("codeBlock")}
+            onClick={() =>
+              editor.chain().focus().toggleCodeBlock({ language: DEFAULT_CODE_LANGUAGE }).run()
+            }
+          >
+            <SquareTerminal size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+        </ToolbarGroup>
 
-      <ToolbarDivider />
+        <ToolbarDivider />
 
-      <ToolbarGroup>
-        <ToolbarButton
-          title="Bulleted list"
-          active={editor.isActive("bulletList")}
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-        >
-          <List size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Numbered list"
-          active={editor.isActive("orderedList")}
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        >
-          <ListOrdered size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="To-do list"
-          active={editor.isActive("taskList")}
-          onClick={() => editor.chain().focus().toggleTaskList().run()}
-        >
-          <CheckSquare size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-      </ToolbarGroup>
+        <ToolbarGroup>
+          <ToolbarButton
+            title="Bulleted list"
+            active={editor.isActive("bulletList")}
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+          >
+            <List size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton
+            title="Numbered list"
+            active={editor.isActive("orderedList")}
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          >
+            <ListOrdered size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton
+            title="To-do list"
+            active={editor.isActive("taskList")}
+            onClick={() => editor.chain().focus().toggleTaskList().run()}
+          >
+            <CheckSquare size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+        </ToolbarGroup>
 
-      <ToolbarDivider />
+        <ToolbarDivider />
 
-      <AlignSelect
-        value={activeAlign}
-        onChange={(align) => editor.chain().focus().setTextAlign(align).run()}
-      />
-
-      <ToolbarDivider />
-
-      <ToolbarGroup>
-        <ColorMenu
-          title="Text color"
-          icon={<Palette size={14} strokeWidth={1.75} />}
-          colors={EDITOR_TEXT_COLORS}
-          activeColor={textColor}
-          allowCustom
-          customDefault={EDITOR_TEXT_CUSTOM_DEFAULT}
-          onPick={(color) => {
-            if (len(color) === 0) editor.chain().focus().unsetColor().run();
-            else editor.chain().focus().setColor(color).run();
-          }}
+        <AlignSelect
+          value={activeAlign}
+          onChange={(align) => editor.chain().focus().setTextAlign(align).run()}
         />
-        <ColorMenu
-          title="Highlight color"
-          icon={<Highlighter size={14} strokeWidth={1.75} />}
-          colors={EDITOR_HIGHLIGHT_COLORS}
-          activeColor={highlightColor}
-          align="right"
-          allowCustom
-          customDefault={EDITOR_HIGHLIGHT_CUSTOM_DEFAULT}
-          onPick={(color) => {
-            if (len(color) === 0) editor.chain().focus().unsetHighlight().run();
-            else editor.chain().focus().setHighlight({ color }).run();
-          }}
-        />
-        <ColorMenu
-          title="Background color"
-          icon={<PaintBucket size={14} strokeWidth={1.75} />}
-          colors={EDITOR_BACKGROUND_COLORS}
-          activeColor={backgroundColor}
-          align="right"
-          allowCustom
-          customDefault={EDITOR_BACKGROUND_CUSTOM_DEFAULT}
-          onPick={(color) => {
-            if (len(color) === 0) editor.chain().focus().unsetBackgroundColor().run();
-            else editor.chain().focus().setBackgroundColor(color).run();
-          }}
-        />
-      </ToolbarGroup>
 
-      <ToolbarDivider />
+        <ToolbarDivider />
 
-      <ToolbarGroup>
-        <ToolbarButton
-          title="Quote"
-          active={editor.isActive("blockquote")}
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        >
-          <Quote size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton
-          title="Divider"
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        >
-          <Minus size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-        <ToolbarButton title="Link" active={editor.isActive("link")} onClick={openLinkDialog}>
-          <Link2 size={14} strokeWidth={1.75} />
-        </ToolbarButton>
-      </ToolbarGroup>
+        <ToolbarGroup>
+          <ColorMenu
+            title="Text color"
+            icon={<Palette size={14} strokeWidth={1.75} />}
+            colors={EDITOR_TEXT_COLORS}
+            activeColor={textColor}
+            allowCustom
+            customDefault={EDITOR_TEXT_CUSTOM_DEFAULT}
+            onPick={(color) => {
+              if (len(color) === 0) editor.chain().focus().unsetColor().run();
+              else editor.chain().focus().setColor(color).run();
+            }}
+          />
+          <ColorMenu
+            title="Highlight color"
+            icon={<Highlighter size={14} strokeWidth={1.75} />}
+            colors={EDITOR_HIGHLIGHT_COLORS}
+            activeColor={highlightColor}
+            align="right"
+            allowCustom
+            customDefault={EDITOR_HIGHLIGHT_CUSTOM_DEFAULT}
+            onPick={(color) => {
+              if (len(color) === 0) editor.chain().focus().unsetHighlight().run();
+              else editor.chain().focus().setHighlight({ color }).run();
+            }}
+          />
+          <ColorMenu
+            title="Background color"
+            icon={<PaintBucket size={14} strokeWidth={1.75} />}
+            colors={EDITOR_BACKGROUND_COLORS}
+            activeColor={backgroundColor}
+            align="right"
+            allowCustom
+            customDefault={EDITOR_BACKGROUND_CUSTOM_DEFAULT}
+            onPick={(color) => {
+              if (len(color) === 0) editor.chain().focus().unsetBackgroundColor().run();
+              else editor.chain().focus().setBackgroundColor(color).run();
+            }}
+          />
+        </ToolbarGroup>
+
+        <ToolbarDivider />
+
+        <ToolbarGroup>
+          <ToolbarButton
+            title="Quote"
+            active={editor.isActive("blockquote")}
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          >
+            <Quote size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton
+            title="Divider"
+            onClick={() => editor.chain().focus().setHorizontalRule().run()}
+          >
+            <Minus size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton title="Link" active={editor.isActive("link")} onClick={openLinkDialog}>
+            <Link2 size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton title="Insert image" onClick={openImagePicker}>
+            <ImageIcon size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton title="Voice note" onClick={startVoiceRecording}>
+            <Mic size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton title="Attach audio file" onClick={attachAudioFile}>
+            <Paperclip size={14} strokeWidth={1.75} />
+          </ToolbarButton>
+        </ToolbarGroup>
+      </div>
     </div>
   );
 }

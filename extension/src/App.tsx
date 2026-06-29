@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useStore } from "@/store/useStore";
+import { revokeAllAttachmentObjectUrls } from "@/lib/attachments/attachmentManager";
 import Sidebar from "@/components/Sidebar";
 import SearchPalette from "@/components/SearchPalette";
 import ThemeDropdown from "@/components/ThemeDropdown";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
 import CustomThemeDialog from "@/components/CustomThemeDialog";
 import LinkDialog from "@/components/LinkDialog";
+import AttachmentDeleteDialog from "@/components/AttachmentDeleteDialog";
 import EditorToolbar from "@/editor/EditorToolbar";
 import MobileExperienceNotice from "@/components/MobileExperienceNotice";
 import WebInstallBanner from "@/components/WebInstallBanner";
@@ -23,6 +25,7 @@ export default function App() {
 
   useEffect(() => {
     void init();
+    return () => revokeAllAttachmentObjectUrls();
   }, [init]);
 
   useEffect(() => {
@@ -84,6 +87,7 @@ export default function App() {
         <SearchPalette />
         <DeleteConfirmDialog />
         <LinkDialog />
+        <AttachmentDeleteDialog />
         <CustomThemeDialog />
       </div>
     </div>

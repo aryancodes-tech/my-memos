@@ -2,6 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { useEffect, useRef } from "react";
 import type { BlockDoc } from "@/storage/types";
 import { EDITOR_SAVE_DEBOUNCE_MS, EDITOR_TAB_INSERT } from "@/lib/constants";
+import { sanitizeBlockDocForPersistence } from "@/lib/attachments/sanitizeBlockDoc";
 import { useStore } from "@/store/useStore";
 import { createEditorExtensions } from "@/editor/editorExtensions";
 import { indentSelectedText } from "@/editor/tabIndent";
@@ -19,7 +20,15 @@ interface Props {
  */
 export default function Editor({ docKey, initial, onChange }: Props) {
   const debounceRef = useRef<number | null>(null);
+  const editorRef = useRef<ReturnType<typeof useEditor>>(null);
+  const onChangeRef = useRef(onChange);
   const setPageEditor = useStore((state) => state.setPageEditor);
+
+  onChangeRef.current = onChange;
+
+  const persistDoc = (doc: BlockDoc) => {
+    onChangeRef.current(sanitizeBlockDocForPersistence(doc));
+  };
 
   const editor = useEditor(
     {
@@ -55,12 +64,14 @@ export default function Editor({ docKey, initial, onChange }: Props) {
       onUpdate({ editor: ed }) {
         if (debounceRef.current) window.clearTimeout(debounceRef.current);
         debounceRef.current = window.setTimeout(() => {
-          onChange(ed.getJSON() as BlockDoc);
+          persistDoc(ed.getJSON() as BlockDoc);
         }, EDITOR_SAVE_DEBOUNCE_MS);
       },
     },
     [docKey],
   );
+
+  editorRef.current = editor;
 
   useEffect(() => {
     if (!editor) {
@@ -74,9 +85,16 @@ export default function Editor({ docKey, initial, onChange }: Props) {
 
   useEffect(() => {
     return () => {
-      if (debounceRef.current) window.clearTimeout(debounceRef.current);
+      if (debounceRef.current) {
+        window.clearTimeout(debounceRef.current);
+        debounceRef.current = null;
+      }
+      const ed = editorRef.current;
+      if (ed && !ed.isDestroyed) {
+        persistDoc(ed.getJSON() as BlockDoc);
+      }
     };
-  }, []);
+  }, [docKey]);
 
   return (
     <div className="ko-editor-wrap">

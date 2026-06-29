@@ -107,13 +107,19 @@ Ask explicitly:
 ┌─────────────────────────────────────────────────────────────┐
 │ IndexedDB (`mymemos`)                                       │
 │   pages  → LZ-compressed BlockDoc (`doc_c` field)           │
-│   images → binary blobs                                     │
+│   images → legacy blob store (unused by new attachment flow)│
+├─────────────────────────────────────────────────────────────┤
+│ OPFS (`mymemos-attachments/`) — per-origin, hidden          │
+│   images/  → img_*.png                                      │
+│   audio/   → voice_*.webm                                   │
+│   (paths referenced from block attrs only)                  │
 ├─────────────────────────────────────────────────────────────┤
 │ Settings tier (chrome.storage.local OR localStorage)        │
 │   theme, lastView, customThemes, collapsedDirs              │
 ├─────────────────────────────────────────────────────────────┤
 │ Ephemeral (never persisted)                                 │
-│   FlexSearch index, UI-only state, drag refs                  │
+│   FlexSearch index, UI-only state, drag refs                │
+│   voiceNote blocks with status "recording"                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -123,6 +129,7 @@ Ask explicitly:
 - On decode failure: fall back to `EMPTY_BLOCK_DOC`, `console.warn`, do not throw into UI.
 - Schema changes require `DB_VERSION` bump and non-destructive upgrade path in `extension/src/storage/db.ts`.
 - Search index rebuilds on demand - do not write FlexSearch to disk.
+- **Attachments:** binary files in OPFS; block attrs hold `attachmentPath` + metadata. Run `sanitizeBlockDocForPersistence()` before save. Page delete must GC orphaned OPFS files (`collectOrphanedAttachmentPaths`).
 
 ### 3.2 Platform abstraction
 

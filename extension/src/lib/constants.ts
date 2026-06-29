@@ -203,6 +203,69 @@ export const MARKDOWN_TASK_ITEM_INPUT_REGEX = new RegExp(
  */
 export const MARKDOWN_BULLET_LIST_INPUT_REGEX = /^\s*([-+*])\s+(?!\[).+$/;
 
+/** Subfolder under the user-selected attachment root for image files. */
+export const ATTACHMENT_DIR_IMAGES = "images";
+
+/** Subfolder under the user-selected attachment root for audio recordings. */
+export const ATTACHMENT_DIR_AUDIO = "audio";
+
+/** Reserved subfolder created alongside images/audio (future metadata exports). */
+export const ATTACHMENT_DIR_DATABASE = "database";
+
+/** MIME type for voice note recordings (Opus in WebM). */
+export const VOICE_NOTE_MIME_TYPE = "audio/webm";
+
+/** File extension for voice note recordings. */
+export const VOICE_NOTE_FILE_EXTENSION = ".webm";
+
+/** Prefix for generated voice note filenames. */
+export const VOICE_NOTE_FILE_PREFIX = "voice";
+
+/** Number of bars rendered in the saved voice note waveform. */
+export const VOICE_NOTE_WAVEFORM_BARS = 48;
+
+/** Number of bars kept visible in the live recording waveform. */
+export const VOICE_NOTE_LIVE_WAVEFORM_BARS = 56;
+
+/** Minimum normalized bar height (0-1) so silent passages stay visible. */
+export const VOICE_NOTE_WAVEFORM_MIN_BAR = 0.08;
+
+/** Prefix for generated image attachment filenames. */
+export const ATTACHMENT_IMAGE_FILE_PREFIX = "img";
+
+/** IndexedDB key for the persisted attachment root directory handle. @deprecated OPFS replaced folder picker; store unused. */
+export const ATTACHMENT_ROOT_HANDLE_KEY = "attachment_root";
+
+/** @deprecated Folder picker removed; attachments use hidden OPFS storage. */
+export const ATTACHMENT_FOLDER_PICKER_TITLE = "Choose where MyMemos should store your attachments.";
+
+/** Hidden OPFS directory name for attachment files (images, audio). */
+export const ATTACHMENT_OPFS_ROOT_DIR = "mymemos-attachments";
+
+/** Playback speeds cycled by clicking the speed control on voice notes. */
+export const VOICE_NOTE_PLAYBACK_SPEEDS = [1, 1.5, 2] as const;
+
+/** Error when attachment storage is unavailable in this browser. */
+export const ATTACHMENT_FS_UNSUPPORTED_MESSAGE =
+  "Attachments require a browser with private file storage (Chrome or Edge).";
+
+/** Error when microphone access is denied. */
+export const MICROPHONE_DENIED_MESSAGE =
+  "Microphone access was denied. Voice notes need microphone permission to record.";
+
+/** @deprecated Recovery dialog removed with OPFS; kept for copy reuse if sync lands later. */
+export const ATTACHMENT_STORAGE_UNAVAILABLE_TITLE = "Storage location unavailable";
+
+/** @deprecated Recovery dialog removed with OPFS. */
+export const ATTACHMENT_STORAGE_UNAVAILABLE_BODY =
+  "MyMemos cannot reach the folder where your images and voice notes are stored. Reconnect the original folder or choose a new location. Your note text is safe.";
+
+/** @deprecated Recovery dialog removed with OPFS. */
+export const ATTACHMENT_RECONNECT_LABEL = "Reconnect folder";
+
+/** @deprecated Recovery dialog removed with OPFS. */
+export const ATTACHMENT_CHOOSE_NEW_LABEL = "Choose new location";
+
 /** Regex patterns used to detect markdown syntax in pasted plain text. */
 export const MARKDOWN_DETECTION_PATTERNS: RegExp[] = [
   /^#{1,6}\s/m,
