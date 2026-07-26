@@ -91,10 +91,12 @@ IndexedDB (pages)          OPFS (mymemos-attachments/)
 
 | Feature | Entry points | Key modules |
 | ------- | ------------ | ----------- |
-| Inline voice recording | Toolbar mic, `/` → Voice note | `insertVoiceRecording.ts`, `VoiceNoteNodeView.tsx`, `voiceRecorder.ts` |
-| Attach audio file | Toolbar paperclip, `/` → Audio file | `insertAudioFromFile.ts` |
-| Images | Toolbar image, `/` → Image, drag-drop, paste (file/screenshot/webpage `<img>`) | `insertImage.ts`, `imageClipboard.ts`, `imagePasteDrop.ts`, `AttachmentImageNodeView.tsx` |
-| Delete attachment | Trash on voice note / image block | `AttachmentDeleteDialog`, `attachmentManager.ts` |
+| Inline voice recording | Toolbar mic, `/` → Voice note | `editor/commands/insertVoiceRecording.ts`, `VoiceNoteNodeView` + hooks, `voiceRecorder.ts` |
+| Attach audio file | Toolbar paperclip, `/` → Audio file | `editor/commands/insertAudioFromFile.ts` |
+| Images | Toolbar image, `/` → Image, drag-drop, paste (file/screenshot/webpage `<img>`) | `editor/commands/insertImage.ts`, `imageClipboard.ts`, `imagePasteDrop.ts`, `AttachmentImageNodeView` + hooks |
+| Delete attachment | Trash on voice note / image block | `AttachmentDeleteDialog`, store `pendingAttachmentDelete`, `attachmentManager.ts` |
+
+**Layering:** TipTap insert helpers live under `editor/commands/`; OPFS I/O stays in `lib/attachments/` (no TipTap types there).
 
 **Image insert sources (all save to OPFS):**
 
@@ -116,7 +118,7 @@ IndexedDB (pages)          OPFS (mymemos-attachments/)
 **Verify:**
 
 ```bash
-npm run test -- extension/src/lib/attachments/
+npm run test -- tests/extension/lib/attachments/
 npm run dev   # record, play, rename label, delete, reload page
 ```
 
@@ -157,12 +159,16 @@ extension/
 │   ├── App.tsx           ← root, shortcuts, view router
 │   ├── components/       ← Sidebar, SearchPalette, dialogs
 │   ├── editor/           ← Tiptap, slash menu, toolbar
+│   │   ├── commands/     ← TipTap insert adapters (call attachments)
+│   │   └── hooks/        ← voice/image node-view logic
 │   ├── views/            ← Dashboard, PageView
-│   ├── store/            ← Zustand
+│   ├── store/            ← Zustand facade + slices/
 │   ├── storage/          ← IndexedDB, codec, types
 │   └── lib/
 │       ├── constants.ts  ← re-export of ../../shared/constants.ts
-│       └── attachments/  ← OPFS manager, voice recorder, sanitize
+│       ├── attachments/  ← OPFS I/O, sanitize, recorder (no TipTap)
+│       ├── workspace-tree.ts
+│       └── workspace-drag.ts ← sidebar DnD helpers
 ├── vite.config.ts        ← Chrome extension build
 ├── vite.web.config.ts    ← Web demo → ../public/demo/
 └── package.json

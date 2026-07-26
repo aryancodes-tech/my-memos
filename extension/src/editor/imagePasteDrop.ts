@@ -7,7 +7,7 @@ import {
   extractImageSrcsFromHtml,
   resolveImagesFromDataTransfer,
 } from "@/lib/attachments/imageClipboard";
-import { insertImagesFromFiles } from "@/lib/attachments/insertImage";
+import { insertImagesFromFiles } from "@/editor/commands/insertImage";
 import { isAttachmentStorageSupported } from "@/lib/attachments/fileSystemManager";
 import { len } from "@/lib/text";
 

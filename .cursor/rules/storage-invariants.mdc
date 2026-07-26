@@ -31,7 +31,7 @@ alwaysApply: false
 
 1. Increment `DB_VERSION` in `db.ts`
 2. Add non-destructive `upgrade` handler
-3. Add tests in `db.test.ts` / `codec.test.ts`
+3. Add tests in `tests/extension/storage/db.test.ts` / `codec.test.ts`
 4. Document migration in PR - user data must survive
 
 ## Page model essentials

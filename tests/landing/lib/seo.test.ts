@@ -8,7 +8,7 @@ import {
   buildRobotsTxt,
   buildSitemapXml,
   resolveSiteOrigin,
-} from "./seo";
+} from "@/lib/seo";
 
 describe("resolveSiteOrigin", () => {
   it("uses the request origin when SITE_ORIGIN is unset", () => {

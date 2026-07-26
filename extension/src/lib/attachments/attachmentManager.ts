@@ -36,24 +36,42 @@ export function revokeAllAttachmentObjectUrls(): void {
 }
 
 /**
- * Saves an image blob to `images/` and returns its relative path.
- * @param file - Source image file from a file picker or clipboard.
+ * Writes a blob to a unique filename under an attachment subdirectory.
+ * @returns Relative path like `images/img_x.png`.
  */
-export async function saveImageAttachment(file: File | Blob, mimeType?: string): Promise<string> {
+async function writeUniqueAttachmentFile(
+  relativeDir: string,
+  filePrefix: string,
+  extension: string,
+  data: Blob,
+): Promise<string> {
   const root = await getWritableAttachmentRoot();
   if (!(await verifyAttachmentRootAccess(root))) {
     throw new AttachmentStorageUnavailableError(ATTACHMENT_STORAGE_UNAVAILABLE_MESSAGE);
   }
 
-  const imagesDir = await getSubdirectoryHandle(root, ATTACHMENT_DIR_IMAGES);
-  const extension = inferImageExtension(file, mimeType);
-  const baseName = buildAttachmentFileName(ATTACHMENT_IMAGE_FILE_PREFIX, extension);
-  const fileName = await resolveUniqueFileName(imagesDir, baseName);
-  const fileHandle = await imagesDir.getFileHandle(fileName, { create: true });
+  const dir = await getSubdirectoryHandle(root, relativeDir);
+  const baseName = buildAttachmentFileName(filePrefix, extension);
+  const fileName = await resolveUniqueFileName(dir, baseName);
+  const fileHandle = await dir.getFileHandle(fileName, { create: true });
   const writable = await fileHandle.createWritable();
-  await writable.write(file);
+  await writable.write(data);
   await writable.close();
-  return `${ATTACHMENT_DIR_IMAGES}/${fileName}`;
+  return `${relativeDir}/${fileName}`;
+}
+
+/**
+ * Saves an image blob to `images/` and returns its relative path.
+ * @param file - Source image file from a file picker or clipboard.
+ */
+export async function saveImageAttachment(file: File | Blob, mimeType?: string): Promise<string> {
+  const extension = inferImageExtension(file, mimeType);
+  return writeUniqueAttachmentFile(
+    ATTACHMENT_DIR_IMAGES,
+    ATTACHMENT_IMAGE_FILE_PREFIX,
+    extension,
+    file,
+  );
 }
 
 /**
@@ -65,20 +83,12 @@ export async function saveAudioAttachment(
   blob: Blob,
   durationSeconds: number,
 ): Promise<AttachmentRef> {
-  const root = await getWritableAttachmentRoot();
-  if (!(await verifyAttachmentRootAccess(root))) {
-    throw new AttachmentStorageUnavailableError(ATTACHMENT_STORAGE_UNAVAILABLE_MESSAGE);
-  }
-
-  const audioDir = await getSubdirectoryHandle(root, ATTACHMENT_DIR_AUDIO);
-  const baseName = buildAttachmentFileName(VOICE_NOTE_FILE_PREFIX, VOICE_NOTE_FILE_EXTENSION);
-  const fileName = await resolveUniqueFileName(audioDir, baseName);
-  const fileHandle = await audioDir.getFileHandle(fileName, { create: true });
-  const writable = await fileHandle.createWritable();
-  await writable.write(blob);
-  await writable.close();
-
-  const path = `${ATTACHMENT_DIR_AUDIO}/${fileName}`;
+  const path = await writeUniqueAttachmentFile(
+    ATTACHMENT_DIR_AUDIO,
+    VOICE_NOTE_FILE_PREFIX,
+    VOICE_NOTE_FILE_EXTENSION,
+    blob,
+  );
   return {
     type: "audio",
     path,
@@ -95,21 +105,13 @@ export async function saveAudioAttachment(
  */
 export async function saveUploadedAudioAttachment(file: File): Promise<AttachmentRef> {
   const durationSeconds = await measureAudioDuration(file);
-  const root = await getWritableAttachmentRoot();
-  if (!(await verifyAttachmentRootAccess(root))) {
-    throw new AttachmentStorageUnavailableError(ATTACHMENT_STORAGE_UNAVAILABLE_MESSAGE);
-  }
-
-  const audioDir = await getSubdirectoryHandle(root, ATTACHMENT_DIR_AUDIO);
   const extension = inferAudioExtension(file);
-  const baseName = buildAttachmentFileName(VOICE_NOTE_FILE_PREFIX, extension);
-  const fileName = await resolveUniqueFileName(audioDir, baseName);
-  const fileHandle = await audioDir.getFileHandle(fileName, { create: true });
-  const writable = await fileHandle.createWritable();
-  await writable.write(file);
-  await writable.close();
-
-  const path = `${ATTACHMENT_DIR_AUDIO}/${fileName}`;
+  const path = await writeUniqueAttachmentFile(
+    ATTACHMENT_DIR_AUDIO,
+    VOICE_NOTE_FILE_PREFIX,
+    extension,
+    file,
+  );
   const title = len(file.name) > 0 ? file.name.replace(/\.[^.]+$/, "") : VOICE_NOTE_DEFAULT_TITLE;
   return {
     type: "audio",

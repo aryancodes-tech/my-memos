@@ -7,7 +7,7 @@ import {
   isCustomThemeId,
   normalizeHexColor,
   toCustomThemeName,
-} from "./themes";
+} from "@/lib/themes";
 import type { CustomTheme } from "@/storage/types";
 
 describe("normalizeHexColor", () => {

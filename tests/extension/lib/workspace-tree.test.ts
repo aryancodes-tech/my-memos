@@ -5,7 +5,7 @@ import {
   canMoveWorkspaceItem,
   isDescendant,
   resolveFolderDropParentId,
-} from "./workspace-tree";
+} from "@/lib/workspace-tree";
 import type { Page } from "@/storage/types";
 
 function page(overrides: Partial<Page> & Pick<Page, "id">): Page {

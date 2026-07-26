@@ -100,7 +100,7 @@ Without it, generated files fall back to `http://localhost:8080`. The `/llms.txt
 **Verify SEO changes**
 
 ```bash
-npm run test -- src/lib/seo.test.ts   # meta, JSON-LD, llms.txt builders
+npm run test -- tests/landing/lib/seo.test.ts   # meta, JSON-LD, llms.txt builders
 npm run generate:seo
 npm run dev:web
 # curl http://localhost:8080/robots.txt

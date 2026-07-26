@@ -29,18 +29,18 @@ isWebAppContext()     // standalone /demo SPA
 
 Web-only components: `WebInstallBanner`, `MobileExperienceNotice` (viewport < 768px).
 
-## Zustand store (`useStore.ts`)
+## Zustand store (`useStore.ts` facade + slices)
 
-Single store owns pages, view routing, theme, dialogs, sidebar, search.
+Call sites keep importing `useStore` from `store/useStore.ts`. Internally it composes slices:
 
-| Action category | Examples |
-|-----------------|----------|
-| Page CRUD | `createPage`, `updatePage`, `requestDelete` |
-| Workspace | `moveWorkspaceItem`, `createDirectory` |
-| Navigation | `openPage`, `openDashboard` |
-| Theme | `setTheme`, custom theme CRUD |
+| Slice | Owns |
+|-------|------|
+| `slices/pagesWorkspace.ts` | pages CRUD, view, workspace move/delete + OPFS GC |
+| `slices/themeUi.ts` | theme, custom themes, `applyThemeToDocument` |
+| `slices/dialogs.ts` | delete / link / attachment-delete flags (serializable payloads only) |
+| `slices/editorBridge.ts` | `pageEditor` + `applyLink` / `removeLink` / confirm attachment delete |
 
-Use exported **selectors** for derived lists - do not rebuild tree logic in components.
+Do **not** put TipTap `Editor` types or `onConfirm` closures in the pages/dialogs slices. Prefer exported **selectors** for derived lists.
 
 ## Views
 
@@ -51,7 +51,7 @@ View type: `{ kind: "dashboard" }` | `{ kind: "page"; id: string }`
 
 ## Components conventions
 
-- `extension/src/components/Sidebar.tsx` - workspace tree, DnD, folders
+- `Sidebar.tsx` - workspace tree UI; DnD helpers live in `lib/workspace-drag.ts`
 - `SearchPalette.tsx` - ⌘K, FlexSearch (ephemeral index)
 - `ThemeDropdown.tsx` - built-in + custom themes
 - Dialogs - delete confirm, etc.
@@ -70,14 +70,17 @@ Defined in `App.tsx` - check existing bindings before adding new global listener
 
 ## Tests
 
-Co-located `*.test.ts` under `extension/src/`. Run:
+Mirrored under `tests/extension/` (see `tests/README.md`).  
+`extension/src/<path>/<file>.ts` → `tests/extension/<path>/<file>.test.ts`.
 
 ```bash
-npm run test -- extension/src/store/
-npm run test -- extension/src/lib/attachments/
+npm run test -- tests/extension/store/
+npm run test -- tests/extension/lib/attachments/
 ```
 
-## Attachments module
+## Attachments vs editor commands (dependency rule)
+
+**`lib/attachments/`** = OPFS I/O + policy only (no TipTap types):
 
 ```
 lib/attachments/
@@ -87,15 +90,22 @@ lib/attachments/
 ├── voiceRecorder.ts       ← MediaRecorder wrapper + live levels
 ├── waveform.ts            ← decode peaks for playback UI
 ├── imageClipboard.ts      ← paste/drop DataTransfer → image Files
-├── insertVoiceRecording.ts
-├── insertAudioFromFile.ts
-└── insertImage.ts         ← picker / file / multi-file insert helpers
+└── imageFiles.ts          ← pure image File checks
 ```
 
-Editor nodes: `voiceNote` (inline record + playback), `image` (`AttachmentImage` with `attachmentPath`).
-Editor paste/drop: `imagePasteDrop.ts` (priority above markdown paste).
+**`editor/commands/`** = TipTap insert/paste adapters that call attachment services:
 
-Dialogs: `AttachmentDeleteDialog` confirms block + file removal.
+```
+editor/commands/
+├── insertImage.ts
+├── insertAudioFromFile.ts
+├── insertVoiceRecording.ts
+└── insertSelection.ts
+```
+
+Node views use hooks under `editor/hooks/` (`useVoiceNoteRecording`, `useVoiceNotePlayback`, `useAttachmentImage*`).
+Editor paste/drop: `imagePasteDrop.ts` (priority above markdown paste).
+Dialogs: `AttachmentDeleteDialog` confirms via store `pendingAttachmentDelete` (path only).
 
 ## Constants
 

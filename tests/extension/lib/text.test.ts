@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractPlainText, len } from "./text";
+import { extractPlainText, len } from "@/lib/text";
 import type { BlockDoc } from "@/storage/types";
 
 describe("len", () => {

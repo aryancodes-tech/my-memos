@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { isValidImportPage } from "./db";
-import type { Page } from "./types";
+import { isValidImportPage } from "@/storage/db";
+import type { Page } from "@/storage/types";
 
 const validPage: Page = {
   id: "page-1",

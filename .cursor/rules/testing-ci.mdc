@@ -1,6 +1,6 @@
 ---
 description: Vitest, CI pipeline, lint, and release packaging expectations
-globs: "{**/*.test.ts,**/*.test.tsx,.github/**/*.yml,vitest.config.ts,eslint.config.js}"
+globs: "{tests/**/*.test.ts,tests/**/*.test.tsx,.github/**/*.yml,vitest.config.ts,eslint.config.js}"
 alwaysApply: false
 ---
 
@@ -30,31 +30,37 @@ Steps in order:
 
 - **Vitest 3** + **happy-dom**
 - Config: `vitest.config.ts` (root)
-- Extension tests: `extension/src/**`
-- Landing tests: `src/lib/*.test.ts` (e.g. `src/lib/seo.test.ts`)
+- All tests live under `tests/` (see `tests/README.md`)
+- Extension: `tests/extension/**/*.test.ts`
+- Landing: `tests/landing/**/*.test.ts`
 
-## When to add tests
+## Source ↔ test mapping (mandatory)
 
-| Change | Test |
+| Source | Test |
 |--------|------|
-| `codec.ts` | `codec.test.ts` |
-| `db.ts` | `db.test.ts` |
-| `workspace-tree.ts` | `workspace-tree.test.ts` |
-| `useStore` logic | `useStore.test.ts` |
-| Markdown paste | `markdownPaste.test.ts` |
-| Attachments / sanitize | `extension/src/lib/attachments/*.test.ts` |
-| `text.ts` helpers | `text.test.ts` |
-| `seo.ts` / FAQ content resolution | `seo.test.ts` |
+| `extension/src/<path>/<file>.ts` | `tests/extension/<path>/<file>.test.ts` |
+| `src/<path>/<file>.ts` | `tests/landing/<path>/<file>.test.ts` |
 
-Co-locate as `*.test.ts` next to source.
+Same basename. Import SUT via `@/` — do not co-locate `*.test.ts` under `src/`.
+
+| Change | Test path |
+|--------|-----------|
+| `extension/src/storage/codec.ts` | `tests/extension/storage/codec.test.ts` |
+| `extension/src/storage/db.ts` | `tests/extension/storage/db.test.ts` |
+| `extension/src/lib/workspace-tree.ts` | `tests/extension/lib/workspace-tree.test.ts` |
+| `extension/src/store/useStore.ts` | `tests/extension/store/useStore.test.ts` (+ `moveWorkspaceItem.test.ts` for moves) |
+| `extension/src/editor/markdownPaste.ts` | `tests/extension/editor/markdownPaste.test.ts` |
+| `extension/src/lib/attachments/*` | `tests/extension/lib/attachments/*.test.ts` |
+| `extension/src/lib/text.ts` | `tests/extension/lib/text.test.ts` |
+| `src/lib/seo.ts` | `tests/landing/lib/seo.test.ts` |
 
 ## Running tests
 
 ```bash
-npm run test                              # all
-npm run test:watch                        # watch mode
-npm run test -- extension/src/editor/     # scoped
-npm run test -- src/lib/seo.test.ts       # landing SEO
+npm run test                                          # all
+npm run test:watch                                    # watch mode
+npm run test -- tests/extension/editor/               # scoped
+npm run test -- tests/landing/lib/seo.test.ts         # landing SEO
 ```
 
 ## Landing SEO verification
@@ -62,7 +68,7 @@ npm run test -- src/lib/seo.test.ts       # landing SEO
 After touching `src/lib/seo.ts`, `ai-content.json`, `generate-sitemap.mjs`, or `llms[.]txt.ts`:
 
 ```bash
-npm run test -- src/lib/seo.test.ts
+npm run test -- tests/landing/lib/seo.test.ts
 npm run generate:seo
 npm run dev:web
 curl -s http://localhost:8080/robots.txt

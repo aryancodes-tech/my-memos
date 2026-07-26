@@ -51,9 +51,9 @@ import {
   ATTACHMENT_FS_UNSUPPORTED_MESSAGE,
 } from "@/lib/constants";
 import { normalizeHexColor } from "@/lib/themes";
-import { insertImageFromPicker } from "@/lib/attachments/insertImage";
-import { insertAudioFromPicker } from "@/lib/attachments/insertAudioFromFile";
-import { insertInlineVoiceRecording } from "@/lib/attachments/insertVoiceRecording";
+import { insertImageFromPicker } from "@/editor/commands/insertImage";
+import { insertAudioFromPicker } from "@/editor/commands/insertAudioFromFile";
+import { insertInlineVoiceRecording } from "@/editor/commands/insertVoiceRecording";
 import { useStore } from "@/store/useStore";
 import { len } from "@/lib/text";
 

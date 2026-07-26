@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as db from "@/storage/db";
-import { useStore } from "./useStore";
+import { useStore } from "@/store/useStore";
 import type { Page } from "@/storage/types";
 
 vi.mock("@/storage/db", () => ({

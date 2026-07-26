@@ -1,5 +1,5 @@
 import { len } from "@/lib/text";
-import { isImageFile } from "@/lib/attachments/insertImage";
+import { isImageFile } from "@/lib/attachments/imageFiles";
 
 /** Collects image files from a paste or drop DataTransfer. */
 export function collectImageFilesFromDataTransfer(data: DataTransfer | null): File[] {

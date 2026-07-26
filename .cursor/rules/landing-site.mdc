@@ -94,7 +94,7 @@ Show inline error if 404 (do not `alert()`).
 
 ```bash
 npm run generate:seo                    # writes public/robots.txt, sitemap.xml, llms.txt
-npm run test -- src/lib/seo.test.ts
+npm run test -- tests/landing/lib/seo.test.ts
 npm run dev:web
 curl http://localhost:8080/llms.txt
 ```
