@@ -96,3 +96,12 @@ Editor nodes: `voiceNote` (inline record + playback), `image` (`AttachmentImage`
 Editor paste/drop: `imagePasteDrop.ts` (priority above markdown paste).
 
 Dialogs: `AttachmentDeleteDialog` confirms block + file removal.
+
+## Constants
+
+**Canonical source:** `shared/constants.ts` (see `.cursor/rules/constants-policy.mdc` and `AGENTS.md` §3.7).
+
+- `extension/src/lib/constants.ts` is a re-export only — edit `shared/constants.ts`
+- UI labels, error messages, attachment/OPFS paths, MIME types, debounce/limits → named exports there
+- Import via `@/lib/constants` — do not hardcode copy in components or attachment helpers
+- Do not add parallel string modules

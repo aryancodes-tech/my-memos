@@ -42,6 +42,7 @@ Steps in order:
 | `workspace-tree.ts` | `workspace-tree.test.ts` |
 | `useStore` logic | `useStore.test.ts` |
 | Markdown paste | `markdownPaste.test.ts` |
+| Attachments / sanitize | `extension/src/lib/attachments/*.test.ts` |
 | `text.ts` helpers | `text.test.ts` |
 | `seo.ts` / FAQ content resolution | `seo.test.ts` |
 

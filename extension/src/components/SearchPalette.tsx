@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import FlexSearch from "flexsearch";
 import { selectSearchablePages, useStore } from "@/store/useStore";
 import { extractPlainText } from "@/lib/text";
-import { DEFAULT_FOLDER_TITLE, WORKSPACE_SECTION } from "@/lib/constants";
+import { DEFAULT_FOLDER_TITLE, SEARCH_PALETTE_PLACEHOLDER, WORKSPACE_SECTION } from "@/lib/constants";
 import type { Page } from "@/storage/types";
 
 /** Human-readable location for search results (folder path or workspace root). */
@@ -77,7 +77,7 @@ export default function SearchPalette() {
           ref={inputRef}
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search pages, content, tags…"
+          placeholder={SEARCH_PALETTE_PLACEHOLDER}
           className="w-full px-4 py-3 bg-transparent outline-none text-[var(--ko-text)]"
         />
         <div

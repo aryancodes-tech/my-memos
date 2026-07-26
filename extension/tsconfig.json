@@ -15,11 +15,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "paths": { "@/*": ["./src/*"] },
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shared/*": ["../shared/*"]
+    },
     "types": ["chrome", "vite/client"]
   },
   "include": [
     "src",
+    "../shared",
     "newtab.html",
     "index.html",
     "manifest.config.ts",

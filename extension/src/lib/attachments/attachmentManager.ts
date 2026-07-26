@@ -2,6 +2,10 @@ import {
   ATTACHMENT_DIR_AUDIO,
   ATTACHMENT_DIR_IMAGES,
   ATTACHMENT_IMAGE_FILE_PREFIX,
+  ATTACHMENT_PATH_EMPTY_MESSAGE,
+  ATTACHMENT_STORAGE_UNAVAILABLE_MESSAGE,
+  AUDIO_DURATION_READ_ERROR,
+  VOICE_NOTE_DEFAULT_TITLE,
   VOICE_NOTE_FILE_EXTENSION,
   VOICE_NOTE_FILE_PREFIX,
   VOICE_NOTE_MIME_TYPE,
@@ -38,7 +42,7 @@ export function revokeAllAttachmentObjectUrls(): void {
 export async function saveImageAttachment(file: File | Blob, mimeType?: string): Promise<string> {
   const root = await getWritableAttachmentRoot();
   if (!(await verifyAttachmentRootAccess(root))) {
-    throw new AttachmentStorageUnavailableError("Attachment storage is unavailable.");
+    throw new AttachmentStorageUnavailableError(ATTACHMENT_STORAGE_UNAVAILABLE_MESSAGE);
   }
 
   const imagesDir = await getSubdirectoryHandle(root, ATTACHMENT_DIR_IMAGES);
@@ -63,7 +67,7 @@ export async function saveAudioAttachment(
 ): Promise<AttachmentRef> {
   const root = await getWritableAttachmentRoot();
   if (!(await verifyAttachmentRootAccess(root))) {
-    throw new AttachmentStorageUnavailableError("Attachment storage is unavailable.");
+    throw new AttachmentStorageUnavailableError(ATTACHMENT_STORAGE_UNAVAILABLE_MESSAGE);
   }
 
   const audioDir = await getSubdirectoryHandle(root, ATTACHMENT_DIR_AUDIO);
@@ -81,7 +85,7 @@ export async function saveAudioAttachment(
     duration: Math.max(0, Math.round(durationSeconds)),
     size: blob.size,
     createdAt: new Date().toISOString(),
-    title: "Voice Note",
+    title: VOICE_NOTE_DEFAULT_TITLE,
   };
 }
 
@@ -93,7 +97,7 @@ export async function saveUploadedAudioAttachment(file: File): Promise<Attachmen
   const durationSeconds = await measureAudioDuration(file);
   const root = await getWritableAttachmentRoot();
   if (!(await verifyAttachmentRootAccess(root))) {
-    throw new AttachmentStorageUnavailableError("Attachment storage is unavailable.");
+    throw new AttachmentStorageUnavailableError(ATTACHMENT_STORAGE_UNAVAILABLE_MESSAGE);
   }
 
   const audioDir = await getSubdirectoryHandle(root, ATTACHMENT_DIR_AUDIO);
@@ -106,7 +110,7 @@ export async function saveUploadedAudioAttachment(file: File): Promise<Attachmen
   await writable.close();
 
   const path = `${ATTACHMENT_DIR_AUDIO}/${fileName}`;
-  const title = len(file.name) > 0 ? file.name.replace(/\.[^.]+$/, "") : "Voice Note";
+  const title = len(file.name) > 0 ? file.name.replace(/\.[^.]+$/, "") : VOICE_NOTE_DEFAULT_TITLE;
   return {
     type: "audio",
     path,
@@ -123,7 +127,7 @@ export async function saveUploadedAudioAttachment(file: File): Promise<Attachmen
  */
 export async function readAttachmentBlob(relativePath: string): Promise<Blob> {
   if (len(relativePath) === 0) {
-    throw new AttachmentIoError("Attachment path is empty.");
+    throw new AttachmentIoError(ATTACHMENT_PATH_EMPTY_MESSAGE);
   }
 
   const root = await getWritableAttachmentRoot();
@@ -213,7 +217,7 @@ export async function measureAudioDuration(file: Blob): Promise<number> {
       audio.onloadedmetadata = () => {
         resolve(Number.isFinite(audio.duration) ? audio.duration : 0);
       };
-      audio.onerror = () => reject(new Error("Could not read audio duration."));
+      audio.onerror = () => reject(new Error(AUDIO_DURATION_READ_ERROR));
       audio.src = url;
     });
   } finally {

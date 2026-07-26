@@ -4,6 +4,26 @@ The core product lives here: React UI, editor, storage, and Chrome MV3 packaging
 
 For repo-wide setup, commands, and hosting deploy → [root README](../README.md).
 
+Agent-facing capability inventory (shipped vs schema-only) → [`AGENTS.md`](../AGENTS.md) §2.5.
+
+---
+
+## Current capabilities
+
+| Area | What users can do |
+| ---- | ----------------- |
+| Workspace | Nested pages/folders, DnD move/reorder, rename, delete (with descendant warning), collapsible sidebar |
+| Favorites / Recent | Star pages; Favorites and Recent sidebar views (not separate storage sections) |
+| Dashboard | Recent pages + quick create |
+| Editor | Headings, lists/tasks, tables, code blocks, colors, links, slash menu, toolbar, markdown paste |
+| Images | Insert via toolbar/slash/drop/paste → OPFS; align, caption, lightbox, replace, alt text, delete |
+| Voice / audio | Inline mic recording, attach audio file, waveform playback + speed, rename, download, delete |
+| Search | ⌘K over title + body text (FlexSearch, ephemeral) |
+| Themes | 7 built-in + custom |
+| Platforms | Chrome New Tab extension **or** `/demo/` web SPA (separate origins — data does not sync) |
+
+**Not exposed in UI:** tags editing, archive, workspace export/import (helpers exist in `storage/db.ts` only).
+
 ---
 
 ## Architecture
@@ -141,11 +161,15 @@ extension/
 │   ├── store/            ← Zustand
 │   ├── storage/          ← IndexedDB, codec, types
 │   └── lib/
-│       ├── constants.ts
+│       ├── constants.ts  ← re-export of ../../shared/constants.ts
 │       └── attachments/  ← OPFS manager, voice recorder, sanitize
 ├── vite.config.ts        ← Chrome extension build
 ├── vite.web.config.ts    ← Web demo → ../public/demo/
 └── package.json
+
+../shared/
+├── constants.ts          ← product constants (canonical)
+└── theme-types.ts
 ```
 
 ---
@@ -201,10 +225,11 @@ Stop `npm run dev` before a production build. Reload the unpacked extension afte
 
 ---
 
-## Roadmap-ready
+## Roadmap-ready (not shipped)
 
-Storage schema and module boundaries support adding these without data migrations:
+These are **not** current product features. Storage schema and module boundaries could support them later without claiming they exist today:
 
+- Tag editing UI / archive UI / export-import UI (schema or `db.ts` helpers already exist in part)
 - AI search, summaries, flashcards (same block JSON)
 - Backlinks and page mentions (graph from blocks)
 - Cloud sync (block JSON on the wire)

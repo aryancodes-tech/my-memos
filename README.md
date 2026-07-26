@@ -156,6 +156,7 @@ The landing site optionally includes web analytics via `@vercel/analytics` in `s
 ```
 my-memos/
 ├── extension/     # Core app - editor, sidebar, storage (Chrome + /demo/)
+├── shared/        # Shared product constants (`shared/constants.ts`)
 ├── src/           # Landing site (TanStack Start)
 ├── public/demo/   # Built web demo (generated - do not edit)
 └── package.json   # Root scripts
@@ -165,20 +166,23 @@ Architecture, storage design, and extension internals → [`extension/README.md`
 
 ---
 
-## Features (short list)
+## Features (shipped)
 
-- New Tab override, dashboard, nested pages & folders
-- Tiptap editor with slash commands, toolbar, code blocks
-- `⌘K` search (FlexSearch, in-memory)
-- 7 themes + custom themes
-- Auto-save to IndexedDB (compressed block JSON only)
+- **New Tab workspace** — dashboard, nested pages & folders, drag-and-drop tree, favorites, recent
+- **Block editor** — slash commands, toolbar, headings, lists/tasks, tables, code blocks, colors, markdown paste
+- **Attachments** — images (picker / drop / paste) and voice notes (inline record or attach audio) stored in OPFS
+- **`⌘K` search** — FlexSearch over titles and page body text (in-memory index)
+- **Themes** — 7 built-ins + custom themes
+- **Local-first persistence** — page BlockDoc JSON in IndexedDB (compressed); settings in `chrome.storage.local` (extension) or `localStorage` (web demo)
+
+Not shipped as user features today: tag editing UI, archive UI, workspace export/import UI, cloud sync. See [`AGENTS.md`](AGENTS.md) §2.5 for the agent-facing inventory.
 
 ---
 
 ## Privacy
 
-- Notes stay in the browser - no backend, no account
-- Extension works offline after install (dev mode uses `localhost` for HMR only)
+- Notes and attachments stay in the browser (IndexedDB + OPFS) - no backend, no account
+- Extension works offline after install (dev mode uses `localhost` for HMR only; the landing marketing video is CDN-hosted and unrelated to note storage)
 - Uninstalling removes extension storage
 
 ---

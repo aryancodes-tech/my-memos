@@ -21,7 +21,7 @@ import {
   saveImageAttachment,
 } from "@/lib/attachments/attachmentManager";
 import { splitAttachmentPath } from "@/lib/attachments/fileName";
-import { IMAGE_ALIGN_DEFAULT, IMAGE_ALIGNMENTS, IMAGE_CAPTION_PLACEHOLDER } from "@/lib/constants";
+import { IMAGE_ALIGN_DEFAULT, IMAGE_ALIGNMENTS, IMAGE_CAPTION_PLACEHOLDER, IMAGE_ALIGN_GROUP_ARIA, IMAGE_REMOVE_LABEL, IMAGE_UNAVAILABLE_MESSAGE } from "@/lib/constants";
 import { useStore } from "@/store/useStore";
 import { len } from "@/lib/text";
 
@@ -80,7 +80,7 @@ export default function AttachmentImageNodeView({
       .catch((err: unknown) => {
         if (cancelled) return;
         setLoading(false);
-        setError("Image unavailable.");
+        setError(IMAGE_UNAVAILABLE_MESSAGE);
         console.warn("[MyMemos] Failed to load attachment image:", attachmentPath, err);
       });
 
@@ -224,8 +224,8 @@ export default function AttachmentImageNodeView({
           <button
             type="button"
             className="ko-attachment-tool-btn ko-attachment-tool-danger"
-            title="Remove image"
-            aria-label="Remove image"
+            title={IMAGE_REMOVE_LABEL}
+            aria-label={IMAGE_REMOVE_LABEL}
             onClick={handleDelete}
           >
             <Trash2 size={14} strokeWidth={1.75} />
@@ -251,7 +251,7 @@ export default function AttachmentImageNodeView({
             <img src={src} alt={alt} className="ko-attachment-image" draggable={false} />
 
             <div className="ko-attachment-toolbar" onClick={stop} onMouseDown={stop}>
-              <div className="ko-attachment-tool-group" role="group" aria-label="Align image">
+              <div className="ko-attachment-tool-group" role="group" aria-label={IMAGE_ALIGN_GROUP_ARIA}>
                 <button
                   type="button"
                   className={`ko-attachment-tool-btn ${align === "left" ? "is-active" : ""}`}

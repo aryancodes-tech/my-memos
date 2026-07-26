@@ -58,27 +58,12 @@ export interface AttachmentRef {
   title?: string;
 }
 
-export type BuiltInThemeName =
-  | "light"
-  | "dark"
-  | "midnight"
-  | "dracula"
-  | "solarized"
-  | "forest"
-  | "ocean";
+export type { BuiltInThemeName, CustomThemeColors } from "@shared/theme-types";
+
+import type { BuiltInThemeName, CustomThemeColors } from "@shared/theme-types";
 
 /** Active theme id - built-in preset or `custom-{id}`. */
 export type ThemeName = BuiltInThemeName | `custom-${string}`;
-
-/** Primary colors users pick when creating a custom theme. */
-export interface CustomThemeColors {
-  /** Page background color. */
-  bg: string;
-  /** Primary text color. */
-  text: string;
-  /** Accent / link color. */
-  accent: string;
-}
 
 /** User-created theme stored in settings. */
 export interface CustomTheme {

@@ -1,4 +1,4 @@
-import { MICROPHONE_DENIED_MESSAGE } from "@/lib/constants";
+import { MICROPHONE_DENIED_MESSAGE, MICROPHONE_UNSUPPORTED_MESSAGE } from "@/lib/constants";
 
 /**
  * Requests microphone access lazily when the user starts a voice note.
@@ -6,7 +6,7 @@ import { MICROPHONE_DENIED_MESSAGE } from "@/lib/constants";
  */
 export async function requestMicrophoneAccess(): Promise<MediaStream> {
   if (!navigator.mediaDevices?.getUserMedia) {
-    throw new Error("Microphone recording is not supported in this browser.");
+    throw new Error(MICROPHONE_UNSUPPORTED_MESSAGE);
   }
 
   try {

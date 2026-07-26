@@ -31,6 +31,10 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { DEFAULT_CODE_LANGUAGE } from "@/editor/codeLowlight";
 import { preventEditorBlur, ToolbarPopover, ToolbarTip } from "@/editor/ToolbarPopover";
 import {
+  EDITOR_ALIGN_CENTER_LABEL,
+  EDITOR_ALIGN_JUSTIFY_LABEL,
+  EDITOR_ALIGN_LEFT_LABEL,
+  EDITOR_ALIGN_RIGHT_LABEL,
   EDITOR_BACKGROUND_COLORS,
   EDITOR_BACKGROUND_CUSTOM_DEFAULT,
   EDITOR_CUSTOM_COLOR_LABEL,
@@ -38,12 +42,18 @@ import {
   EDITOR_HIGHLIGHT_CUSTOM_DEFAULT,
   EDITOR_TEXT_COLORS,
   EDITOR_TEXT_CUSTOM_DEFAULT,
+  EDITOR_TOOLBAR_BLOCK_TYPE_ARIA,
+  EDITOR_TOOLBAR_CODE_BLOCK_LABEL,
+  EDITOR_TOOLBAR_IMAGE_ALIGN_ARIA,
+  EDITOR_TOOLBAR_LINK_LABEL,
+  EDITOR_TOOLBAR_STRIKETHROUGH_LABEL,
+  EDITOR_TOOLBAR_TEXT_ALIGN_ARIA,
+  ATTACHMENT_FS_UNSUPPORTED_MESSAGE,
 } from "@/lib/constants";
 import { normalizeHexColor } from "@/lib/themes";
 import { insertImageFromPicker } from "@/lib/attachments/insertImage";
 import { insertAudioFromPicker } from "@/lib/attachments/insertAudioFromFile";
 import { insertInlineVoiceRecording } from "@/lib/attachments/insertVoiceRecording";
-import { ATTACHMENT_FS_UNSUPPORTED_MESSAGE } from "@/lib/constants";
 import { useStore } from "@/store/useStore";
 import { len } from "@/lib/text";
 
@@ -72,10 +82,22 @@ const BLOCK_OPTIONS: { id: BlockKind; label: string }[] = [
 ];
 
 const ALIGN_OPTIONS: { id: AlignKind; label: string; icon: ReactNode }[] = [
-  { id: "left", label: "Align left", icon: <AlignLeft size={14} strokeWidth={1.75} /> },
-  { id: "center", label: "Align center", icon: <AlignCenter size={14} strokeWidth={1.75} /> },
-  { id: "right", label: "Align right", icon: <AlignRight size={14} strokeWidth={1.75} /> },
-  { id: "justify", label: "Justify", icon: <AlignJustify size={14} strokeWidth={1.75} /> },
+  { id: "left", label: EDITOR_ALIGN_LEFT_LABEL, icon: <AlignLeft size={14} strokeWidth={1.75} /> },
+  {
+    id: "center",
+    label: EDITOR_ALIGN_CENTER_LABEL,
+    icon: <AlignCenter size={14} strokeWidth={1.75} />,
+  },
+  {
+    id: "right",
+    label: EDITOR_ALIGN_RIGHT_LABEL,
+    icon: <AlignRight size={14} strokeWidth={1.75} />,
+  },
+  {
+    id: "justify",
+    label: EDITOR_ALIGN_JUSTIFY_LABEL,
+    icon: <AlignJustify size={14} strokeWidth={1.75} />,
+  },
 ];
 
 interface EditorToolbarProps {
@@ -197,7 +219,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             <Underline size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton
-            title="Strikethrough"
+            title={EDITOR_TOOLBAR_STRIKETHROUGH_LABEL}
             active={editor.isActive("strike")}
             onClick={() => editor.chain().focus().toggleStrike().run()}
           >
@@ -211,7 +233,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             <Code2 size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton
-            title="Code block"
+            title={EDITOR_TOOLBAR_CODE_BLOCK_LABEL}
             active={editor.isActive("codeBlock")}
             onClick={() =>
               editor.chain().focus().toggleCodeBlock({ language: DEFAULT_CODE_LANGUAGE }).run()
@@ -321,7 +343,11 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           >
             <Minus size={14} strokeWidth={1.75} />
           </ToolbarButton>
-          <ToolbarButton title="Link" active={editor.isActive("link")} onClick={openLinkDialog}>
+          <ToolbarButton
+            title={EDITOR_TOOLBAR_LINK_LABEL}
+            active={editor.isActive("link")}
+            onClick={openLinkDialog}
+          >
             <Link2 size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton title="Image" onClick={openImagePicker}>
@@ -362,7 +388,9 @@ function AlignSelect({
       <button
         type="button"
         className="ko-toolbar-block-trigger"
-        aria-label={imageSelected ? "Image alignment" : "Text alignment"}
+        aria-label={
+          imageSelected ? EDITOR_TOOLBAR_IMAGE_ALIGN_ARIA : EDITOR_TOOLBAR_TEXT_ALIGN_ARIA
+        }
         onMouseDown={preventEditorBlur}
         onMouseEnter={(event) => {
           if (!open) showTip("Align", event.currentTarget);
@@ -546,7 +574,7 @@ function BlockTypeSelect({
       <button
         type="button"
         className="ko-toolbar-block-trigger"
-        aria-label="Block type"
+        aria-label={EDITOR_TOOLBAR_BLOCK_TYPE_ARIA}
         onMouseDown={preventEditorBlur}
         onMouseEnter={(event) => {
           if (!open) showTip("Style", event.currentTarget);

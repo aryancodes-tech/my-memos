@@ -1,4 +1,4 @@
-import { VOICE_NOTE_WAVEFORM_MIN_BAR } from "@/lib/constants";
+import { VOICE_NOTE_WAVEFORM_MIN_BAR, WEB_AUDIO_UNSUPPORTED_MESSAGE } from "@/lib/constants";
 
 /** Shared AudioContext for decoding waveform peaks (created lazily). */
 let sharedAudioContext: AudioContext | null = null;
@@ -13,7 +13,7 @@ function getAudioContext(): AudioContext {
         }
       ).webkitAudioContext;
     if (!Ctor) {
-      throw new Error("Web Audio API is not supported in this browser.");
+      throw new Error(WEB_AUDIO_UNSUPPORTED_MESSAGE);
     }
     sharedAudioContext = new Ctor();
   }

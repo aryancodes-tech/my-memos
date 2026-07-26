@@ -1,6 +1,11 @@
 import { useStore } from "@/store/useStore";
 import { PageIcon } from "@/components/PageIcon";
-import { DEFAULT_FOLDER_TITLE, DEFAULT_PAGE_TITLE } from "@/lib/constants";
+import {
+  DEFAULT_FOLDER_TITLE,
+  DEFAULT_PAGE_TITLE,
+  DELETE_FOLDER_TITLE,
+  DELETE_PAGE_TITLE,
+} from "@/lib/constants";
 import { X } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 
@@ -31,7 +36,7 @@ export default function DeleteConfirmDialog() {
 
   if (!open || !item) return null;
 
-  const title = isDirectory ? "Delete this folder?" : "Delete this page?";
+  const title = isDirectory ? DELETE_FOLDER_TITLE : DELETE_PAGE_TITLE;
   const description = isDirectory
     ? childCount > 0
       ? `"${label}" contains ${childCount} item${childCount === 1 ? "" : "s"}. Deleting it will permanently remove the folder and everything inside. This cannot be undone.`

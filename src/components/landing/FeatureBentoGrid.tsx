@@ -53,7 +53,7 @@ const FEATURE_TILES: FeatureTile[] = [
   {
     id: "editor",
     title: "Notion-style editor",
-    description: "Slash commands, headings, lists, and code blocks-keyboard-first.",
+    description: "Slash commands, markdown paste, tables, images, and voice notes.",
     tag: "Editor",
     clipFilename: "editor.mp4",
     span: { col: 7, row: 2 },
@@ -69,7 +69,7 @@ const FEATURE_TILES: FeatureTile[] = [
   {
     id: "offline",
     title: "Local-first & offline",
-    description: "No backend. Your notes never leave your device.",
+    description: "No account or sync server. Notes and attachments stay on your device.",
     tag: "Privacy",
     clipFilename: "offline.mp4",
     span: { col: 2, row: 1 },

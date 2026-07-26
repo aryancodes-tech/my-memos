@@ -20,7 +20,9 @@ alwaysApply: false
 
 ## Constants
 
-All marketing copy and tunables live in `src/lib/constants.ts`:
+**Canonical source:** `shared/constants.ts` (see `.cursor/rules/constants-policy.mdc`).
+
+`src/lib/constants.ts` re-exports `@shared/constants`. Marketing copy and tunables live in `shared/constants.ts`:
 
 | Category | Examples |
 |----------|----------|
@@ -30,7 +32,7 @@ All marketing copy and tunables live in `src/lib/constants.ts`:
 | Paths | `DEMO_PATH`, `EXTENSION_ZIP_FILENAME` |
 | Favicon | `SITE_FAVICON_PATH`, `SITE_FAVICON_TYPE` |
 
-Do not hardcode strings in components - import from constants.
+Do not hardcode strings in components — import via `@/lib/constants`. FAQ/llms body → `ai-content.json`; SEO builders → `seo.ts`. Per-feature bento clips are off when `LANDING_FEATURE_CLIPS_ENABLED` is `false`.
 
 ## Key components
 
@@ -84,7 +86,7 @@ Show inline error if 404 (do not `alert()`).
 
 **Content split:**
 
-- Marketing copy → `src/lib/constants.ts`
+- Marketing copy → `shared/constants.ts`
 - FAQ / llms summary → `src/lib/ai-content.json`
 - FAQ link paths → `"path": "/demo/"` in JSON; resolved in `landing-faq-content.ts`
 

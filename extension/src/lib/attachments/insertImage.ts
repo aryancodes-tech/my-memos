@@ -3,7 +3,7 @@ import { saveImageAttachment } from "@/lib/attachments/attachmentManager";
 import { AttachmentFsUnsupportedError } from "@/lib/attachments/errors";
 import { appendAfterSelectedNode } from "@/lib/attachments/insertSelection";
 import { isAttachmentStorageSupported } from "@/lib/attachments/fileSystemManager";
-import { ATTACHMENT_FS_UNSUPPORTED_MESSAGE } from "@/lib/constants";
+import { ATTACHMENT_FS_UNSUPPORTED_MESSAGE, IMAGE_INSERT_PARTIAL_FAILURE_MESSAGE } from "@/lib/constants";
 import type { SlashRange } from "@/editor/slashBlock";
 import { len } from "@/lib/text";
 
@@ -68,7 +68,7 @@ export async function insertImagesFromFiles(
         break;
       }
       console.warn("[MyMemos] insertImagesFromFiles failed for", file.name, err);
-      options?.onError?.("Could not save one or more images. Please try again.");
+      options?.onError?.(IMAGE_INSERT_PARTIAL_FAILURE_MESSAGE);
     }
   }
 

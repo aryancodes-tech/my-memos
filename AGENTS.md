@@ -14,33 +14,34 @@ This document is the **source of truth** for how an AI agent should reason about
 ┌──────────────────────────────────────────────────────────────────────────┐
 │ SURFACE A - Landing site (`src/`, TanStack Start, React 19, Tailwind 4) │
 │   Routes: `/` (marketing + download), SSR via Nitro                      │
-│   Constants: `src/lib/constants.ts`                                    │
+│   Constants: `@/lib/constants` → `shared/constants.ts`                 │
 │   Do NOT import extension code directly                                │
 └───────────────────────────────┬──────────────────────────────────────────┘
                                 │ `/demo/` embeds built SPA
 ┌───────────────────────────────▼──────────────────────────────────────────┐
 │ SURFACE B - Web demo (`extension/` → `public/demo/`, React 18)           │
 │   Entry: `extension/index.html`, build: `vite.web.config.ts`             │
-│   Settings: `localStorage` · Pages: IndexedDB (separate origin)        │
+│   Settings: `localStorage` · Pages: IndexedDB · Attachments: OPFS        │
+│   (separate origin from extension — data does not sync)                │
 └───────────────────────────────┬──────────────────────────────────────────┘
                                 │ same `extension/src/` source
 ┌───────────────────────────────▼──────────────────────────────────────────┐
 │ SURFACE C - Chrome extension (`extension/` → `dist/`, MV3 + CRXJS)      │
 │   Entry: `extension/newtab.html`, overrides New Tab                    │
-│   Settings: `chrome.storage.local` · Pages: IndexedDB                   │
+│   Settings: `chrome.storage.local` · Pages: IndexedDB · Attachments: OPFS│
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Path alias warning
 
-`@/*` resolves to **different roots** depending on which `tsconfig` is active:
+Aliases resolve differently depending on which `tsconfig` is active:
 
-| Package | Alias `@/` → |
-|---------|----------------|
-| Root / landing | `src/*` |
-| Extension | `extension/src/*` |
+| Package | Alias `@/` → | Alias `@shared/` → |
+|---------|----------------|---------------------|
+| Root / landing | `src/*` | `shared/*` |
+| Extension | `extension/src/*` | `../shared/*` |
 
-Before adding imports, confirm which package you are editing.
+Before adding imports, confirm which package you are editing. Product constants: edit `shared/constants.ts` only.
 
 ### Generated artifacts - never hand-edit
 
@@ -82,7 +83,7 @@ Ask explicitly:
 
 - **Minimize blast radius.** One logical change per PR.
 - **Match conventions** in the nearest sibling file.
-- **Constants over literals.** Add to the correct `constants.ts` with JSDoc.
+- **Constants first.** Before adding any user-facing string, error message, label, path segment, MIME type, debounce, or other tunable: open `shared/constants.ts`, reuse or add a JSDoc'd export, then import via `@/lib/constants`. Never leave new literals in components. See §3.7 and `.cursor/rules/constants-policy.mdc`.
 - **Empty strings:** use `len(value) === 0` in extension code (never `!value` for strings).
 
 ### Phase D - Verify
@@ -99,6 +100,48 @@ Ask explicitly:
 
 ---
 
+## 2.5 Product capabilities (shipped vs not)
+
+Document only what users can do today. Schema fields or storage helpers without UI are **not** product features.
+
+### Shipped (extension + web demo)
+
+| Area | Capabilities |
+|------|----------------|
+| Workspace | Nested pages & folders, drag-and-drop reparent/reorder, inline rename, delete with descendant warning, collapsible sidebar & folders |
+| Favorites / Recent | Star/unstar pages (`favorite` boolean persisted); Favorites and Recent are sidebar **views** (not separate sections) |
+| Dashboard | Recent pages list, quick-create page/folder |
+| Editor | Tiptap blocks: headings H1–H4, bullet/ordered/task lists, blockquote, HR, tables, code blocks (lowlight); inline bold/italic/underline/strike/code/link; text/highlight colors; alignment |
+| Slash + toolbar | `/` slash menu; formatting toolbar; voice note, audio file, image insert |
+| Markdown paste | GFM-oriented paste (headings, task lists, tables, links, images, highlights, code fences) |
+| Images | Picker, drag-drop, paste file/screenshot/webpage `<img>` → OPFS; align, caption, lightbox, replace, copy, alt text, delete |
+| Voice notes | Inline record (mic on start), pause/resume, waveform playback + speed cycle, rename, download, delete; attach existing audio file |
+| Search | ⌘K FlexSearch over **title + body text** (in-memory; rebuilt on demand) |
+| Themes | 7 built-ins + user custom themes (persisted in settings tier) |
+| Persistence | Debounced autosave; BlockDoc JSON in IndexedDB (`doc_c`); settings in chrome.storage / localStorage; binaries in OPFS |
+
+### Landing site
+
+| Area | Capabilities |
+|------|----------------|
+| Marketing | Hero, scroll-linked launch video (Cloudinary-hosted), feature bento (CSS mockups; per-feature clips gated off by `LANDING_FEATURE_CLIPS_ENABLED`) |
+| Install | ZIP download (`mymemos-extension.zip`), get-started steps, FAQ accordion |
+| Demo | `/demo/` embeds the web SPA (separate origin from the extension) |
+| SEO / GEO | Meta + OG/Twitter, JSON-LD, `robots.txt`, `sitemap.xml`, `/llms.txt` |
+
+### Present in code but **not** user-facing today
+
+Do **not** claim these as product features in README, FAQ, SEO, or agent summaries:
+
+| Item | Reality |
+|------|---------|
+| `Page.tags` | Schema + FlexSearch index field; **no UI** to add/edit tags |
+| `Page.archived` | Schema + filtered from selectors; **no UI** to archive |
+| `exportWorkspace` / `importWorkspace` | Implemented + tested in `db.ts`; **no UI** entry point |
+| Cloud sync, accounts, backlinks/wikilinks | Out of scope / roadmap only (`extension/README.md` Roadmap-ready) |
+
+---
+
 ## 3. Architectural invariants (non-negotiable)
 
 ### 3.1 Storage contract
@@ -107,7 +150,7 @@ Ask explicitly:
 ┌─────────────────────────────────────────────────────────────┐
 │ IndexedDB (`mymemos`)                                       │
 │   pages  → LZ-compressed BlockDoc (`doc_c` field)           │
-│   images → legacy blob store (unused by new attachment flow)│
+│   images → legacy blob store (no longer written; OPFS for attachments) │
 ├─────────────────────────────────────────────────────────────┤
 │ OPFS (`mymemos-attachments/`) — per-origin, hidden          │
 │   images/  → img_*.png                                      │
@@ -160,19 +203,21 @@ Prefer **selectors** (`selectSearchablePages`, etc.) for derived data. Do not du
 - `Page.section`: workspace lives under `WORKSPACE_SECTION` (`"Pages"`)
 - `parent_id`: `""` (root) - check with `len(parent_id) === 0`
 - Drag-and-drop uses `WORKSPACE_DRAG_MIME`; validate moves via `workspace-tree.ts` helpers
-- Favorites / Recent are **derived views**, not stored sections
+- Favorites / Recent are sidebar **views**, not stored sections. The `favorite` flag is persisted on `Page`; Recent is derived from timestamps.
+- `tags` and `archived` exist on the schema for forward-compat / filtering — no product UI today (see §2.5).
 
 ### 3.5 Editor pipeline
 
 ```
-Paste / typing → Tiptap input rules → ProseMirror doc
+Paste / typing / image drop → Tiptap input rules → ProseMirror doc
                 ↓
-         markdown paste layer (optional)
+         markdown paste + image paste/drop layers
                 ↓
-         debounced save → encode → IndexedDB
+         sanitizeBlockDocForPersistence → debounced save → encode → IndexedDB
+         (attachment binaries → OPFS; paths in block attrs)
 ```
 
-Markdown paste: `extension/src/editor/markdownPaste.ts` + tests in `markdownPaste.test.ts`. Task lists (`- [x]`) must not be swallowed by bullet-list rules.
+Markdown paste: `extension/src/editor/markdownPaste.ts` + tests in `markdownPaste.test.ts`. Task lists (`- [x]`) must not be swallowed by bullet-list rules. Image paste/drop: `imagePasteDrop.ts` (priority above markdown paste).
 
 ### 3.6 Landing SEO & AI discoverability
 
@@ -205,6 +250,31 @@ npm run dev:web
 curl -s http://localhost:8080/llms.txt | head
 ```
 
+### 3.7 Constants contract (shared module)
+
+Agents **must** read `.cursor/rules/constants-policy.mdc` before changing copy, labels, errors, or tunables.
+
+| Role | Path |
+|------|------|
+| **Canonical source** | `shared/constants.ts` |
+| Landing re-export | `src/lib/constants.ts` (`export * from "@shared/constants"`) |
+| Extension re-export | `extension/src/lib/constants.ts` (`export * from "@shared/constants"`) |
+
+**Rules:**
+
+- Edit **`shared/constants.ts` only**. Do not add constants to the re-export files. Do not add `strings.ts`, `messages.ts`, `copy.ts`, or inline user-facing literals in components.
+- App code imports via `@/lib/constants` (preferred) or `@shared/constants`.
+- Exceptions: FAQ/llms body → `src/lib/ai-content.json`; SEO builders → `src/lib/seo.ts`; build-only knobs → Vite/manifest config; pure CSS tokens → stylesheets; theme type shapes → `shared/theme-types.ts`.
+
+```typescript
+// ✅
+import { DEFAULT_FOLDER_TITLE, MICROPHONE_DENIED_MESSAGE } from "@/lib/constants";
+
+// ❌
+title: "Untitled folder";
+throw new Error("Microphone access was denied…");
+```
+
 ---
 
 ## 4. Decision trees
@@ -212,20 +282,19 @@ curl -s http://localhost:8080/llms.txt | head
 ### 4.1 "Where do I put this constant?"
 
 ```
-Is it marketing copy, scroll animation, or landing paths?
-  YES → src/lib/constants.ts
- NO ↓
-Is it FAQ / llms.txt / AI crawler content?
+Is it FAQ / llms.txt / AI crawler body copy?
   YES → src/lib/ai-content.json (+ resolve links in landing-faq-content.ts)
  NO ↓
 Is it SEO meta, JSON-LD, robots, or sitemap builders?
   YES → src/lib/seo.ts (+ scripts/generate-sitemap.mjs for static files)
  NO ↓
-Is it used by extension, editor, storage, or themes?
-  YES → extension/src/lib/constants.ts
-  NO ↓
+Is it a product constant (copy, label, error, path, MIME, debounce, theme label, marketing string)?
+  YES → shared/constants.ts  (import via @/lib/constants)
+ NO ↓
 Is it build-time only (Vite, manifest)?
   YES → colocate in config with a short comment
+ NO ↓
+STOP — do not hardcode in a component.
 ```
 
 ### 4.2 "Which dev server do I run?"
@@ -338,7 +407,8 @@ Do not share React components across packages without an explicit build boundary
 | **Directory** | Folder node (`kind: "directory"`) in workspace tree |
 | **Workspace** | User-organized tree under Pages section |
 | **Dashboard** | Home view: recent pages, quick create |
-| **Search palette** | ⌘K fuzzy search over titles, body text, tags |
+| **Search palette** | ⌘K fuzzy search over titles and body text (tags field indexed but no tag UI) |
+| **OPFS attachments** | Images and voice/audio binaries under `mymemos-attachments/` |
 | **New Tab override** | `chrome_url_overrides.newtab` → extension UI |
 | **Scroll runway** | Landing sticky-scroll section driving launch video |
 | **Web demo** | Static SPA at `/demo/` for try-before-install |
@@ -353,6 +423,8 @@ Do not share React components across packages without an explicit build boundary
 |------|---------|
 | [`.cursor/SKILLS.md`](.cursor/SKILLS.md) | Task → skill/workflow routing |
 | [`.cursor/rules/`](.cursor/rules/) | Scoped Cursor rules (`.mdc`) |
+| [`.cursor/rules/constants-policy.mdc`](.cursor/rules/constants-policy.mdc) | Single-source constants policy (always apply) |
+| [`shared/constants.ts`](shared/constants.ts) | Canonical product constants (landing + extension) |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Human contributor guide |
 | [`extension/README.md`](extension/README.md) | Extension architecture deep-dive |
 | [`src/routes/README.md`](src/routes/README.md) | TanStack Router conventions |

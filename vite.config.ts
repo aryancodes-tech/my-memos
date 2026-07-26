@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": `${process.cwd()}/src`,
+        "@shared": `${process.cwd()}/shared`,
       },
       dedupe: [
         "react",

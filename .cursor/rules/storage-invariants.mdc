@@ -61,7 +61,14 @@ len(page.parent_id ?? "") === 0
 
 - **FlexSearch is never persisted**
 - Rebuilt from pages in memory when palette opens
+- Indexes `title`, body `text`, and `tags` — but there is **no UI** to edit tags today, so user-facing search is effectively title + body
 - If adding indexed fields, update search builder only
+
+## Schema vs product UI
+
+- `exportWorkspace` / `importWorkspace` exist in `db.ts` and are tested — **not wired to any UI**
+- `Page.archived` is filtered in selectors — **no archive action in UI**
+- Do not document these as user features until exposed (see `AGENTS.md` §2.5)
 
 ## Platform note
 
