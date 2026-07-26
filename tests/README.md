@@ -46,6 +46,7 @@ src/lib/seo.ts                     →  tests/landing/lib/seo.test.ts
 | `store/dialogs.test.ts` | delete/link/attachment dialog state |
 | `editor/markdownPaste.test.ts` | GFM paste + task-list typing |
 | `editor/tabIndent.test.ts` | multi-block indent algorithm |
+| `editor/listBackspace.test.ts` | Backspace lifts list/task items to paragraphs |
 
 ### Landing
 

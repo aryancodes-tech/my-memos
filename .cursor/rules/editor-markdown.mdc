@@ -43,6 +43,12 @@ Key modules:
 
 Headings, GFM task lists, tables, links, images, highlights, code fences.
 
+## List Backspace
+
+- `listBackspace.ts` - at the start of a bullet / ordered / task item, Backspace **lifts** to a normal paragraph (does not merge into the previous item)
+- Registered in `editorExtensions.ts` via `ListBackspace`
+- Tests: `tests/extension/editor/listBackspace.test.ts`
+
 ## Slash menu
 
 - `SlashMenu.tsx` - command palette inside editor
