@@ -2,7 +2,7 @@ import { openDB, type IDBPDatabase } from "idb";
 import { DB_NAME } from "@/lib/constants";
 import { len } from "@/lib/text";
 import { decodeDoc, encodeDoc } from "./codec";
-import type { BlockDoc, ImageBlob, Page } from "./types";
+import type { BlockDoc, Page } from "./types";
 
 /**
  * MyMemos storage layer.
@@ -13,9 +13,10 @@ import type { BlockDoc, ImageBlob, Page } from "./types";
  *  - Only source data is stored. Rendered HTML / markdown are never persisted.
  *  - Documents are compact JSON blobs of Tiptap-compatible block structures.
  *  - Schema versioned via DB_VERSION; future fields can be added non-destructively.
+ *  - Legacy `images` / `fs_handles` stores remain for existing DBs; new code uses OPFS.
  */
 
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 let dbPromise: Promise<IDBPDatabase> | null = null;
 
@@ -29,8 +30,12 @@ function db() {
           s.createIndex("parent_id", "parent_id");
           s.createIndex("favorite", "favorite");
         }
+        // Legacy stores kept for schema compatibility (no longer written).
         if (!d.objectStoreNames.contains("images")) {
           d.createObjectStore("images", { keyPath: "id" });
+        }
+        if (!d.objectStoreNames.contains("fs_handles")) {
+          d.createObjectStore("fs_handles", { keyPath: "id" });
         }
       },
     });
@@ -74,17 +79,6 @@ export async function putPage(page: Page): Promise<void> {
 export async function deletePage(id: string): Promise<void> {
   const d = await db();
   await d.delete("pages", id);
-}
-
-// --- Images -----------------------------------------------------------------
-
-export async function putImage(img: ImageBlob): Promise<void> {
-  const d = await db();
-  await d.put("images", img);
-}
-export async function getImage(id: string): Promise<ImageBlob | undefined> {
-  const d = await db();
-  return (await d.get("images", id)) as ImageBlob | undefined;
 }
 
 // --- Settings (chrome.storage.local with localStorage fallback) -------------

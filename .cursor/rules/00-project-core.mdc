@@ -12,13 +12,13 @@ alwaysApply: true
 
 ## Three surfaces - never conflate
 
-| Surface | Path | React | Constants file |
-|---------|------|-------|----------------|
-| Landing | `src/` | 19 | `src/lib/constants.ts` |
-| Extension | `extension/src/` | 18 | `extension/src/lib/constants.ts` |
-| Web demo | `extension/src/` (web build) | 18 | extension constants |
+| Surface | Path | React | Constants |
+|---------|------|-------|-----------|
+| Landing | `src/` | 19 | `@/lib/constants` → `shared/constants.ts` |
+| Extension | `extension/src/` | 18 | `@/lib/constants` → `shared/constants.ts` |
+| Web demo | `extension/src/` (web build) | 18 | same as extension |
 
-`@/` alias points to different roots per package. Check `tsconfig.json` before importing.
+`@/` alias points to different roots per package. Check `tsconfig.json` before importing. Product constants live in `shared/constants.ts` (`@shared/*`).
 
 ## Generated artifacts - do not edit
 
@@ -32,9 +32,14 @@ Regenerate via `npm run build:web`, `npm run package:extension`, `npm run genera
 
 ## Constants & literals
 
-- Hardcoded values → named export in the correct `constants.ts` with JSDoc
+**Policy:** `.cursor/rules/constants-policy.mdc` (always apply). Read it before any copy/UI/tunable change.
+
+- **Source of truth:** `shared/constants.ts`
+- Package files `src/lib/constants.ts` and `extension/src/lib/constants.ts` are re-exports only
+- Hardcoded user-facing strings, error messages, and magic numbers → named export in `shared/constants.ts` with JSDoc, then import via `@/lib/constants`
+- Never add parallel copy modules (`strings.ts`, `messages.ts`, etc.)
 - Extension empty-string checks → `len(value) === 0` from `@/lib/text`
-- Landing and extension constants are **intentionally separate** - do not create shared package without explicit request
+- FAQ/AI crawler prose → `src/lib/ai-content.json`; SEO builders → `src/lib/seo.ts`
 
 ## Change discipline
 

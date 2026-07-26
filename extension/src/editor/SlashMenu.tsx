@@ -3,12 +3,15 @@ import type { LucideIcon } from "lucide-react";
 import {
   CheckSquare,
   Code2,
+  FileAudio,
   Heading1,
   Heading2,
   Heading3,
   Heading4,
+  ImageIcon,
   List,
   ListOrdered,
+  Mic,
   Minus,
   Quote,
   Type,
@@ -23,6 +26,9 @@ import {
   applyTaskListBlock,
   type SlashRange,
 } from "@/editor/slashBlock";
+import { insertAudioFromPicker } from "@/lib/attachments/insertAudioFromFile";
+import { insertImageFromPicker } from "@/lib/attachments/insertImage";
+import { insertInlineVoiceRecording } from "@/lib/attachments/insertVoiceRecording";
 
 interface SlashCommand {
   id: string;
@@ -34,7 +40,17 @@ interface SlashCommand {
   previewTitle: string;
   previewLines?: string[];
   /** Controls how the hover preview panel renders this block type. */
-  previewKind: "text" | "heading" | "bullet" | "numbered" | "todo" | "quote" | "code" | "divider";
+  previewKind:
+    | "text"
+    | "heading"
+    | "bullet"
+    | "numbered"
+    | "todo"
+    | "quote"
+    | "code"
+    | "divider"
+    | "image"
+    | "voice";
   headingLevel?: 1 | 2 | 3 | 4;
   /** Applies the block transform after removing the slash trigger text. */
   run: (editor: Editor, range: SlashRange) => void;
@@ -195,6 +211,45 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "divider",
     run: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+    },
+  },
+  {
+    id: "image",
+    title: "Image",
+    description: "Upload or attach an image from your device.",
+    shortcut: "",
+    keywords: ["image", "photo", "picture", "img", "screenshot"],
+    icon: ImageIcon,
+    previewTitle: "Image",
+    previewKind: "image",
+    run: (editor, range) => {
+      insertImageFromPicker(editor, range);
+    },
+  },
+  {
+    id: "voice-note",
+    title: "Voice note",
+    description: "Record audio inline at the cursor.",
+    shortcut: "",
+    keywords: ["voice", "audio", "record", "mic", "microphone"],
+    icon: Mic,
+    previewTitle: "Voice Note",
+    previewKind: "voice",
+    run: (editor, range) => {
+      insertInlineVoiceRecording(editor, range);
+    },
+  },
+  {
+    id: "audio-file",
+    title: "Audio file",
+    description: "Attach an existing audio file from your device.",
+    shortcut: "",
+    keywords: ["audio", "file", "mp3", "upload", "attach", "sound"],
+    icon: FileAudio,
+    previewTitle: "Attached audio",
+    previewKind: "voice",
+    run: (editor, range) => {
+      insertAudioFromPicker(editor, range);
     },
   },
 ];
@@ -458,6 +513,32 @@ function SlashMenuPreviewContent({ command }: { command: SlashCommand }) {
         <p>Content above</p>
         <hr />
         <p>Content below</p>
+      </div>
+    );
+  }
+
+  if (command.previewKind === "image") {
+    return (
+      <div className="ko-slash-preview-image" aria-hidden>
+        <span className="ko-slash-preview-image-frame" />
+      </div>
+    );
+  }
+
+  if (command.previewKind === "voice") {
+    return (
+      <div className="ko-slash-preview-voice">
+        <span className="ko-slash-preview-voice-play" aria-hidden />
+        <div className="ko-slash-preview-voice-bars" aria-hidden>
+          {Array.from({ length: 24 }).map((_, index) => (
+            <span
+              key={index}
+              style={{ height: `${20 + ((index * 17) % 60)}%` }}
+              className="ko-slash-preview-voice-bar"
+            />
+          ))}
+        </div>
+        <span className="ko-slash-preview-voice-time">0:42</span>
       </div>
     );
   }

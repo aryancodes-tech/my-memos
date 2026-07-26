@@ -50,10 +50,11 @@ After changing extension UI code, `npm run dev:web` picks up changes via HMR at 
 
 | Path                     | Purpose                                  |
 | ------------------------ | ---------------------------------------- |
-| `extension/`             | Core product - Chrome MV3 extension      |
+| `extension/`             | Core product - Chrome MV3 + web demo     |
+| `shared/`                | Shared product constants (`constants.ts`) |
 | `src/`                   | Landing / download site (TanStack Start) |
 | `extension/src/storage/` | IndexedDB layer and document codec       |
-| `extension/src/lib/`     | Shared utilities and constants           |
+| `extension/src/lib/`     | Shared utilities; `constants.ts` re-exports `shared/` |
 | `extension/src/editor/`  | Tiptap editor, slash menu, toolbar       |
 
 See [`extension/README.md`](extension/README.md) for architecture details.
@@ -89,7 +90,7 @@ This repo includes structured agent documentation for Cursor and other AI coding
 
 | Doc | Purpose |
 | --- | ------- |
-| [`AGENTS.md`](AGENTS.md) | Architecture invariants, decision trees, verification contracts |
+| [`AGENTS.md`](AGENTS.md) | Architecture invariants, shipped capabilities (§2.5), verification contracts |
 | [`.cursor/SKILLS.md`](.cursor/SKILLS.md) | Task → skill routing (extension, storage, editor, landing, CI) |
 | [`.cursor/rules/`](.cursor/rules/) | Scoped rules injected by file type (`.mdc`) |
 | [`.cursor/README.md`](.cursor/README.md) | Index of the above |
@@ -98,9 +99,10 @@ Human contributors benefit from the same docs - especially `AGENTS.md` §3 (stor
 
 ## Code conventions
 
-- **Constants** - put magic values in `extension/src/lib/constants.ts` (landing copy in `src/lib/constants.ts`)
-- **Empty strings** - use `len(value) > 0` from `extension/src/lib/text.ts`
-- **Storage** - persist block JSON only; never store rendered HTML or markdown
+- **Constants** - single source: `shared/constants.ts`. Landing/extension `*/lib/constants.ts` only re-export. Import via `@/lib/constants`; do not hardcode strings in components. See `.cursor/rules/constants-policy.mdc` and `AGENTS.md` §3.7. FAQ/AI crawler prose stays in `src/lib/ai-content.json`.
+- **Empty strings** - use `len(value) === 0` / `len(value) > 0` from `extension/src/lib/text.ts` (never `!value` for strings)
+- **Storage** - persist block JSON only; attachment binaries go in OPFS (paths in block attrs)
+- **Capabilities** - do not document schema-only / unwired APIs as user features (`AGENTS.md` §2.5)
 - **Types** - keep domain models in `extension/src/storage/types.ts`
 - **Unused variables** - prefix with `_` if intentionally unused (ESLint enforces this)
 
@@ -141,10 +143,10 @@ Set `VITE_SITE_URL` on your hosting provider (e.g. `https://www.mymemos.in`) so 
 
 ## Release artifacts
 
-Extension ZIPs for the landing page are built via:
+Extension ZIPs for the landing download button live at `public/mymemos-extension.zip`.
 
 ```bash
 npm run package:extension
 ```
 
-Do not commit `public/mymemos-extension.zip` - CI and release workflows build it on demand.
+A **pre-commit hook** rebuilds and stages that ZIP when extension-related files are committed (`extension/`, `shared/`, lockfiles). Skip with `SKIP_EXTENSION_PACKAGE=1` if `npm run dev` is running or you intentionally want to commit without refreshing the artifact.

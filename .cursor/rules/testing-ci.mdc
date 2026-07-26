@@ -42,6 +42,7 @@ Steps in order:
 | `workspace-tree.ts` | `workspace-tree.test.ts` |
 | `useStore` logic | `useStore.test.ts` |
 | Markdown paste | `markdownPaste.test.ts` |
+| Attachments / sanitize | `extension/src/lib/attachments/*.test.ts` |
 | `text.ts` helpers | `text.test.ts` |
 | `seo.ts` / FAQ content resolution | `seo.test.ts` |
 
@@ -98,6 +99,8 @@ npm run package:extension
 ```
 
 Required for landing download button. Warn in UI if missing.
+
+Pre-commit (`simple-git-hooks` → `npm run pre-commit`) rebuilds and stages the ZIP when staged changes touch `extension/`, `shared/`, or root lockfiles. Skip with `SKIP_EXTENSION_PACKAGE=1`. The hook refuses to package while `npm run dev` is active so it does not overwrite live `extension/dist/`.
 
 ## Build guards
 

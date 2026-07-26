@@ -11,6 +11,8 @@ alwaysApply: true
 2. **Read** nearest existing implementation - same directory, same layer
 3. **Trace data flow** - where state is read, written, persisted
 4. **State invariants** you must preserve (see `storage-invariants.mdc`)
+5. **Constants** - any new copy, label, error message, or tunable → `shared/constants.ts` only (see `constants-policy.mdc`)
+6. **Capabilities** - do not document or market schema-only / unwired APIs as features (`AGENTS.md` §2.5)
 
 ## Analysis output (for non-trivial tasks)
 
@@ -18,6 +20,7 @@ Summarize before coding:
 
 - Which surface(s) affected
 - Files likely to change
+- Whether `shared/constants.ts` will gain/reuse exports
 - Storage/settings impact
 - Tests to add or run
 
@@ -42,12 +45,15 @@ if (!page.parent_id) { ... }
 ```
 
 ```typescript
-// ✅ New tunable value
+// ✅ New tunable / copy — define in constants.ts, then import
 /** Debounce for editor saves, in milliseconds. */
 export const EDITOR_SAVE_DEBOUNCE_MS = 250;
+// in component:
+setTimeout(save, EDITOR_SAVE_DEBOUNCE_MS);
 
-// ❌ Magic number in component
+// ❌ Magic number or hardcoded user string in component
 setTimeout(save, 250);
+<button>Show more</button>
 ```
 
 ## Communication

@@ -4,6 +4,26 @@ The core product lives here: React UI, editor, storage, and Chrome MV3 packaging
 
 For repo-wide setup, commands, and hosting deploy → [root README](../README.md).
 
+Agent-facing capability inventory (shipped vs schema-only) → [`AGENTS.md`](../AGENTS.md) §2.5.
+
+---
+
+## Current capabilities
+
+| Area | What users can do |
+| ---- | ----------------- |
+| Workspace | Nested pages/folders, DnD move/reorder, rename, delete (with descendant warning), collapsible sidebar |
+| Favorites / Recent | Star pages; Favorites and Recent sidebar views (not separate storage sections) |
+| Dashboard | Recent pages + quick create |
+| Editor | Headings, lists/tasks, tables, code blocks, colors, links, slash menu, toolbar, markdown paste |
+| Images | Insert via toolbar/slash/drop/paste → OPFS; align, caption, lightbox, replace, alt text, delete |
+| Voice / audio | Inline mic recording, attach audio file, waveform playback + speed, rename, download, delete |
+| Search | ⌘K over title + body text (FlexSearch, ephemeral) |
+| Themes | 7 built-in + custom |
+| Platforms | Chrome New Tab extension **or** `/demo/` web SPA (separate origins — data does not sync) |
+
+**Not exposed in UI:** tags editing, archive, workspace export/import (helpers exist in `storage/db.ts` only).
+
 ---
 
 ## Architecture
@@ -58,8 +78,49 @@ flowchart TB
 1. **Block JSON only** - every page is a Tiptap/ProseMirror `doc`. Never persist rendered HTML or duplicate markdown.
 2. **Search index is ephemeral** - FlexSearch is rebuilt in memory on demand, never written to disk.
 3. **Two-tier storage** - heavy page data in IndexedDB; light settings (theme, last view, custom themes, collapsed folders) in `chrome.storage.local` or `localStorage` on web.
+4. **Attachments in OPFS** - images and voice notes store binary files in the browser's Origin Private File System (hidden, per-origin). Block JSON holds only relative paths and metadata (`attachmentPath`, `duration`, `size`, `title`). In-progress voice recordings are **never** persisted.
 
-### Implementation notes
+### Attachments & voice notes
+
+```
+IndexedDB (pages)          OPFS (mymemos-attachments/)
+├── doc_c (BlockDoc)       ├── images/img_*.png
+│   └── voiceNote attrs    └── audio/voice_*.webm
+│       attachmentPath ────────────────┘
+```
+
+| Feature | Entry points | Key modules |
+| ------- | ------------ | ----------- |
+| Inline voice recording | Toolbar mic, `/` → Voice note | `insertVoiceRecording.ts`, `VoiceNoteNodeView.tsx`, `voiceRecorder.ts` |
+| Attach audio file | Toolbar paperclip, `/` → Audio file | `insertAudioFromFile.ts` |
+| Images | Toolbar image, `/` → Image, drag-drop, paste (file/screenshot/webpage `<img>`) | `insertImage.ts`, `imageClipboard.ts`, `imagePasteDrop.ts`, `AttachmentImageNodeView.tsx` |
+| Delete attachment | Trash on voice note / image block | `AttachmentDeleteDialog`, `attachmentManager.ts` |
+
+**Image insert sources (all save to OPFS):**
+
+- Toolbar / slash file picker (multi-select)
+- Drag-drop onto the editor (incl. Mac screenshot thumbnail)
+- Paste image files or screenshots (`Cmd/Ctrl+V`)
+- Paste webpage HTML — remote/data `<img>` srcs are fetched into OPFS when possible
+
+**Image UI:** Hover/select shows a top-right toolbar (align left/center/right, download, delete, more). Click the image to expand in a lightbox. Caption field under the image. More menu: Replace, Copy image, Alt text, Expand. Backspace still deletes the block without a confirm dialog; the Delete button confirms and removes the OPFS file.
+
+**Permissions:** Microphone is requested only when recording starts. OPFS needs no folder picker.
+
+**Persistence rules:**
+
+- `sanitizeBlockDocForPersistence()` strips `status: "recording"` blocks before save (`Editor.tsx`).
+- Page delete removes orphaned OPFS files when no other page references the path (`sanitizeBlockDoc.ts` + `useStore.deletePage`).
+- Copy/paste duplicate blocks share the same path — deleting one block removes the file for all copies (known limitation).
+
+**Verify:**
+
+```bash
+npm run test -- extension/src/lib/attachments/
+npm run dev   # record, play, rename label, delete, reload page
+```
+
+---
 
 - **Manifest V3** - service worker (`background.js`), `chrome_url_overrides.newtab` → `newtab.html`.
 - **LZString compression** - documents are compacted before IndexedDB write; schema versioned via `DB_VERSION` for non-destructive upgrades.
@@ -99,10 +160,16 @@ extension/
 │   ├── views/            ← Dashboard, PageView
 │   ├── store/            ← Zustand
 │   ├── storage/          ← IndexedDB, codec, types
-│   └── lib/              ← constants, themes, helpers
+│   └── lib/
+│       ├── constants.ts  ← re-export of ../../shared/constants.ts
+│       └── attachments/  ← OPFS manager, voice recorder, sanitize
 ├── vite.config.ts        ← Chrome extension build
 ├── vite.web.config.ts    ← Web demo → ../public/demo/
 └── package.json
+
+../shared/
+├── constants.ts          ← product constants (canonical)
+└── theme-types.ts
 ```
 
 ---
@@ -158,10 +225,11 @@ Stop `npm run dev` before a production build. Reload the unpacked extension afte
 
 ---
 
-## Roadmap-ready
+## Roadmap-ready (not shipped)
 
-Storage schema and module boundaries support adding these without data migrations:
+These are **not** current product features. Storage schema and module boundaries could support them later without claiming they exist today:
 
+- Tag editing UI / archive UI / export-import UI (schema or `db.ts` helpers already exist in part)
 - AI search, summaries, flashcards (same block JSON)
 - Backlinks and page mentions (graph from blocks)
 - Cloud sync (block JSON on the wire)

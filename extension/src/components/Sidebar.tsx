@@ -7,14 +7,25 @@ import {
 } from "@/store/useStore";
 import type { Page } from "@/storage/types";
 import {
+  DEFAULT_FOLDER_TITLE,
   PRODUCT_NAME,
+  SEARCH_SHORTCUT_LABEL,
+  SIDEBAR_ADD_INSIDE_LABEL,
+  SIDEBAR_ADD_NEW_ARIA_LABEL,
+  SIDEBAR_ADD_TO_FAVORITES_LABEL,
+  SIDEBAR_COLLAPSE_LABEL,
+  SIDEBAR_DASHBOARD_LABEL,
+  SIDEBAR_EXPAND_LABEL,
+  SIDEBAR_FOLDER_TOGGLE_COLLAPSE,
+  SIDEBAR_FOLDER_TOGGLE_EXPAND,
   SIDEBAR_INDENT_PX,
   SIDEBAR_MENU_MIN_WIDTH_PX,
-  SIDEBAR_WIDTH_PX,
-  SEARCH_SHORTCUT_LABEL,
+  SIDEBAR_NEW_FOLDER_LABEL,
   SIDEBAR_RECENT_SHOW_LESS_LABEL,
   SIDEBAR_RECENT_SHOW_MORE_LABEL,
   SIDEBAR_RECENT_VISIBLE_LIMIT,
+  SIDEBAR_REMOVE_FROM_FAVORITES_LABEL,
+  SIDEBAR_WIDTH_PX,
   WORKSPACE_DRAG_MIME,
   WORKSPACE_SECTION,
 } from "@/lib/constants";
@@ -84,7 +95,7 @@ export default function Sidebar() {
   if (sidebarCollapsed) {
     return (
       <aside className="ko-sidebar w-11 shrink-0 border-r flex flex-col items-center py-3 gap-1">
-        <IconRailButton title="Expand sidebar" onClick={toggleSidebar}>
+        <IconRailButton title={SIDEBAR_EXPAND_LABEL} onClick={toggleSidebar}>
           <ChevronRight size={16} strokeWidth={1.75} />
         </IconRailButton>
         <IconRailButton
@@ -93,7 +104,7 @@ export default function Sidebar() {
         >
           <Search size={16} strokeWidth={1.75} />
         </IconRailButton>
-        <IconRailButton title="Dashboard" onClick={() => setView({ kind: "dashboard" })}>
+        <IconRailButton title={SIDEBAR_DASHBOARD_LABEL} onClick={() => setView({ kind: "dashboard" })}>
           <LayoutDashboard size={16} strokeWidth={1.75} />
         </IconRailButton>
       </aside>
@@ -112,7 +123,7 @@ export default function Sidebar() {
         <div className="text-sm font-semibold tracking-tight text-[var(--ko-text)]">
           {PRODUCT_NAME}
         </div>
-        <IconRailButton title="Collapse sidebar" onClick={toggleSidebar}>
+        <IconRailButton title={SIDEBAR_COLLAPSE_LABEL} onClick={toggleSidebar}>
           <ChevronLeft size={16} strokeWidth={1.75} />
         </IconRailButton>
       </div>
@@ -273,7 +284,7 @@ function WorkspaceAddButton() {
         type="button"
         className="ko-icon-btn !p-1"
         title="Add new"
-        aria-label="Add new page or folder"
+        aria-label={SIDEBAR_ADD_NEW_ARIA_LABEL}
         onClick={() => setOpen((value) => !value)}
       >
         <Plus size={13} strokeWidth={1.75} />
@@ -290,7 +301,7 @@ function WorkspaceAddButton() {
           />
           <MenuItem
             icon={<Folder size={14} strokeWidth={1.75} />}
-            label="New folder"
+            label={SIDEBAR_NEW_FOLDER_LABEL}
             onClick={() => {
               void createDirectory();
               setOpen(false);
@@ -414,7 +425,7 @@ function DirectoryRow({
       <button
         className="ko-sidebar-chevron"
         draggable={false}
-        title={expanded ? "Collapse" : "Expand"}
+        title={expanded ? SIDEBAR_FOLDER_TOGGLE_COLLAPSE : SIDEBAR_FOLDER_TOGGLE_EXPAND}
         onClick={onToggle}
       >
         <ChevronRight
@@ -434,7 +445,7 @@ function DirectoryRow({
           }}
           onChange={(e) => void updatePage(item.id, { title: e.target.value })}
           className="ko-sidebar-row-label"
-          placeholder="Untitled folder"
+          placeholder={DEFAULT_FOLDER_TITLE}
         />
       ) : (
         <div
@@ -442,14 +453,14 @@ function DirectoryRow({
           onDoubleClick={() => setEditing(true)}
           onClick={onToggle}
         >
-          {item.title || "Untitled folder"}
+          {item.title || DEFAULT_FOLDER_TITLE}
         </div>
       )}
       <div className="ko-sidebar-row-actions">
         <div className="relative">
           <button
             className="ko-icon-btn !p-1"
-            title="Add inside"
+            title={SIDEBAR_ADD_INSIDE_LABEL}
             onClick={() => {
               setAddOpen((value) => !value);
               setMenuOpen(false);
@@ -469,7 +480,7 @@ function DirectoryRow({
               />
               <MenuItem
                 icon={<Folder size={14} strokeWidth={1.75} />}
-                label="New folder"
+                label={SIDEBAR_NEW_FOLDER_LABEL}
                 onClick={() => {
                   void createDirectory(item.id);
                   setAddOpen(false);
@@ -616,7 +627,7 @@ function PageRow({
                 {(menuVariant === "recent" || menuVariant === "workspace") && !page.favorite && (
                   <MenuItem
                     icon={<Star size={14} strokeWidth={1.75} />}
-                    label="Add to favorites"
+                    label={SIDEBAR_ADD_TO_FAVORITES_LABEL}
                     onClick={() => {
                       void updatePage(page.id, { favorite: true });
                       setMenuOpen(false);
@@ -626,7 +637,7 @@ function PageRow({
                 {(menuVariant === "favorites" || page.favorite) && (
                   <MenuItem
                     icon={<Star size={14} strokeWidth={1.75} />}
-                    label="Remove from favorites"
+                    label={SIDEBAR_REMOVE_FROM_FAVORITES_LABEL}
                     onClick={() => {
                       void updatePage(page.id, { favorite: false });
                       setMenuOpen(false);

@@ -19,7 +19,10 @@ export default defineConfig({
   plugins: [react()],
   base: WEB_DEMO_BASE,
   resolve: {
-    alias: { "@": path.resolve(__dirname, "src") },
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "@shared": path.resolve(__dirname, "../shared"),
+    },
     extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
   },
   css: {

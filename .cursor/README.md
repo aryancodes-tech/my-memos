@@ -6,11 +6,11 @@ This directory defines how AI coding agents operate on **MyMemos**. It demonstra
 
 | File | Role |
 |------|------|
-| [`../AGENTS.md`](../AGENTS.md) | Master operating manual - architecture, invariants, decision trees |
+| [`../AGENTS.md`](../AGENTS.md) | Master operating manual - architecture, invariants, shipped capabilities (§2.5) |
 | [`SKILLS.md`](SKILLS.md) | Task → skill routing and verification contracts |
 | [`rules/`](rules/) | Scoped Cursor rules (`.mdc`) injected by file pattern |
 
-Notable skills: `landing-seo` (meta, JSON-LD, `llms.txt`, FAQ schema) - see `SKILLS.md` for verify commands.
+Notable skills: `landing-seo` (meta, JSON-LD, `llms.txt`, FAQ schema), `attachments-voice-notes`, `constants-copy` - see `SKILLS.md` for verify commands. Product constants live in `../shared/constants.ts`.
 
 ## Rules index
 
@@ -18,6 +18,7 @@ Notable skills: `landing-seo` (meta, JSON-LD, `llms.txt`, FAQ schema) - see `SKI
 |------|-------|-----------|
 | `00-project-core.mdc` | Global invariants | ✅ |
 | `ai-operating-model.mdc` | Agent behavior standards | ✅ |
+| `constants-policy.mdc` | Single-source constants / no hardcoded copy | ✅ |
 | `extension-architecture.mdc` | `extension/**` | |
 | `storage-invariants.mdc` | `extension/src/storage/**` | |
 | `editor-markdown.mdc` | `extension/src/editor/**` | |

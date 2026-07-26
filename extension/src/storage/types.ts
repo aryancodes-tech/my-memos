@@ -36,36 +36,34 @@ export interface Page {
   doc: BlockDoc;
 }
 
-export interface ImageBlob {
-  id: string;
-  mime: string;
-  data: Blob;
-  width?: number;
-  height?: number;
-  created_at: number;
+/** Attachment kinds stored in OPFS via the attachment manager. */
+export type AttachmentKind = "image" | "audio";
+
+/**
+ * Relative attachment reference persisted inside editor block attrs.
+ * Binary data lives in Origin Private File System under `images/` or `audio/`.
+ */
+export interface AttachmentRef {
+  /** Attachment category. */
+  type: AttachmentKind;
+  /** Path relative to the attachment root, e.g. `audio/voice_abc.webm`. */
+  path: string;
+  /** Duration in seconds (audio only). */
+  duration?: number;
+  /** File size in bytes. */
+  size?: number;
+  /** ISO timestamp when the attachment was created. */
+  createdAt?: string;
+  /** Optional display title shown in the editor block. */
+  title?: string;
 }
 
-export type BuiltInThemeName =
-  | "light"
-  | "dark"
-  | "midnight"
-  | "dracula"
-  | "solarized"
-  | "forest"
-  | "ocean";
+export type { BuiltInThemeName, CustomThemeColors } from "../../../shared/theme-types";
+
+import type { BuiltInThemeName, CustomThemeColors } from "../../../shared/theme-types";
 
 /** Active theme id - built-in preset or `custom-{id}`. */
 export type ThemeName = BuiltInThemeName | `custom-${string}`;
-
-/** Primary colors users pick when creating a custom theme. */
-export interface CustomThemeColors {
-  /** Page background color. */
-  bg: string;
-  /** Primary text color. */
-  text: string;
-  /** Accent / link color. */
-  accent: string;
-}
 
 /** User-created theme stored in settings. */
 export interface CustomTheme {

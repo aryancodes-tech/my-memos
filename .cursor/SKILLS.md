@@ -25,9 +25,28 @@
 - `AGENTS.md` §1–§3
 - `.cursor/rules/00-project-core.mdc`
 
-**Verify:** You can answer: which surface(s), which storage tier(s), which `constants.ts`.
+**Verify:** You can answer: which surface(s), which storage tier(s), that product constants live in `shared/constants.ts` (see `constants-policy.mdc`), and which capabilities are shipped vs schema-only (`AGENTS.md` §2.5).
 
 ---
+
+### `constants-copy`
+
+**When:** Adding UI labels, error messages, placeholders, CTAs, timeouts, limits, MIME/path segments, or any other magic value.
+
+**Read:**
+
+- `.cursor/rules/constants-policy.mdc`
+- `AGENTS.md` §3.7 and §4.1
+- Canonical file: `shared/constants.ts`
+
+**Patterns:**
+
+- Grep `shared/constants.ts` first → reuse → else add JSDoc'd export → import via `@/lib/constants`
+- Never hardcode user-facing strings in components
+- Do not edit the thin re-exports in `src/lib/constants.ts` / `extension/src/lib/constants.ts`
+- FAQ/SEO body content is **not** `constants.ts` (use `ai-content.json` / `seo.ts`)
+
+**Verify:** Call sites import from `@/lib/constants`; new values exist only in `shared/constants.ts`.
 
 ### `extension-feature`
 
@@ -50,6 +69,38 @@
 ```bash
 npm run dev          # manual new-tab exercise
 npm run test         # if store/tree logic touched
+```
+
+---
+
+### `attachments-voice-notes`
+
+**When:** Voice notes, image attachments, OPFS storage, inline recording, waveform player, attachment lifecycle.
+
+**Read:**
+
+- `extension/README.md` (Attachments & voice notes section)
+- `.cursor/rules/storage-invariants.mdc` (Attachments section)
+- `extension/src/lib/attachments/attachmentManager.ts`
+- `extension/src/lib/attachments/sanitizeBlockDoc.ts`
+- `extension/src/editor/voiceNote.ts`, `VoiceNoteNodeView.tsx`
+
+**Invariants:**
+
+- Block JSON stores paths/metadata only — never binary blobs in `doc_c`
+- `status: "recording"` is ephemeral; stripped before persist
+- Fresh inserts set `autoStart: true`; reloaded survivors must not request mic
+- Page delete GC uses ref counting across all pages before deleting OPFS files
+- Lazy permissions: mic on record, no folder picker (OPFS)
+- Images: toolbar, slash `/` Image, drag-drop, paste files/screenshots/webpage imgs → OPFS; hover toolbar (align / download / delete / more); click image for lightbox; caption; Backspace deletes node without confirm
+
+**Verify:**
+
+```bash
+npm run test -- extension/src/lib/attachments/
+npm run dev
+# Record inline, play with speed cycle, edit label, delete unavailable note, delete page with attachments
+# Image: slash Image, drop PNG / screenshot thumbnail, paste screenshot, paste from webpage, zoom, delete button, Backspace
 ```
 
 ---
@@ -134,14 +185,16 @@ npm run test -- extension/src/lib/workspace-tree.test.ts extension/src/store/mov
 **Read:**
 
 - `.cursor/rules/landing-site.mdc`
-- `src/lib/constants.ts`
+- `shared/constants.ts` (landing marketing + scroll tunables)
 - `src/routes/README.md`
+- `AGENTS.md` §2.5 (shipped capabilities — do not overclaim)
 
 **Patterns:**
 
-- Marketing copy lives in `src/lib/constants.ts`
+- Marketing copy and scroll tunables live in `shared/constants.ts` (import `@/lib/constants`)
 - Scroll video tunables: `LANDING_VIDEO_*`, `LANDING_MAIN_OVERLAP_VH`
 - Download uses `EXTENSION_ZIP_FILENAME` - ZIP must exist (`npm run package:extension`)
+- Feature clips: `LANDING_FEATURE_CLIPS_ENABLED` is currently `false` (CSS mockups only)
 
 **Verify:**
 
@@ -167,7 +220,7 @@ npm run dev:web
 
 **Patterns:**
 
-- `VITE_SITE_URL` → `SITE_ORIGIN` in `src/lib/constants.ts` (no trailing slash)
+- `VITE_SITE_URL` → `SITE_ORIGIN` in `shared/constants.ts` (no trailing slash)
 - FAQ links use `"path": "/demo/"` in JSON; resolve via `resolveLandingFaqItems()`
 - Static SEO files in `public/` are **gitignored** - run `npm run generate:seo`
 - `/llms.txt` is served dynamically by a TanStack Start server route **and** written statically at build time
@@ -260,6 +313,7 @@ npm run package:extension   # if download artifact needed
 | Combined task | Apply skills in order |
 |---------------|----------------------|
 | Editor feature + persistence | `editor-markdown` → `storage-migration` → `extension-feature` |
+| Voice notes / attachments | `attachments-voice-notes` → `editor-markdown` → `storage-migration` |
 | Landing download + extension build | `ci-release` → `landing-marketing` |
 | SEO / FAQ / llms.txt changes | `landing-seo` → `landing-marketing` |
 | Web demo parity with extension UI | `dual-build-web` → `extension-feature` |
@@ -284,9 +338,11 @@ Stop and ask the user when:
 | Skill | Primary rules |
 |-------|---------------|
 | `core-onboard` | `00-project-core.mdc`, `ai-operating-model.mdc` |
+| `constants-copy` | `constants-policy.mdc` |
 | `extension-feature` | `extension-architecture.mdc` |
 | `storage-migration` | `storage-invariants.mdc` |
 | `editor-markdown` | `editor-markdown.mdc` |
+| `attachments-voice-notes` | `storage-invariants.mdc`, `extension-architecture.mdc` |
 | `landing-marketing` | `landing-site.mdc` |
 | `landing-seo` | `landing-site.mdc`, `testing-ci.mdc` |
 | `ci-release` | `testing-ci.mdc` |
