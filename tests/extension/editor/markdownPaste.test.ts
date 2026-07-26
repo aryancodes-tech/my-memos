@@ -84,6 +84,16 @@ describe("looksLikeMarkdown", () => {
     expect(looksLikeMarkdown("- [x] done")).toBe(true);
     expect(looksLikeMarkdown("plain sentence")).toBe(false);
   });
+
+  it("handles empty input and additional markdown shapes", () => {
+    expect(looksLikeMarkdown("")).toBe(false);
+    expect(looksLikeMarkdown("   ")).toBe(false);
+    expect(looksLikeMarkdown("```ts\nconst x = 1\n```")).toBe(true);
+    expect(looksLikeMarkdown("> quoted")).toBe(true);
+    expect(looksLikeMarkdown("1. ordered")).toBe(true);
+    expect(looksLikeMarkdown("[link](https://example.com)")).toBe(true);
+    expect(looksLikeMarkdown("**bold** text")).toBe(true);
+  });
 });
 
 describe("markdown paste", () => {
