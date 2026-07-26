@@ -1,11 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
+import { DEFAULT_THEME } from "@/lib/constants";
 import {
+  applyThemeToDocument,
   deriveThemeTokens,
   getCustomThemeStorageId,
   getThemeLabel,
+  getThemeSwatchColors,
   isBuiltInTheme,
   isCustomThemeId,
   normalizeHexColor,
+  syncCustomThemeStyles,
   toCustomThemeName,
 } from "@/lib/themes";
 import type { CustomTheme } from "@/storage/types";
@@ -61,5 +65,49 @@ describe("deriveThemeTokens", () => {
     expect(tokens["--ko-accent"]).toBe("#4a4a4a");
     expect(tokens["--ko-surface"]).toMatch(/^#/);
     expect(tokens["--ko-text-muted"]).toMatch(/^#/);
+  });
+});
+
+describe("getThemeSwatchColors", () => {
+  const customThemes: CustomTheme[] = [
+    { id: "focus", name: "Focus", colors: { bg: "#101010", text: "#f0f0f0", accent: "#808080" } },
+  ];
+
+  it("returns built-in and custom swatches", () => {
+    expect(getThemeSwatchColors("dark", customThemes).bg).toMatch(/^#/);
+    expect(getThemeSwatchColors("custom-focus", customThemes)).toEqual(customThemes[0]!.colors);
+  });
+
+  it("falls back to the default theme swatch for unknown custom ids", () => {
+    expect(getThemeSwatchColors("custom-missing", customThemes)).toEqual(
+      getThemeSwatchColors(DEFAULT_THEME, []),
+    );
+  });
+});
+
+describe("applyThemeToDocument / syncCustomThemeStyles", () => {
+  afterEach(() => {
+    document.documentElement.removeAttribute("data-theme");
+    document.documentElement.removeAttribute("style");
+    document.getElementById("ko-custom-theme-styles")?.remove();
+  });
+
+  it("sets data-theme for built-in themes", () => {
+    applyThemeToDocument("ocean", []);
+    expect(document.documentElement.dataset.theme).toBe("ocean");
+  });
+
+  it("injects CSS for custom themes and applies inline vars when active", () => {
+    const customThemes: CustomTheme[] = [
+      { id: "focus", name: "Focus", colors: { bg: "#101010", text: "#fafafa", accent: "#888888" } },
+    ];
+    syncCustomThemeStyles(customThemes);
+    const style = document.getElementById("ko-custom-theme-styles");
+    expect(style?.textContent).toContain('[data-theme="custom-focus"]');
+    expect(style?.textContent).toContain("--ko-bg: #101010");
+
+    applyThemeToDocument("custom-focus", customThemes);
+    expect(document.documentElement.dataset.theme).toBe("custom-focus");
+    expect(document.documentElement.style.getPropertyValue("--ko-bg")).toBe("#101010");
   });
 });

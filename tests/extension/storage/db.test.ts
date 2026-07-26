@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isValidImportPage } from "@/storage/db";
+import { importWorkspace, isValidImportPage } from "@/storage/db";
 import type { Page } from "@/storage/types";
 
 const validPage: Page = {
@@ -29,5 +29,36 @@ describe("isValidImportPage", () => {
       false,
     );
     expect(isValidImportPage({ ...validPage, kind: "folder" })).toBe(false);
+  });
+
+  it("rejects wrong scalar types and parent_id shapes", () => {
+    expect(isValidImportPage({ ...validPage, title: 1 })).toBe(false);
+    expect(isValidImportPage({ ...validPage, created_at: "1" })).toBe(false);
+    expect(isValidImportPage({ ...validPage, favorite: "yes" })).toBe(false);
+    expect(isValidImportPage({ ...validPage, tags: "tag" })).toBe(false);
+    expect(isValidImportPage({ ...validPage, parent_id: 12 })).toBe(false);
+    expect(isValidImportPage({ ...validPage, doc: { type: "doc" } })).toBe(false);
+  });
+
+  it("accepts directories and string parent ids", () => {
+    expect(
+      isValidImportPage({
+        ...validPage,
+        kind: "directory",
+        parent_id: "folder-1",
+        tags: ["a"],
+      }),
+    ).toBe(true);
+  });
+});
+
+describe("importWorkspace", () => {
+  it("rejects payloads without a pages array", async () => {
+    await expect(importWorkspace({})).rejects.toThrow("expected a pages array");
+    await expect(importWorkspace({ pages: undefined })).rejects.toThrow("expected a pages array");
+  });
+
+  it("rejects malformed page entries before writing", async () => {
+    await expect(importWorkspace({ pages: [{ id: "" }] })).rejects.toThrow("malformed page entry");
   });
 });

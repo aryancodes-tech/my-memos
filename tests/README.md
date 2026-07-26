@@ -18,22 +18,48 @@ extension/src/lib/attachments/X.ts →  tests/extension/lib/attachments/X.test.t
 src/lib/seo.ts                     →  tests/landing/lib/seo.test.ts
 ```
 
-## Current inventory
+## Inventory
+
+### Extension
 
 | Test | Covers |
 | ---- | ------ |
-| `tests/extension/storage/db.test.ts` | `extension/src/storage/db.ts` |
-| `tests/extension/storage/codec.test.ts` | `extension/src/storage/codec.ts` |
-| `tests/extension/lib/text.test.ts` | `extension/src/lib/text.ts` |
-| `tests/extension/lib/themes.test.ts` | `extension/src/lib/themes.ts` |
-| `tests/extension/lib/workspace-tree.test.ts` | `extension/src/lib/workspace-tree.ts` |
-| `tests/extension/lib/attachments/sanitizeBlockDoc.test.ts` | `extension/src/lib/attachments/sanitizeBlockDoc.ts` |
-| `tests/extension/lib/attachments/fileName.test.ts` | `extension/src/lib/attachments/fileName.ts` |
-| `tests/extension/lib/attachments/imageClipboard.test.ts` | `extension/src/lib/attachments/imageClipboard.ts` |
-| `tests/extension/store/useStore.test.ts` | `extension/src/store/useStore.ts` |
-| `tests/extension/store/moveWorkspaceItem.test.ts` | `moveWorkspaceItem` in `useStore` |
-| `tests/extension/editor/markdownPaste.test.ts` | `extension/src/editor/markdownPaste.ts` |
-| `tests/landing/lib/seo.test.ts` | `src/lib/seo.ts` |
+| `storage/db.test.ts` | import validation, `importWorkspace` rejection |
+| `storage/codec.test.ts` | BlockDoc encode/decode + corrupt fallback |
+| `lib/text.test.ts` | `len`, `extractPlainText` |
+| `lib/themes.test.ts` | hex/id helpers, tokens, swatches, DOM apply |
+| `lib/platform.test.ts` | extension vs web context detection |
+| `lib/workspace-tree.test.ts` | section normalize, move/drop validators |
+| `lib/workspace-drag.test.ts` | drag start guards, MIME precedence, cleanup |
+| `lib/attachments/sanitizeBlockDoc.test.ts` | persist sanitize, path collect, orphan GC |
+| `lib/attachments/fileName.test.ts` | names, unique collision suffixes, format helpers |
+| `lib/attachments/imageClipboard.test.ts` | paste/drop files, HTML imgs, data:/http fetch |
+| `lib/attachments/fileSystemManager.test.ts` | OPFS support, subdirectory walk, access check |
+| `lib/attachments/permissionManager.test.ts` | mic unsupported / denied / success |
+| `lib/attachments/waveform.test.ts` | synthetic peaks + decode fallback |
+| `lib/attachments/errors.test.ts` | error class names / instanceof |
+| `store/useStore.test.ts` | root/children selectors |
+| `store/selectors.test.ts` | favorites, recent, searchable, sidebar filters |
+| `store/moveWorkspaceItem.test.ts` | move to root / outdent folder |
+| `store/pagesWorkspace.test.ts` | create/update/delete/init/view chrome |
+| `store/themeUi.test.ts` | custom theme add/remove/activate |
+| `store/dialogs.test.ts` | delete/link/attachment dialog state |
+| `editor/markdownPaste.test.ts` | GFM paste + task-list typing |
+| `editor/tabIndent.test.ts` | multi-block indent algorithm |
+
+### Landing
+
+| Test | Covers |
+| ---- | ------ |
+| `lib/seo.test.ts` | meta, links, JSON-LD, robots, sitemap, llms |
+| `lib/landing-faq-content.test.ts` | FAQ link resolve + schema flatten |
+| `lib/url.test.ts` | absolute URL joining edge cases |
+| `lib/client-error-reporting.test.ts` | optional reporter wiring |
+| `lib/error-capture.test.ts` | SSR error capture TTL / consume |
+
+## Not unit-tested here (needs browser / heavy mocks)
+
+Full UI flows (slash menu chrome, lightbox, live mic UI), OPFS write/read via `attachmentManager`, `VoiceRecorder` MediaRecorder state machine, and React hooks under `editor/hooks/`. Prefer manual QA / future e2e for those.
 
 ## Commands
 
@@ -47,6 +73,6 @@ npm run test -- tests/extension/store/                # store tests
 
 Config: [`vitest.config.ts`](../vitest.config.ts). On load it ensures `tests/extension/node_modules` → `extension/node_modules` (gitignored symlink) so TipTap/ProseMirror resolve to a single copy.
 
-IDE/`tsc` path aliases: [`tests/extension/tsconfig.json`](extension/tsconfig.json) (`@/` → `extension/src`) and [`tests/landing/tsconfig.json`](landing/tsconfig.json) (`@/` → `src`). Without these, the root tsconfig would own files under `tests/` and map `@/` to the landing package.
+IDE/`tsc` path aliases: [`tests/extension/tsconfig.json`](extension/tsconfig.json) (`@/` → `extension/src`) and [`tests/landing/tsconfig.json`](landing/tsconfig.json) (`@/` → `src`).
 
 Agent rules: [`.cursor/rules/testing-ci.mdc`](../.cursor/rules/testing-ci.mdc), [`AGENTS.md`](../AGENTS.md) §4.3.

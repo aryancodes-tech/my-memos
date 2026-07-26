@@ -33,4 +33,23 @@ describe("extractPlainText", () => {
   it("returns empty string for an empty document", () => {
     expect(extractPlainText({ type: "doc", content: [] })).toBe("");
   });
+
+  it("skips nodes without text and joins deeply nested leaves", () => {
+    const doc: BlockDoc = {
+      type: "doc",
+      content: [
+        {
+          type: "blockquote",
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "quoted" }],
+            },
+          ],
+        },
+        { type: "horizontalRule" },
+      ],
+    };
+    expect(extractPlainText(doc)).toBe("quoted");
+  });
 });

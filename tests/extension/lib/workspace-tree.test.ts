@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { WORKSPACE_SECTION } from "@/lib/constants";
 import {
   canDropOntoFolder,
   canDropOntoPage,
   canMoveWorkspaceItem,
   isDescendant,
+  LEGACY_WORKSPACE_SECTIONS,
+  normalizeWorkspaceSection,
   resolveFolderDropParentId,
 } from "@/lib/workspace-tree";
 import type { Page } from "@/storage/types";
@@ -23,6 +26,20 @@ function page(overrides: Partial<Page> & Pick<Page, "id">): Page {
     ...overrides,
   };
 }
+
+describe("normalizeWorkspaceSection", () => {
+  it("maps legacy and empty sections to the workspace section", () => {
+    expect(normalizeWorkspaceSection("")).toBe(WORKSPACE_SECTION);
+    for (const section of LEGACY_WORKSPACE_SECTIONS) {
+      expect(normalizeWorkspaceSection(section)).toBe(WORKSPACE_SECTION);
+    }
+  });
+
+  it("preserves unknown modern sections", () => {
+    expect(normalizeWorkspaceSection("Custom Bucket")).toBe("Custom Bucket");
+    expect(normalizeWorkspaceSection(WORKSPACE_SECTION)).toBe(WORKSPACE_SECTION);
+  });
+});
 
 describe("isDescendant", () => {
   const pages = [
@@ -60,6 +77,21 @@ describe("canMoveWorkspaceItem", () => {
 
   it("blocks moving pages into non-directory parents", () => {
     expect(canMoveWorkspaceItem(pages, "deep-page", "nested-page")).toBe(false);
+  });
+
+  it("blocks archived items and unknown ids", () => {
+    const withArchived = [...pages, page({ id: "archived", archived: true })];
+    expect(canMoveWorkspaceItem(withArchived, "archived", null)).toBe(false);
+    expect(canMoveWorkspaceItem(pages, "missing", null)).toBe(false);
+    expect(canMoveWorkspaceItem(pages, "deep-page", "missing-folder")).toBe(false);
+  });
+
+  it("blocks moves into archived folders", () => {
+    const withArchivedFolder = [
+      page({ id: "archived-folder", kind: "directory", archived: true }),
+      page({ id: "loose" }),
+    ];
+    expect(canMoveWorkspaceItem(withArchivedFolder, "loose", "archived-folder")).toBe(false);
   });
 });
 

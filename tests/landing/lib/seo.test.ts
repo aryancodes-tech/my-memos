@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildAbsoluteUrl,
   buildLandingJsonLdScripts,
+  buildLandingLinkTags,
   buildLandingMetaTags,
   buildLlmsTxt,
   buildRobotsTxt,
@@ -44,6 +45,14 @@ describe("buildLandingMetaTags", () => {
     expect(description?.content).toContain("New Tab");
     expect(ogUrl?.content).toBe("https://mymemos.app/");
     expect(twitterCard?.content).toBe("summary_large_image");
+  });
+});
+
+describe("buildLandingLinkTags", () => {
+  it("emits a canonical link for the homepage", () => {
+    expect(buildLandingLinkTags("https://mymemos.app")).toEqual([
+      { rel: "canonical", href: "https://mymemos.app/" },
+    ]);
   });
 });
 
