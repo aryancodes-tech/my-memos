@@ -1,5 +1,8 @@
 /**
  * Package re-export of the shared constants module.
- * Source of truth: `shared/constants.ts` (import `@shared/constants`).
+ * Source of truth: `shared/constants.ts`.
+ *
+ * Uses a relative path so Node/Vite SSR can resolve without relying on
+ * `@shared/*` aliases during config bootstrap.
  */
-export * from "@shared/constants";
+export * from "../../shared/constants";

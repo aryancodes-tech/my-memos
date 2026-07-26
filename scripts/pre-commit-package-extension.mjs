@@ -15,7 +15,6 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const publicZip = path.join(root, "public", "mymemos-extension.zip");
-const extensionZip = path.join(root, "extension", "mymemos-extension.zip");
 const devSessionPath = path.join(root, "extension", ".dev-session");
 const DEV_PORT = 5173;
 
@@ -45,16 +44,41 @@ function git(args) {
   }).trim();
 }
 
-/** Returns true when something is listening on the extension Vite port. */
-function isDevPortInUse() {
+/** Returns true when something is listening on the extension Vite port (IPv4 or IPv6). */
+function isPortInUse(host) {
   return new Promise((resolve) => {
     const probe = net.createServer();
     probe.once("error", () => resolve(true));
     probe.once("listening", () => {
       probe.close(() => resolve(false));
     });
-    probe.listen(DEV_PORT, "127.0.0.1");
+    probe.listen(DEV_PORT, host);
   });
+}
+
+async function isDevPortInUse() {
+  // Vite may bind to 127.0.0.1, ::1, or both — probe each.
+  const results = await Promise.all([isPortInUse("127.0.0.1"), isPortInUse("::1")]);
+  return results.some(Boolean);
+}
+
+/**
+ * True when a live extension dev server is present.
+ * Clears a stale `.dev-session` marker if the port is free (e.g. aborted `npm run dev`).
+ */
+async function isExtensionDevActive() {
+  const portBusy = await isDevPortInUse();
+  const sessionPath = devSessionPath;
+  const hasSession = fs.existsSync(sessionPath);
+
+  if (portBusy) return { active: true, reason: `port ${DEV_PORT} is in use` };
+  if (hasSession) {
+    fs.rmSync(sessionPath, { force: true });
+    console.log(
+      "[MyMemos pre-commit] Cleared stale extension/.dev-session (dev port is free).",
+    );
+  }
+  return { active: false, reason: "" };
 }
 
 function stagedFiles() {
@@ -89,17 +113,16 @@ if (process.env.SKIP_EXTENSION_PACKAGE === "1") {
   process.exit(0);
 }
 
-const devPortBusy = await isDevPortInUse();
-const hasDevSession = fs.existsSync(devSessionPath);
+const { active: devActive, reason: devReason } = await isExtensionDevActive();
 
-if (devPortBusy || hasDevSession) {
+if (devActive) {
   fail(
     [
       "Extension sources changed, but packaging would overwrite extension/dist/",
-      "while `npm run dev` is active (HMR would break).",
+      `while the extension Vite server is active (${devReason}).`,
       "",
       "Options:",
-      "  1. Stop `npm run dev`, then commit again",
+      "  1. Stop `npm run dev` (Ctrl+C in that terminal), then commit again",
       "  2. SKIP_EXTENSION_PACKAGE=1 git commit ...  (commit without refreshing the ZIP)",
     ].join("\n"),
   );
@@ -117,10 +140,10 @@ if (result.status !== 0) {
   fail("npm run package:extension failed. Fix the build or skip with SKIP_EXTENSION_PACKAGE=1.");
 }
 
-const toStage = [publicZip, extensionZip].filter((file) => fs.existsSync(file));
-if (toStage.length === 0) {
-  fail("package:extension finished but no ZIP was found under public/ or extension/.");
+if (!fs.existsSync(publicZip)) {
+  fail("package:extension finished but public/mymemos-extension.zip was not found.");
 }
 
-execFileSync("git", ["add", "--", ...toStage], { cwd: root, stdio: "inherit" });
-console.log("[MyMemos pre-commit] Staged updated extension ZIP(s).");
+// Only the landing download artifact is tracked; extension/*.zip is gitignored.
+execFileSync("git", ["add", "--", publicZip], { cwd: root, stdio: "inherit" });
+console.log("[MyMemos pre-commit] Staged public/mymemos-extension.zip.");

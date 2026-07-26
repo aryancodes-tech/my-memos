@@ -74,8 +74,15 @@ export const LANDING_PAGE_TITLE = `${PRODUCT_NAME} - Your notes, on every new ta
 /**
  * Canonical site origin without a trailing slash.
  * Set `VITE_SITE_URL` at build/deploy time (e.g. `https://mymemos.app`).
+ * Safe when `import.meta.env` is absent (e.g. Node loading Vite config via manifest).
  */
-export const SITE_ORIGIN = (import.meta.env.VITE_SITE_URL ?? "").replace(/\/$/, "");
+export const SITE_ORIGIN = (
+  (typeof import.meta !== "undefined" &&
+    import.meta.env &&
+    typeof import.meta.env.VITE_SITE_URL === "string" &&
+    import.meta.env.VITE_SITE_URL) ||
+  ""
+).replace(/\/$/, "");
 
 /** Open Graph / Twitter card image path (served from `public/`). */
 export const SITE_OG_IMAGE_PATH = "/launch-poster.png";

@@ -58,9 +58,9 @@ export interface AttachmentRef {
   title?: string;
 }
 
-export type { BuiltInThemeName, CustomThemeColors } from "@shared/theme-types";
+export type { BuiltInThemeName, CustomThemeColors } from "../../../shared/theme-types";
 
-import type { BuiltInThemeName, CustomThemeColors } from "@shared/theme-types";
+import type { BuiltInThemeName, CustomThemeColors } from "../../../shared/theme-types";
 
 /** Active theme id - built-in preset or `custom-{id}`. */
 export type ThemeName = BuiltInThemeName | `custom-${string}`;
