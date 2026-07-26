@@ -1,5 +1,6 @@
 import { useStore } from "@/store/useStore";
 import { PageIcon } from "@/components/PageIcon";
+import { DEFAULT_FOLDER_TITLE, DEFAULT_PAGE_TITLE } from "@/lib/constants";
 import { X } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 
@@ -16,7 +17,7 @@ export default function DeleteConfirmDialog() {
   const open = pendingDelete !== null && item !== undefined;
   const childCount = pendingDelete?.childCount ?? 0;
   const isDirectory = item?.kind === "directory";
-  const label = item?.title || (isDirectory ? "Untitled folder" : "Untitled");
+  const label = item?.title || (isDirectory ? DEFAULT_FOLDER_TITLE : DEFAULT_PAGE_TITLE);
 
   useEffect(() => {
     if (!open) return;

@@ -7,7 +7,7 @@ import {
   VOICE_NOTE_MIME_TYPE,
 } from "@/lib/constants";
 import { len } from "@/lib/text";
-import type { AttachmentKind, AttachmentRef } from "@/storage/types";
+import type { AttachmentRef } from "@/storage/types";
 import {
   buildAttachmentFileName,
   resolveUniqueFileName,
@@ -187,11 +187,6 @@ function inferImageExtension(file: File | Blob, mimeType?: string): string {
     default:
       return ".png";
   }
-}
-
-/** Maps attachment kind to its top-level subdirectory name. */
-export function attachmentKindDirectory(kind: AttachmentKind): string {
-  return kind === "audio" ? ATTACHMENT_DIR_AUDIO : ATTACHMENT_DIR_IMAGES;
 }
 
 /** Preferred MediaRecorder MIME type for voice notes. */

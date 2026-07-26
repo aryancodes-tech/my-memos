@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import FlexSearch from "flexsearch";
 import { selectSearchablePages, useStore } from "@/store/useStore";
 import { extractPlainText } from "@/lib/text";
-import { WORKSPACE_SECTION } from "@/lib/constants";
+import { DEFAULT_FOLDER_TITLE, WORKSPACE_SECTION } from "@/lib/constants";
 import type { Page } from "@/storage/types";
 
 /** Human-readable location for search results (folder path or workspace root). */
@@ -18,7 +18,7 @@ function pageLocationLabel(pages: Page[], page: Page): string {
   if (!parent) {
     return WORKSPACE_SECTION;
   }
-  return `${parent.title || "Untitled folder"}`;
+  return `${parent.title || DEFAULT_FOLDER_TITLE}`;
 }
 
 /**

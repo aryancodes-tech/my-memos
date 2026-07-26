@@ -73,6 +73,7 @@ npm run test         # if store/tree logic touched
 - Fresh inserts set `autoStart: true`; reloaded survivors must not request mic
 - Page delete GC uses ref counting across all pages before deleting OPFS files
 - Lazy permissions: mic on record, no folder picker (OPFS)
+- Images: toolbar, slash `/` Image, drag-drop, paste files/screenshots/webpage imgs → OPFS; hover Zoom + Delete (Backspace still deletes node)
 
 **Verify:**
 
@@ -80,6 +81,7 @@ npm run test         # if store/tree logic touched
 npm run test -- extension/src/lib/attachments/
 npm run dev
 # Record inline, play with speed cycle, edit label, delete unavailable note, delete page with attachments
+# Image: slash Image, drop PNG / screenshot thumbnail, paste screenshot, paste from webpage, zoom, delete button, Backspace
 ```
 
 ---

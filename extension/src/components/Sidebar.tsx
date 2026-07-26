@@ -7,6 +7,7 @@ import {
 } from "@/store/useStore";
 import type { Page } from "@/storage/types";
 import {
+  DEFAULT_FOLDER_TITLE,
   PRODUCT_NAME,
   SIDEBAR_INDENT_PX,
   SIDEBAR_MENU_MIN_WIDTH_PX,
@@ -434,7 +435,7 @@ function DirectoryRow({
           }}
           onChange={(e) => void updatePage(item.id, { title: e.target.value })}
           className="ko-sidebar-row-label"
-          placeholder="Untitled folder"
+          placeholder={DEFAULT_FOLDER_TITLE}
         />
       ) : (
         <div
@@ -442,7 +443,7 @@ function DirectoryRow({
           onDoubleClick={() => setEditing(true)}
           onClick={onToggle}
         >
-          {item.title || "Untitled folder"}
+          {item.title || DEFAULT_FOLDER_TITLE}
         </div>
       )}
       <div className="ko-sidebar-row-actions">

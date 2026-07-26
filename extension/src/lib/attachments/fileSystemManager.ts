@@ -20,16 +20,6 @@ export function isAttachmentStorageSupported(): boolean {
   );
 }
 
-/** @deprecated Use {@link isAttachmentStorageSupported}. */
-export function isFileSystemAccessSupported(): boolean {
-  return isAttachmentStorageSupported();
-}
-
-/** Clears the in-memory root handle cache. */
-export function clearAttachmentRootCache(): void {
-  cachedRootHandle = null;
-}
-
 /** Creates `database/`, `images/`, and `audio/` under the attachment root. */
 async function ensureAttachmentSubdirectories(root: FileSystemDirectoryHandle): Promise<void> {
   await root.getDirectoryHandle(ATTACHMENT_DIR_DATABASE, { create: true });

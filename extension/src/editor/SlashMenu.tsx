@@ -8,6 +8,7 @@ import {
   Heading2,
   Heading3,
   Heading4,
+  ImageIcon,
   List,
   ListOrdered,
   Mic,
@@ -26,6 +27,7 @@ import {
   type SlashRange,
 } from "@/editor/slashBlock";
 import { insertAudioFromPicker } from "@/lib/attachments/insertAudioFromFile";
+import { insertImageFromPicker } from "@/lib/attachments/insertImage";
 import { insertInlineVoiceRecording } from "@/lib/attachments/insertVoiceRecording";
 
 interface SlashCommand {
@@ -47,6 +49,7 @@ interface SlashCommand {
     | "quote"
     | "code"
     | "divider"
+    | "image"
     | "voice";
   headingLevel?: 1 | 2 | 3 | 4;
   /** Applies the block transform after removing the slash trigger text. */
@@ -208,6 +211,19 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "divider",
     run: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+    },
+  },
+  {
+    id: "image",
+    title: "Image",
+    description: "Upload or attach an image from your device.",
+    shortcut: "",
+    keywords: ["image", "photo", "picture", "img", "screenshot"],
+    icon: ImageIcon,
+    previewTitle: "Image",
+    previewKind: "image",
+    run: (editor, range) => {
+      insertImageFromPicker(editor, range);
     },
   },
   {
@@ -497,6 +513,14 @@ function SlashMenuPreviewContent({ command }: { command: SlashCommand }) {
         <p>Content above</p>
         <hr />
         <p>Content below</p>
+      </div>
+    );
+  }
+
+  if (command.previewKind === "image") {
+    return (
+      <div className="ko-slash-preview-image" aria-hidden>
+        <span className="ko-slash-preview-image-frame" />
       </div>
     );
   }

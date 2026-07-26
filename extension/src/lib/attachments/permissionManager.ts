@@ -1,3 +1,5 @@
+import { MICROPHONE_DENIED_MESSAGE } from "@/lib/constants";
+
 /**
  * Requests microphone access lazily when the user starts a voice note.
  * @returns The active `MediaStream` on success.
@@ -10,6 +12,6 @@ export async function requestMicrophoneAccess(): Promise<MediaStream> {
   try {
     return await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch {
-    throw new Error("Microphone access was denied. Voice notes need microphone permission.");
+    throw new Error(MICROPHONE_DENIED_MESSAGE);
   }
 }

@@ -72,7 +72,7 @@ export default function App() {
             style={{ borderColor: "var(--ko-border)", background: "var(--ko-bg)" }}
           >
             <div aria-hidden />
-            <div className="justify-self-center max-w-full overflow-x-auto ko-scroll">
+            <div className="justify-self-center max-w-full overflow-x-auto overflow-y-hidden ko-scroll">
               {view.kind === "page" && pageEditor && <EditorToolbar editor={pageEditor} />}
             </div>
             <div className="justify-self-end shrink-0">

@@ -17,6 +17,7 @@ import { AttachmentImage } from "@/editor/attachmentImage";
 import { VoiceNote } from "@/editor/voiceNote";
 import { BackgroundColor } from "@/editor/backgroundColor";
 import { HighlightWithMarkdown } from "@/editor/highlightMarkdown";
+import { ImagePasteDrop } from "@/editor/imagePasteDrop";
 import { MarkdownPaste } from "@/editor/markdownPaste";
 import { codeLowlight } from "@/editor/codeLowlight";
 
@@ -60,6 +61,7 @@ export function createEditorExtensions() {
       transformPastedText: false,
       transformCopiedText: false,
     }),
+    ImagePasteDrop,
     MarkdownPaste,
   ];
 }

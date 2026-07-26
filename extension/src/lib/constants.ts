@@ -183,19 +183,11 @@ export const MOBILE_EXPERIENCE_NOTICE_CTA = "Return to home page";
 /** Public path for the marketing home page. */
 export const MARKETING_HOME_PATH = "/";
 
-/** Path to the site favicon served from the public directory. */
-export const SITE_FAVICON_PATH = "/favicon.svg";
-
-/** MIME type for the site favicon. */
-export const SITE_FAVICON_TYPE = "image/svg+xml";
-
 /** HTML class markdown-it uses for GFM task lists. */
 export const MARKDOWN_TASK_LIST_HTML_CLASS = "contains-task-list";
 
 /** Input rule for GFM task items: `- [x] `, `* [ ] `, etc. */
-export const MARKDOWN_TASK_ITEM_INPUT_REGEX = new RegExp(
-  String.raw`^\s*([-+*])\s+\[([ xX])?\]\s$`,
-);
+export const MARKDOWN_TASK_ITEM_INPUT_REGEX = new RegExp(String.raw`^\s*([-+*])\s+\[([ xX])?\]\s$`);
 
 /**
  * Bullet list input rule that ignores GFM task checkbox syntax (`- [x]`).
@@ -233,11 +225,14 @@ export const VOICE_NOTE_WAVEFORM_MIN_BAR = 0.08;
 /** Prefix for generated image attachment filenames. */
 export const ATTACHMENT_IMAGE_FILE_PREFIX = "img";
 
-/** IndexedDB key for the persisted attachment root directory handle. @deprecated OPFS replaced folder picker; store unused. */
-export const ATTACHMENT_ROOT_HANDLE_KEY = "attachment_root";
+/** Horizontal alignment options for embedded images. */
+export const IMAGE_ALIGNMENTS = ["left", "center", "right"] as const;
 
-/** @deprecated Folder picker removed; attachments use hidden OPFS storage. */
-export const ATTACHMENT_FOLDER_PICKER_TITLE = "Choose where MyMemos should store your attachments.";
+/** Default alignment for newly inserted images. */
+export const IMAGE_ALIGN_DEFAULT: (typeof IMAGE_ALIGNMENTS)[number] = "center";
+
+/** Placeholder shown under an image until the user adds a caption. */
+export const IMAGE_CAPTION_PLACEHOLDER = "Write a caption…";
 
 /** Hidden OPFS directory name for attachment files (images, audio). */
 export const ATTACHMENT_OPFS_ROOT_DIR = "mymemos-attachments";
@@ -252,19 +247,6 @@ export const ATTACHMENT_FS_UNSUPPORTED_MESSAGE =
 /** Error when microphone access is denied. */
 export const MICROPHONE_DENIED_MESSAGE =
   "Microphone access was denied. Voice notes need microphone permission to record.";
-
-/** @deprecated Recovery dialog removed with OPFS; kept for copy reuse if sync lands later. */
-export const ATTACHMENT_STORAGE_UNAVAILABLE_TITLE = "Storage location unavailable";
-
-/** @deprecated Recovery dialog removed with OPFS. */
-export const ATTACHMENT_STORAGE_UNAVAILABLE_BODY =
-  "MyMemos cannot reach the folder where your images and voice notes are stored. Reconnect the original folder or choose a new location. Your note text is safe.";
-
-/** @deprecated Recovery dialog removed with OPFS. */
-export const ATTACHMENT_RECONNECT_LABEL = "Reconnect folder";
-
-/** @deprecated Recovery dialog removed with OPFS. */
-export const ATTACHMENT_CHOOSE_NEW_LABEL = "Choose new location";
 
 /** Regex patterns used to detect markdown syntax in pasted plain text. */
 export const MARKDOWN_DETECTION_PATTERNS: RegExp[] = [

@@ -14,14 +14,6 @@ export class AttachmentStorageUnavailableError extends Error {
   }
 }
 
-/** Thrown when the user denies folder or microphone permission. */
-export class AttachmentPermissionDeniedError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "AttachmentPermissionDeniedError";
-  }
-}
-
 /** Thrown when saving or reading an attachment file fails. */
 export class AttachmentIoError extends Error {
   constructor(message: string) {

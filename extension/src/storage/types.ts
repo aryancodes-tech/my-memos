@@ -36,15 +36,6 @@ export interface Page {
   doc: BlockDoc;
 }
 
-export interface ImageBlob {
-  id: string;
-  mime: string;
-  data: Blob;
-  width?: number;
-  height?: number;
-  created_at: number;
-}
-
 /** Attachment kinds stored in OPFS via the attachment manager. */
 export type AttachmentKind = "image" | "audio";
 

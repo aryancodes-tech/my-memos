@@ -73,8 +73,17 @@ IndexedDB (pages)          OPFS (mymemos-attachments/)
 | ------- | ------------ | ----------- |
 | Inline voice recording | Toolbar mic, `/` → Voice note | `insertVoiceRecording.ts`, `VoiceNoteNodeView.tsx`, `voiceRecorder.ts` |
 | Attach audio file | Toolbar paperclip, `/` → Audio file | `insertAudioFromFile.ts` |
-| Images | Toolbar image, paste | `insertImage.ts`, `AttachmentImageNodeView.tsx` |
-| Delete attachment | Trash on voice note block | `AttachmentDeleteDialog`, `attachmentManager.ts` |
+| Images | Toolbar image, `/` → Image, drag-drop, paste (file/screenshot/webpage `<img>`) | `insertImage.ts`, `imageClipboard.ts`, `imagePasteDrop.ts`, `AttachmentImageNodeView.tsx` |
+| Delete attachment | Trash on voice note / image block | `AttachmentDeleteDialog`, `attachmentManager.ts` |
+
+**Image insert sources (all save to OPFS):**
+
+- Toolbar / slash file picker (multi-select)
+- Drag-drop onto the editor (incl. Mac screenshot thumbnail)
+- Paste image files or screenshots (`Cmd/Ctrl+V`)
+- Paste webpage HTML — remote/data `<img>` srcs are fetched into OPFS when possible
+
+**Image UI:** Hover/select shows a top-right toolbar (align left/center/right, download, delete, more). Click the image to expand in a lightbox. Caption field under the image. More menu: Replace, Copy image, Alt text, Expand. Backspace still deletes the block without a confirm dialog; the Delete button confirms and removes the OPFS file.
 
 **Permissions:** Microphone is requested only when recording starts. OPFS needs no folder picker.
 

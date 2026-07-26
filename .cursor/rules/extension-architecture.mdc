@@ -86,11 +86,13 @@ lib/attachments/
 ├── sanitizeBlockDoc.ts    ← persist sanitizer + ref-count GC helpers
 ├── voiceRecorder.ts       ← MediaRecorder wrapper + live levels
 ├── waveform.ts            ← decode peaks for playback UI
+├── imageClipboard.ts      ← paste/drop DataTransfer → image Files
 ├── insertVoiceRecording.ts
 ├── insertAudioFromFile.ts
-└── insertImage.ts
+└── insertImage.ts         ← picker / file / multi-file insert helpers
 ```
 
 Editor nodes: `voiceNote` (inline record + playback), `image` (`AttachmentImage` with `attachmentPath`).
+Editor paste/drop: `imagePasteDrop.ts` (priority above markdown paste).
 
 Dialogs: `AttachmentDeleteDialog` confirms block + file removal.

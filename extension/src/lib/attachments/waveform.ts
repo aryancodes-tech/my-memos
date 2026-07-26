@@ -60,7 +60,7 @@ function extractPeaks(audioBuffer: AudioBuffer, barCount: number): number[] {
 }
 
 /** Normalizes raw peaks to 0-1 with a visible minimum floor. */
-export function normalizePeaks(peaks: number[], max: number): number[] {
+function normalizePeaks(peaks: number[], max: number): number[] {
   if (max <= 0) {
     return peaks.map(() => VOICE_NOTE_WAVEFORM_MIN_BAR);
   }

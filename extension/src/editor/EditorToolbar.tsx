@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { DEFAULT_CODE_LANGUAGE } from "@/editor/codeLowlight";
-import { preventEditorBlur, ToolbarPopover } from "@/editor/ToolbarPopover";
+import { preventEditorBlur, ToolbarPopover, ToolbarTip } from "@/editor/ToolbarPopover";
 import {
   EDITOR_BACKGROUND_COLORS,
   EDITOR_BACKGROUND_CUSTOM_DEFAULT,
@@ -49,6 +49,19 @@ import { len } from "@/lib/text";
 
 type BlockKind = "paragraph" | "h1" | "h2" | "h3" | "h4";
 type AlignKind = "left" | "center" | "right" | "justify";
+
+/** Tracks hover rect for instant portal tooltips. */
+function useInstantTip() {
+  const [tip, setTip] = useState<{ label: string; rect: DOMRect } | null>(null);
+
+  const showTip = useCallback((label: string, el: HTMLElement) => {
+    setTip({ label, rect: el.getBoundingClientRect() });
+  }, []);
+
+  const hideTip = useCallback(() => setTip(null), []);
+
+  return { tip, showTip, hideTip };
+}
 
 const BLOCK_OPTIONS: { id: BlockKind; label: string }[] = [
   { id: "paragraph", label: "Text" },
@@ -112,7 +125,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 
   const openImagePicker = useCallback(() => {
     setAttachError(null);
-    void insertImageFromPicker(editor, { onError: reportAttachError });
+    insertImageFromPicker(editor, undefined, { onError: reportAttachError });
   }, [editor, reportAttachError]);
 
   const startVoiceRecording = useCallback(() => {
@@ -191,7 +204,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             <Strikethrough size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton
-            title="Inline code"
+            title="Code"
             active={editor.isActive("code")}
             onClick={() => editor.chain().focus().toggleCode().run()}
           >
@@ -212,21 +225,21 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 
         <ToolbarGroup>
           <ToolbarButton
-            title="Bulleted list"
+            title="Bullets"
             active={editor.isActive("bulletList")}
             onClick={() => editor.chain().focus().toggleBulletList().run()}
           >
             <List size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton
-            title="Numbered list"
+            title="Numbers"
             active={editor.isActive("orderedList")}
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
           >
             <ListOrdered size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton
-            title="To-do list"
+            title="To-do"
             active={editor.isActive("taskList")}
             onClick={() => editor.chain().focus().toggleTaskList().run()}
           >
@@ -238,14 +251,22 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 
         <AlignSelect
           value={activeAlign}
-          onChange={(align) => editor.chain().focus().setTextAlign(align).run()}
+          imageSelected={editor.isActive("image")}
+          onChange={(align) => {
+            if (editor.isActive("image")) {
+              const imageAlign = align === "justify" ? "center" : align;
+              editor.chain().focus().updateAttributes("image", { align: imageAlign }).run();
+              return;
+            }
+            editor.chain().focus().setTextAlign(align).run();
+          }}
         />
 
         <ToolbarDivider />
 
         <ToolbarGroup>
           <ColorMenu
-            title="Text color"
+            title="Color"
             icon={<Palette size={14} strokeWidth={1.75} />}
             colors={EDITOR_TEXT_COLORS}
             activeColor={textColor}
@@ -257,7 +278,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             }}
           />
           <ColorMenu
-            title="Highlight color"
+            title="Highlight"
             icon={<Highlighter size={14} strokeWidth={1.75} />}
             colors={EDITOR_HIGHLIGHT_COLORS}
             activeColor={highlightColor}
@@ -270,7 +291,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             }}
           />
           <ColorMenu
-            title="Background color"
+            title="Fill"
             icon={<PaintBucket size={14} strokeWidth={1.75} />}
             colors={EDITOR_BACKGROUND_COLORS}
             activeColor={backgroundColor}
@@ -303,13 +324,13 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           <ToolbarButton title="Link" active={editor.isActive("link")} onClick={openLinkDialog}>
             <Link2 size={14} strokeWidth={1.75} />
           </ToolbarButton>
-          <ToolbarButton title="Insert image" onClick={openImagePicker}>
+          <ToolbarButton title="Image" onClick={openImagePicker}>
             <ImageIcon size={14} strokeWidth={1.75} />
           </ToolbarButton>
-          <ToolbarButton title="Voice note" onClick={startVoiceRecording}>
+          <ToolbarButton title="Voice" onClick={startVoiceRecording}>
             <Mic size={14} strokeWidth={1.75} />
           </ToolbarButton>
-          <ToolbarButton title="Attach audio file" onClick={attachAudioFile}>
+          <ToolbarButton title="Audio" onClick={attachAudioFile}>
             <Paperclip size={14} strokeWidth={1.75} />
           </ToolbarButton>
         </ToolbarGroup>
@@ -321,28 +342,51 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
 function AlignSelect({
   value,
   onChange,
+  imageSelected = false,
 }: {
   value: AlignKind;
   onChange: (align: AlignKind) => void;
+  /** When an image block is selected, justify is hidden (images use left/center/right). */
+  imageSelected?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
-  const active = ALIGN_OPTIONS.find((option) => option.id === value) ?? ALIGN_OPTIONS[0];
+  const { tip, showTip, hideTip } = useInstantTip();
+  const options = imageSelected
+    ? ALIGN_OPTIONS.filter((option) => option.id !== "justify")
+    : ALIGN_OPTIONS;
+  const active = options.find((option) => option.id === value) ?? options[0];
 
   return (
     <div className="ko-toolbar-block-select" ref={anchorRef}>
       <button
         type="button"
         className="ko-toolbar-block-trigger"
-        title="Text alignment"
+        aria-label={imageSelected ? "Image alignment" : "Text alignment"}
         onMouseDown={preventEditorBlur}
-        onClick={() => setOpen((current) => !current)}
+        onMouseEnter={(event) => {
+          if (!open) showTip("Align", event.currentTarget);
+        }}
+        onMouseLeave={hideTip}
+        onFocus={(event) => {
+          if (!open) showTip("Align", event.currentTarget);
+        }}
+        onBlur={hideTip}
+        onClick={() => {
+          hideTip();
+          setOpen((current) => !current);
+        }}
       >
         {active.icon}
         <ChevronDown size={12} strokeWidth={1.75} />
       </button>
+      <ToolbarTip
+        label={tip?.label ?? ""}
+        visible={tip !== null && !open}
+        anchorRect={tip?.rect ?? null}
+      />
       <ToolbarPopover open={open} onClose={() => setOpen(false)} anchorRef={anchorRef}>
-        {ALIGN_OPTIONS.map((option) => (
+        {options.map((option) => (
           <button
             key={option.id}
             type="button"
@@ -494,6 +538,7 @@ function BlockTypeSelect({
 }) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
+  const { tip, showTip, hideTip } = useInstantTip();
   const label = BLOCK_OPTIONS.find((option) => option.id === value)?.label ?? "Text";
 
   return (
@@ -501,14 +546,30 @@ function BlockTypeSelect({
       <button
         type="button"
         className="ko-toolbar-block-trigger"
-        title="Block type"
+        aria-label="Block type"
         onMouseDown={preventEditorBlur}
-        onClick={() => setOpen((current) => !current)}
+        onMouseEnter={(event) => {
+          if (!open) showTip("Style", event.currentTarget);
+        }}
+        onMouseLeave={hideTip}
+        onFocus={(event) => {
+          if (!open) showTip("Style", event.currentTarget);
+        }}
+        onBlur={hideTip}
+        onClick={() => {
+          hideTip();
+          setOpen((current) => !current);
+        }}
       >
         <Type size={13} strokeWidth={1.75} />
         <span>{label}</span>
         <ChevronDown size={12} strokeWidth={1.75} />
       </button>
+      <ToolbarTip
+        label={tip?.label ?? ""}
+        visible={tip !== null && !open}
+        anchorRect={tip?.rect ?? null}
+      />
       <ToolbarPopover open={open} onClose={() => setOpen(false)} anchorRef={anchorRef}>
         {BLOCK_OPTIONS.map((option) => (
           <button
@@ -549,17 +610,33 @@ function ToolbarButton({
   onClick: () => void;
   children: ReactNode;
 }) {
+  const { tip, showTip, hideTip } = useInstantTip();
+
   return (
-    <button
-      type="button"
-      className={`ko-toolbar-btn ${active ? "is-active" : ""}`}
-      title={title}
-      disabled={disabled}
-      onMouseDown={preventEditorBlur}
-      onClick={onClick}
-    >
-      {children}
-    </button>
+    <>
+      <button
+        type="button"
+        className={`ko-toolbar-btn ${active ? "is-active" : ""}`}
+        aria-label={title}
+        disabled={disabled}
+        onMouseDown={preventEditorBlur}
+        onMouseEnter={(event) => {
+          if (!disabled) showTip(title, event.currentTarget);
+        }}
+        onMouseLeave={hideTip}
+        onFocus={(event) => {
+          if (!disabled) showTip(title, event.currentTarget);
+        }}
+        onBlur={hideTip}
+        onClick={() => {
+          hideTip();
+          onClick();
+        }}
+      >
+        {children}
+      </button>
+      <ToolbarTip label={tip?.label ?? ""} visible={tip !== null} anchorRect={tip?.rect ?? null} />
+    </>
   );
 }
 
@@ -572,6 +649,11 @@ function getActiveBlock(editor: Editor): BlockKind {
 }
 
 function getActiveAlign(editor: Editor): AlignKind {
+  if (editor.isActive("image")) {
+    const align = editor.getAttributes("image").align as string | undefined;
+    if (align === "center" || align === "right" || align === "left") return align;
+    return "center";
+  }
   if (editor.isActive({ textAlign: "center" })) return "center";
   if (editor.isActive({ textAlign: "right" })) return "right";
   if (editor.isActive({ textAlign: "justify" })) return "justify";

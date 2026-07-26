@@ -1,6 +1,8 @@
 import Image from "@tiptap/extension-image";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import AttachmentImageNodeView from "@/editor/AttachmentImageNodeView";
+import { IMAGE_ALIGN_DEFAULT } from "@/lib/constants";
+import { len } from "@/lib/text";
 
 /**
  * Image block that supports lazy-loaded filesystem attachments via `attachmentPath`,
@@ -27,6 +29,22 @@ export const AttachmentImage = Image.extend({
         renderHTML: (attributes) =>
           attributes.attachmentSize
             ? { "data-attachment-size": String(attributes.attachmentSize) }
+            : {},
+      },
+      caption: {
+        default: "",
+        parseHTML: (element) => element.getAttribute("data-caption") ?? "",
+        renderHTML: (attributes) =>
+          len(String(attributes.caption ?? "")) > 0
+            ? { "data-caption": String(attributes.caption) }
+            : {},
+      },
+      align: {
+        default: IMAGE_ALIGN_DEFAULT,
+        parseHTML: (element) => element.getAttribute("data-align") ?? IMAGE_ALIGN_DEFAULT,
+        renderHTML: (attributes) =>
+          attributes.align && attributes.align !== IMAGE_ALIGN_DEFAULT
+            ? { "data-align": String(attributes.align) }
             : {},
       },
     };

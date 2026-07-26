@@ -76,6 +76,36 @@ export function ToolbarPopover({
   );
 }
 
+/**
+ * Instant tooltip rendered in a portal so it never expands the toolbar scroll area
+ * (overflow-x:auto ancestors otherwise grow vertical scrollbars around absolute tips).
+ */
+export function ToolbarTip({
+  label,
+  visible,
+  anchorRect,
+}: {
+  label: string;
+  visible: boolean;
+  anchorRect: DOMRect | null;
+}) {
+  if (!visible || !anchorRect || label.length === 0) return null;
+
+  return createPortal(
+    <div
+      className="ko-toolbar-tip-portal"
+      role="tooltip"
+      style={{
+        top: anchorRect.bottom + 6,
+        left: anchorRect.left + anchorRect.width / 2,
+      }}
+    >
+      {label}
+    </div>,
+    document.body,
+  );
+}
+
 /** Prevents the editor from losing focus when clicking toolbar controls. */
 export function preventEditorBlur(event: React.MouseEvent) {
   event.preventDefault();

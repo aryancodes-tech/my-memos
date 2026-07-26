@@ -1,4 +1,4 @@
-import type { ChainedCommands, Editor } from "@tiptap/react";
+import type { ChainedCommands } from "@tiptap/react";
 import { NodeSelection, TextSelection } from "@tiptap/pm/state";
 
 /**
@@ -21,9 +21,4 @@ export function appendAfterSelectedNode(chain: ChainedCommands): ChainedCommands
     }
     return true;
   });
-}
-
-/** True when the current selection is a whole-node (atom) selection. */
-export function isNodeSelection(editor: Editor): boolean {
-  return editor.state.selection instanceof NodeSelection;
 }

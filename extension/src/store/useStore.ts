@@ -6,6 +6,7 @@ import type { Page, PageKind, CustomTheme, CustomThemeColors, ThemeName } from "
 import {
   COLLAPSED_DIRS_SETTING,
   CUSTOM_THEMES_SETTING,
+  DEFAULT_FOLDER_TITLE,
   DEFAULT_THEME,
   RECENT_PAGE_LIMIT,
   SETTINGS_KEYS,
@@ -364,7 +365,7 @@ export const useStore = create<State>((set, get) => ({
     const now = Date.now();
     const directory: Page = {
       id: nanoid(),
-      title: "Untitled folder",
+      title: DEFAULT_FOLDER_TITLE,
       kind: "directory",
       parent_id,
       section: WORKSPACE_SECTION,

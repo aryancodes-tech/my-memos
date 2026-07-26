@@ -1,8 +1,8 @@
 import { openDB, type IDBPDatabase } from "idb";
-import { ATTACHMENT_ROOT_HANDLE_KEY, DB_NAME } from "@/lib/constants";
+import { DB_NAME } from "@/lib/constants";
 import { len } from "@/lib/text";
 import { decodeDoc, encodeDoc } from "./codec";
-import type { BlockDoc, ImageBlob, Page } from "./types";
+import type { BlockDoc, Page } from "./types";
 
 /**
  * MyMemos storage layer.
@@ -13,6 +13,7 @@ import type { BlockDoc, ImageBlob, Page } from "./types";
  *  - Only source data is stored. Rendered HTML / markdown are never persisted.
  *  - Documents are compact JSON blobs of Tiptap-compatible block structures.
  *  - Schema versioned via DB_VERSION; future fields can be added non-destructively.
+ *  - Legacy `images` / `fs_handles` stores remain for existing DBs; new code uses OPFS.
  */
 
 const DB_VERSION = 2;
@@ -29,6 +30,7 @@ function db() {
           s.createIndex("parent_id", "parent_id");
           s.createIndex("favorite", "favorite");
         }
+        // Legacy stores kept for schema compatibility (no longer written).
         if (!d.objectStoreNames.contains("images")) {
           d.createObjectStore("images", { keyPath: "id" });
         }
@@ -77,43 +79,6 @@ export async function putPage(page: Page): Promise<void> {
 export async function deletePage(id: string): Promise<void> {
   const d = await db();
   await d.delete("pages", id);
-}
-
-// --- Images -----------------------------------------------------------------
-
-export async function putImage(img: ImageBlob): Promise<void> {
-  const d = await db();
-  await d.put("images", img);
-}
-export async function getImage(id: string): Promise<ImageBlob | undefined> {
-  const d = await db();
-  return (await d.get("images", id)) as ImageBlob | undefined;
-}
-
-// --- Attachment root handle (File System Access API) ------------------------
-
-interface StoredFsHandle {
-  id: string;
-  handle: FileSystemDirectoryHandle;
-}
-
-/** Persists the user-selected attachment root directory handle. */
-export async function putAttachmentRootHandle(handle: FileSystemDirectoryHandle): Promise<void> {
-  const d = await db();
-  await d.put("fs_handles", { id: ATTACHMENT_ROOT_HANDLE_KEY, handle } satisfies StoredFsHandle);
-}
-
-/** Returns the persisted attachment root handle, if any. */
-export async function getAttachmentRootHandle(): Promise<FileSystemDirectoryHandle | undefined> {
-  const d = await db();
-  const row = (await d.get("fs_handles", ATTACHMENT_ROOT_HANDLE_KEY)) as StoredFsHandle | undefined;
-  return row?.handle;
-}
-
-/** Clears the persisted attachment root handle (does not delete files on disk). */
-export async function clearAttachmentRootHandle(): Promise<void> {
-  const d = await db();
-  await d.delete("fs_handles", ATTACHMENT_ROOT_HANDLE_KEY);
 }
 
 // --- Settings (chrome.storage.local with localStorage fallback) -------------
