@@ -17,11 +17,20 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   deleteAttachment,
-  getAttachmentObjectUrl,
   saveImageAttachment,
 } from "@/lib/attachments/attachmentManager";
 import { splitAttachmentPath } from "@/lib/attachments/fileName";
-import { IMAGE_ALIGN_DEFAULT, IMAGE_ALIGNMENTS, IMAGE_CAPTION_PLACEHOLDER, IMAGE_ALIGN_GROUP_ARIA, IMAGE_REMOVE_LABEL, IMAGE_UNAVAILABLE_MESSAGE } from "@/lib/constants";
+import {
+  IMAGE_ALIGN_DEFAULT,
+  IMAGE_ALIGNMENTS,
+  IMAGE_CAPTION_PLACEHOLDER,
+  IMAGE_ALIGN_GROUP_ARIA,
+  IMAGE_REMOVE_LABEL,
+} from "@/lib/constants";
+import {
+  useAttachmentImageChrome,
+  useAttachmentImageSource,
+} from "@/editor/hooks/useAttachmentImage";
 import { useStore } from "@/store/useStore";
 import { len } from "@/lib/text";
 
@@ -46,16 +55,11 @@ export default function AttachmentImageNodeView({
   const align = normalizeAlign(node.attrs.align);
 
   const requestAttachmentDelete = useStore((state) => state.requestAttachmentDelete);
+  const { src, loading, error } = useAttachmentImageSource(attachmentPath, legacySrc);
+  const { lightboxOpen, setLightboxOpen, menuOpen, setMenuOpen, closeMenuOnOutside } =
+    useAttachmentImageChrome();
 
-  const [src, setSrc] = useState<string | null>(len(legacySrc ?? "") > 0 ? legacySrc : null);
-  const [loading, setLoading] = useState(
-    len(attachmentPath ?? "") > 0 && len(legacySrc ?? "") === 0,
-  );
-  const [error, setError] = useState<string | null>(null);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [captionDraft, setCaptionDraft] = useState(caption);
-  const [menuOpen, setMenuOpen] = useState(false);
-
   const menuRef = useRef<HTMLDivElement>(null);
   const moreBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -63,58 +67,10 @@ export default function AttachmentImageNodeView({
     setCaptionDraft(caption);
   }, [caption]);
 
-  useEffect(() => {
-    if (len(attachmentPath ?? "") === 0) return;
-
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-
-    void getAttachmentObjectUrl(attachmentPath!)
-      .then((url) => {
-        if (!cancelled) {
-          setSrc(url);
-          setLoading(false);
-        }
-      })
-      .catch((err: unknown) => {
-        if (cancelled) return;
-        setLoading(false);
-        setError(IMAGE_UNAVAILABLE_MESSAGE);
-        console.warn("[MyMemos] Failed to load attachment image:", attachmentPath, err);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [attachmentPath]);
-
-  useEffect(() => {
-    if (!lightboxOpen) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setLightboxOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [lightboxOpen]);
-
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onPointerDown = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (menuRef.current?.contains(target) || moreBtnRef.current?.contains(target)) return;
-      setMenuOpen(false);
-    };
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
-    };
-    window.addEventListener("mousedown", onPointerDown);
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("mousedown", onPointerDown);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [menuOpen]);
+  useEffect(
+    () => closeMenuOnOutside(menuRef.current, moreBtnRef.current),
+    [closeMenuOnOutside, menuOpen],
+  );
 
   const commitCaption = useCallback(() => {
     const next = captionDraft.trim();
@@ -136,16 +92,8 @@ export default function AttachmentImageNodeView({
     }
     requestAttachmentDelete({
       attachmentPath: attachmentPath!,
-      onConfirm: async () => {
-        try {
-          await deleteAttachment(attachmentPath!);
-        } catch (err) {
-          console.warn("[MyMemos] Failed to delete image file:", attachmentPath, err);
-        }
-        deleteNode();
-      },
     });
-  }, [attachmentPath, deleteNode, requestAttachmentDelete]);
+  }, [attachmentPath, deleteNode, requestAttachmentDelete, setMenuOpen]);
 
   const handleDownload = useCallback(() => {
     if (len(src ?? "") === 0) return;
@@ -167,7 +115,7 @@ export default function AttachmentImageNodeView({
     } catch (err) {
       console.warn("[MyMemos] Failed to copy image:", err);
     }
-  }, [src]);
+  }, [setMenuOpen, src]);
 
   const handleReplace = useCallback(() => {
     setMenuOpen(false);
@@ -196,7 +144,7 @@ export default function AttachmentImageNodeView({
       })();
     };
     input.click();
-  }, [attachmentPath, updateAttributes]);
+  }, [attachmentPath, setMenuOpen, updateAttributes]);
 
   const stop = (event: React.SyntheticEvent) => {
     event.stopPropagation();
@@ -251,7 +199,11 @@ export default function AttachmentImageNodeView({
             <img src={src} alt={alt} className="ko-attachment-image" draggable={false} />
 
             <div className="ko-attachment-toolbar" onClick={stop} onMouseDown={stop}>
-              <div className="ko-attachment-tool-group" role="group" aria-label={IMAGE_ALIGN_GROUP_ARIA}>
+              <div
+                className="ko-attachment-tool-group"
+                role="group"
+                aria-label={IMAGE_ALIGN_GROUP_ARIA}
+              >
                 <button
                   type="button"
                   className={`ko-attachment-tool-btn ${align === "left" ? "is-active" : ""}`}

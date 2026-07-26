@@ -30,7 +30,7 @@ Summarize before coding:
 - **Report results** - pass/fail with relevant output
 - UI changes → `npm run dev` or `npm run dev:web` when feasible
 - Logic changes → `npm run test` for affected modules
-- Landing SEO → `npm run test -- src/lib/seo.test.ts` + `npm run generate:seo` + curl `/llms.txt`
+- Landing SEO → `npm run test -- tests/landing/lib/seo.test.ts` + `npm run generate:seo` + curl `/llms.txt`
 - Pre-PR → `npm run ci`
 
 ## Code quality bar

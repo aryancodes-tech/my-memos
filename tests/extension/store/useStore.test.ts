@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isWorkspaceRoot, selectWorkspaceChildren, selectWorkspaceRoots } from "./useStore";
+import { isWorkspaceRoot, selectWorkspaceChildren, selectWorkspaceRoots } from "@/store/useStore";
 import type { Page } from "@/storage/types";
 
 function page(overrides: Partial<Page> & Pick<Page, "id">): Page {

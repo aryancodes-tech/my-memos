@@ -2,8 +2,8 @@ import { WORKSPACE_SECTION } from "@/lib/constants";
 import { len } from "@/lib/text";
 import type { Page } from "@/storage/types";
 
-/** Legacy sidebar section names treated as workspace pages for move validation. */
-const LEGACY_WORKSPACE_SECTIONS = new Set([
+/** Legacy sidebar section names treated as workspace pages for move validation / migration. */
+export const LEGACY_WORKSPACE_SECTIONS = new Set([
   "Favorites",
   "Recent",
   "System Design",
@@ -18,7 +18,7 @@ const LEGACY_WORKSPACE_SECTIONS = new Set([
 ]);
 
 /** Normalizes a stored section value to the current workspace section when applicable. */
-function normalizedWorkspaceSection(section: string): string {
+export function normalizeWorkspaceSection(section: string): string {
   if (LEGACY_WORKSPACE_SECTIONS.has(section) || len(section) === 0) {
     return WORKSPACE_SECTION;
   }
@@ -55,7 +55,7 @@ export function canMoveWorkspaceItem(
   }
 
   const item = pages.find((page) => page.id === pageId);
-  if (!item || item.archived || normalizedWorkspaceSection(item.section) !== WORKSPACE_SECTION) {
+  if (!item || item.archived || normalizeWorkspaceSection(item.section) !== WORKSPACE_SECTION) {
     return false;
   }
 
@@ -67,7 +67,7 @@ export function canMoveWorkspaceItem(
   if (
     !parent ||
     parent.archived ||
-    normalizedWorkspaceSection(parent.section) !== WORKSPACE_SECTION ||
+    normalizeWorkspaceSection(parent.section) !== WORKSPACE_SECTION ||
     parent.kind !== "directory"
   ) {
     return false;

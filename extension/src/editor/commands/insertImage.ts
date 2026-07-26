@@ -1,29 +1,21 @@
 import type { Editor } from "@tiptap/react";
 import { saveImageAttachment } from "@/lib/attachments/attachmentManager";
 import { AttachmentFsUnsupportedError } from "@/lib/attachments/errors";
-import { appendAfterSelectedNode } from "@/lib/attachments/insertSelection";
+import { filterImageFiles } from "@/lib/attachments/imageFiles";
 import { isAttachmentStorageSupported } from "@/lib/attachments/fileSystemManager";
-import { ATTACHMENT_FS_UNSUPPORTED_MESSAGE, IMAGE_INSERT_PARTIAL_FAILURE_MESSAGE } from "@/lib/constants";
+import {
+  ATTACHMENT_FS_UNSUPPORTED_MESSAGE,
+  IMAGE_INSERT_PARTIAL_FAILURE_MESSAGE,
+} from "@/lib/constants";
 import type { SlashRange } from "@/editor/slashBlock";
+import { appendAfterSelectedNode } from "@/editor/commands/insertSelection";
 import { len } from "@/lib/text";
 
 export interface InsertImageCallbacks {
   onError?: (message: string) => void;
 }
 
-/** True when a File/Blob looks like an image (MIME or common extension). */
-export function isImageFile(file: File | Blob): boolean {
-  if (len(file.type) > 0 && file.type.startsWith("image/")) return true;
-  if (file instanceof File && len(file.name) > 0) {
-    return /\.(png|jpe?g|gif|webp|svg|bmp|heic|heif|avif)$/i.test(file.name);
-  }
-  return false;
-}
-
-/** Filters a file list down to image files. */
-export function filterImageFiles(files: ArrayLike<File>): File[] {
-  return Array.from(files).filter(isImageFile);
-}
+export { filterImageFiles, isImageFile } from "@/lib/attachments/imageFiles";
 
 /** Builds TipTap image node JSON for an OPFS-backed attachment. */
 function imageNodeContent(path: string, size: number, alt: string) {

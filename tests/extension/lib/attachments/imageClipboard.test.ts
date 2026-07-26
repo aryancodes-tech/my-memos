@@ -3,7 +3,7 @@ import {
   extractImageSrcsFromHtml,
   collectImageFilesFromDataTransfer,
 } from "@/lib/attachments/imageClipboard";
-import { filterImageFiles, isImageFile } from "@/lib/attachments/insertImage";
+import { filterImageFiles, isImageFile } from "@/lib/attachments/imageFiles";
 
 describe("isImageFile / filterImageFiles", () => {
   it("accepts image MIME types", () => {

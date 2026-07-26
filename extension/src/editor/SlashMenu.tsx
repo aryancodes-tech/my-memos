@@ -26,9 +26,9 @@ import {
   applyTaskListBlock,
   type SlashRange,
 } from "@/editor/slashBlock";
-import { insertAudioFromPicker } from "@/lib/attachments/insertAudioFromFile";
-import { insertImageFromPicker } from "@/lib/attachments/insertImage";
-import { insertInlineVoiceRecording } from "@/lib/attachments/insertVoiceRecording";
+import { insertAudioFromPicker } from "@/editor/commands/insertAudioFromFile";
+import { insertImageFromPicker } from "@/editor/commands/insertImage";
+import { insertInlineVoiceRecording } from "@/editor/commands/insertVoiceRecording";
 
 interface SlashCommand {
   id: string;

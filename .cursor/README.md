@@ -23,7 +23,7 @@ Notable skills: `landing-seo` (meta, JSON-LD, `llms.txt`, FAQ schema), `attachme
 | `storage-invariants.mdc` | `extension/src/storage/**` | |
 | `editor-markdown.mdc` | `extension/src/editor/**` | |
 | `landing-site.mdc` | `src/**` | |
-| `testing-ci.mdc` | Tests, CI, lint config | |
+| `testing-ci.mdc` | `tests/**`, CI, lint config | |
 
 ## For human contributors
 

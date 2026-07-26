@@ -108,13 +108,16 @@ Human contributors benefit from the same docs - especially `AGENTS.md` §3 (stor
 
 ## Testing
 
-Tests live next to the code they cover (`*.test.ts`). Start with pure functions in:
+Tests live under `tests/` and **mirror** source paths (see [`tests/README.md`](tests/README.md)):
 
-- `extension/src/storage/codec.ts` - document compression round-trip
-- `extension/src/lib/text.ts` - plain-text extraction
-- `extension/src/lib/themes.ts` - hex normalization and theme helpers
+| Source | Test |
+| ------ | ---- |
+| `extension/src/storage/codec.ts` | `tests/extension/storage/codec.test.ts` |
+| `extension/src/lib/text.ts` | `tests/extension/lib/text.test.ts` |
+| `extension/src/lib/themes.ts` | `tests/extension/lib/themes.test.ts` |
+| `src/lib/seo.ts` | `tests/landing/lib/seo.test.ts` |
 
-Add tests for new logic, especially storage, state management, and parsing.
+Add tests for new logic at the mirrored path, especially storage, state management, and parsing.
 
 ### Landing SEO
 
@@ -122,7 +125,7 @@ FAQ copy and AI crawler content live in `src/lib/ai-content.json`. SEO helpers a
 
 ```bash
 npm run generate:seo
-npm run test -- src/lib/seo.test.ts
+npm run test -- tests/landing/lib/seo.test.ts
 ```
 
 Set `VITE_SITE_URL` on your hosting provider (e.g. `https://www.mymemos.in`) so canonical URLs are correct in production. See README § SEO & AI discoverability for full details.

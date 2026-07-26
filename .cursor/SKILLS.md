@@ -97,7 +97,7 @@ npm run test         # if store/tree logic touched
 **Verify:**
 
 ```bash
-npm run test -- extension/src/lib/attachments/
+npm run test -- tests/extension/lib/attachments/
 npm run dev
 # Record inline, play with speed cycle, edit label, delete unavailable note, delete page with attachments
 # Image: slash Image, drop PNG / screenshot thumbnail, paste screenshot, paste from webpage, zoom, delete button, Backspace
@@ -124,7 +124,7 @@ npm run dev
 **Verify:**
 
 ```bash
-npm run test -- extension/src/storage/
+npm run test -- tests/extension/storage/
 ```
 
 ---
@@ -137,7 +137,7 @@ npm run test -- extension/src/storage/
 
 - `.cursor/rules/editor-markdown.mdc`
 - `extension/src/editor/markdownPaste.ts`
-- `extension/src/editor/markdownPaste.test.ts`
+- `tests/extension/editor/markdownPaste.test.ts`
 
 **Patterns:**
 
@@ -148,7 +148,7 @@ npm run test -- extension/src/storage/
 **Verify:**
 
 ```bash
-npm run test -- extension/src/editor/markdownPaste.test.ts
+npm run test -- tests/extension/editor/markdownPaste.test.ts
 # Manual: paste GFM samples, task lists, tables
 ```
 
@@ -161,7 +161,7 @@ npm run test -- extension/src/editor/markdownPaste.test.ts
 **Read:**
 
 - `extension/src/lib/workspace-tree.ts`
-- `extension/src/store/moveWorkspaceItem.test.ts`
+- `tests/extension/store/moveWorkspaceItem.test.ts`
 - `extension/src/components/Sidebar.tsx`
 
 **Patterns:**
@@ -173,7 +173,7 @@ npm run test -- extension/src/editor/markdownPaste.test.ts
 **Verify:**
 
 ```bash
-npm run test -- extension/src/lib/workspace-tree.test.ts extension/src/store/moveWorkspaceItem.test.ts
+npm run test -- tests/extension/lib/workspace-tree.test.ts tests/extension/store/moveWorkspaceItem.test.ts
 ```
 
 ---
@@ -229,7 +229,7 @@ npm run dev:web
 **Verify:**
 
 ```bash
-npm run test -- src/lib/seo.test.ts
+npm run test -- tests/landing/lib/seo.test.ts
 npm run generate:seo
 npm run dev:web
 curl -s http://localhost:8080/robots.txt

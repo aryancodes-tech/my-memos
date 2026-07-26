@@ -1,0 +1,11 @@
+{
+  "extends": "../../extension/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["../../extension/src/*"],
+      "@shared/*": ["../../shared/*"]
+    },
+    "types": ["chrome", "vite/client"]
+  },
+  "include": ["./**/*.ts", "../../extension/src/**/*.ts", "../../shared/**/*.ts"]
+}

@@ -579,6 +579,10 @@ export const AUDIO_DURATION_READ_ERROR = "Could not read audio duration.";
 export const IMAGE_INSERT_PARTIAL_FAILURE_MESSAGE =
   "Could not save one or more images. Please try again.";
 
+/** Error when attaching an audio file from the picker fails. */
+export const AUDIO_ATTACH_FAILURE_MESSAGE =
+  "Could not attach the audio file. Please try again.";
+
 /** Shown when an attachment image file cannot be loaded from OPFS. */
 export const IMAGE_UNAVAILABLE_MESSAGE = "Image unavailable.";
 

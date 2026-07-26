@@ -1,6 +1,6 @@
 import type { Editor } from "@tiptap/react";
 import type { SlashRange } from "@/editor/slashBlock";
-import { appendAfterSelectedNode } from "@/lib/attachments/insertSelection";
+import { appendAfterSelectedNode } from "@/editor/commands/insertSelection";
 import { isAttachmentStorageSupported } from "@/lib/attachments/fileSystemManager";
 import { ATTACHMENT_FS_UNSUPPORTED_MESSAGE } from "@/lib/constants";
 

@@ -26,7 +26,6 @@ import {
   SIDEBAR_RECENT_VISIBLE_LIMIT,
   SIDEBAR_REMOVE_FROM_FAVORITES_LABEL,
   SIDEBAR_WIDTH_PX,
-  WORKSPACE_DRAG_MIME,
   WORKSPACE_SECTION,
 } from "@/lib/constants";
 import { len } from "@/lib/text";
@@ -36,6 +35,13 @@ import {
   canMoveWorkspaceItem,
   resolveFolderDropParentId,
 } from "@/lib/workspace-tree";
+import {
+  resolveDragPageId,
+  scheduleWorkspaceDragCleanup,
+  startWorkspaceRowDrag,
+  useWorkspaceDrag,
+  type WorkspaceDragProps,
+} from "@/lib/workspace-drag";
 import { PageIcon } from "@/components/PageIcon";
 import {
   ChevronLeft,
@@ -50,43 +56,11 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
-
-/** Drag-and-drop props shared by workspace sidebar rows. */
-interface WorkspaceDragProps {
-  dragPageId: string | null;
-  dragPageIdRef: RefObject<string | null>;
-  beginWorkspaceDrag: (pageId: string) => void;
-  endWorkspaceDrag: () => void;
-  finishWorkspaceDrag: () => void;
-}
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 export default function Sidebar() {
   const { pages, sidebarCollapsed, toggleSidebar, view, setView, setSearchOpen } = useStore();
-  const [dragPageId, setDragPageId] = useState<string | null>(null);
-  const dragPageIdRef = useRef<string | null>(null);
-
-  const beginWorkspaceDrag = (pageId: string) => {
-    dragPageIdRef.current = pageId;
-    setDragPageId(pageId);
-  };
-
-  const endWorkspaceDrag = () => {
-    setDragPageId(null);
-  };
-
-  const finishWorkspaceDrag = () => {
-    dragPageIdRef.current = null;
-    setDragPageId(null);
-  };
-
-  const workspaceDrag: WorkspaceDragProps = {
-    dragPageId,
-    dragPageIdRef,
-    beginWorkspaceDrag,
-    endWorkspaceDrag,
-    finishWorkspaceDrag,
-  };
+  const workspaceDrag = useWorkspaceDrag();
 
   const favorites = useMemo(() => selectFavoritePages(pages), [pages]);
   const recent = useMemo(() => selectRecentPages(pages), [pages]);
@@ -679,66 +653,6 @@ function MenuItem({
       <span className="ko-sidebar-menu-item-label">{label}</span>
     </button>
   );
-}
-
-/** Starts a workspace row drag unless the pointer is on an interactive child. */
-function startWorkspaceRowDrag(
-  event: React.DragEvent<HTMLElement>,
-  pageId: string,
-  onBegin: (pageId: string) => void,
-) {
-  if (!shouldStartWorkspaceRowDrag(event.target)) {
-    event.preventDefault();
-    return;
-  }
-
-  event.dataTransfer.setData(WORKSPACE_DRAG_MIME, pageId);
-  event.dataTransfer.setData("text/plain", pageId);
-  event.dataTransfer.effectAllowed = "move";
-  onBegin(pageId);
-}
-
-/** Returns false when the event target is a button, menu, or other non-drag control. */
-function shouldStartWorkspaceRowDrag(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) {
-    return true;
-  }
-
-  return target.closest(".ko-sidebar-row-actions, .ko-sidebar-menu, .ko-sidebar-chevron, input") === null;
-}
-
-/** Clears the drag ref after drop runs; no-op when drop already finished the drag. */
-function scheduleWorkspaceDragCleanup(
-  finishWorkspaceDrag: () => void,
-  dragPageIdRef: RefObject<string | null>,
-) {
-  window.setTimeout(() => {
-    if (len(dragPageIdRef.current ?? "") > 0) {
-      finishWorkspaceDrag();
-    }
-  }, 0);
-}
-
-/** Prefers the live drag ref/state; falls back to dataTransfer on drop. */
-function resolveDragPageId(
-  event: React.DragEvent,
-  dragPageId: string | null,
-  dragPageIdRef: RefObject<string | null>,
-): string {
-  if (len(dragPageIdRef.current ?? "") > 0) {
-    return dragPageIdRef.current!;
-  }
-
-  if (len(dragPageId ?? "") > 0) {
-    return dragPageId!;
-  }
-
-  const fromMime = event.dataTransfer.getData(WORKSPACE_DRAG_MIME);
-  if (len(fromMime) > 0) {
-    return fromMime;
-  }
-
-  return event.dataTransfer.getData("text/plain");
 }
 
 function useClickOutside(ref: React.RefObject<HTMLElement | null>, onClose: () => void) {

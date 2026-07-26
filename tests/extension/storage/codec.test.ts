@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { decodeDoc, encodeDoc, EMPTY_BLOCK_DOC } from "./codec";
-import type { BlockDoc } from "./types";
+import { decodeDoc, encodeDoc, EMPTY_BLOCK_DOC } from "@/storage/codec";
+import type { BlockDoc } from "@/storage/types";
 
 const sampleDoc: BlockDoc = {
   type: "doc",

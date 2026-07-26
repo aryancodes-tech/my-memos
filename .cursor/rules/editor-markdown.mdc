@@ -29,7 +29,7 @@ Key modules:
 - `markdownPaste.ts` - detection + conversion
 - `taskListMarkdown.ts` - `- [x]` input rules
 - `HighlightWithMarkdown.ts` - highlight syntax
-- `markdownPaste.test.ts` - regression tests
+- `tests/extension/editor/markdownPaste.test.ts` - regression tests
 
 ### Task list vs bullet list
 
@@ -59,7 +59,7 @@ Headings, GFM task lists, tables, links, images, highlights, code fences.
 1. Check if Tiptap extension already exists in `package.json`
 2. Register in editor setup file alongside peers
 3. Add markdown paste handling if feature has text syntax
-4. Add test case in `markdownPaste.test.ts` for paste scenarios
+4. Add test case in `tests/extension/editor/markdownPaste.test.ts` for paste scenarios
 
 ## Manual verification
 

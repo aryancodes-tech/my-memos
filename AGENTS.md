@@ -91,9 +91,9 @@ Ask explicitly:
 | Change type | Minimum verification |
 |-------------|---------------------|
 | Extension UI/logic | `npm run test` + manual new-tab check |
-| Storage/schema | `extension/src/storage/*.test.ts` + migration review |
+| Storage/schema | `tests/extension/storage/` + migration review |
 | Landing | `npm run dev:web` + visual check at `/` |
-| Landing SEO | `npm run test -- src/lib/seo.test.ts` + `curl` `/robots.txt`, `/sitemap.xml`, `/llms.txt` |
+| Landing SEO | `npm run test -- tests/landing/lib/seo.test.ts` + `curl` `/robots.txt`, `/sitemap.xml`, `/llms.txt` |
 | Build/scripts | `npm run ci` |
 
 **CI contract:** `npm run ci` must pass before merge. It mirrors `.github/workflows/ci.yml` exactly.
@@ -185,17 +185,25 @@ Branch settings I/O only - page data path is shared (IndexedDB). Web and extensi
 
 ### 3.3 State management
 
-Single Zustand store: `extension/src/store/useStore.ts`
+Single Zustand facade: `extension/src/store/useStore.ts` (composes slices under `store/slices/`).
 
 | Concern | Owner |
 |---------|-------|
-| Pages, CRUD, workspace tree | Store actions |
-| View routing (`dashboard` \| `page`) | `view` + `lastView` setting |
-| Theme | Store + `data-theme` on `<html>` |
-| Dialogs, sidebar UI | Store flags |
+| Pages, CRUD, workspace tree | `slices/pagesWorkspace.ts` |
+| View routing (`dashboard` \| `page`) | pages slice + `lastView` setting |
+| Theme | `slices/themeUi.ts` + `data-theme` on `<html>` |
+| Dialogs (serializable payloads) | `slices/dialogs.ts` |
+| TipTap bridge (`pageEditor`, links, attachment delete) | `slices/editorBridge.ts` |
 | Editor debounced saves | `PageView` + `EDITOR_SAVE_DEBOUNCE_MS` |
 
-Prefer **selectors** (`selectSearchablePages`, etc.) for derived data. Do not duplicate tree logic in components.
+Prefer **selectors** (`selectSearchablePages`, etc.) for derived data. Do not duplicate tree logic in components. Do not store `onConfirm` closures in dialog state.
+
+### 3.3.1 Attachments vs editor layering
+
+- **`lib/attachments/`** — OPFS I/O, sanitize, recorder, waveform (no TipTap imports).
+- **`editor/commands/`** — TipTap insert helpers (`insertImage`, `insertAudioFromFile`, `insertVoiceRecording`, `insertSelection`).
+- **`editor/hooks/`** — fat node-view logic (voice record/playback, image chrome).
+- **`lib/workspace-drag.ts`** — sidebar workspace DnD session helpers.
 
 ### 3.4 Workspace model
 
@@ -217,7 +225,7 @@ Paste / typing / image drop → Tiptap input rules → ProseMirror doc
          (attachment binaries → OPFS; paths in block attrs)
 ```
 
-Markdown paste: `extension/src/editor/markdownPaste.ts` + tests in `markdownPaste.test.ts`. Task lists (`- [x]`) must not be swallowed by bullet-list rules. Image paste/drop: `imagePasteDrop.ts` (priority above markdown paste).
+Markdown paste: `extension/src/editor/markdownPaste.ts` + tests in `tests/extension/editor/markdownPaste.test.ts`. Task lists (`- [x]`) must not be swallowed by bullet-list rules. Image paste/drop: `imagePasteDrop.ts` (priority above markdown paste).
 
 ### 3.6 Landing SEO & AI discoverability
 
@@ -245,7 +253,7 @@ Markdown paste: `extension/src/editor/markdownPaste.ts` + tests in `markdownPast
 
 ```bash
 npm run generate:seo
-npm run test -- src/lib/seo.test.ts
+npm run test -- tests/landing/lib/seo.test.ts
 npm run dev:web
 curl -s http://localhost:8080/llms.txt | head
 ```
@@ -318,11 +326,13 @@ Editing web demo only (no landing)?
 ```
 Touches storage encode/decode, workspace move rules, markdown paste,
 text helpers, or store invariants?
-  YES → add/update co-located *.test.ts
+  YES → add/update mirrored test under tests/ (see mapping below)
   NO ↓
 Pure UI tweak with no logic change?
   → manual verification sufficient unless user requests tests
 ```
+
+**Mapping:** `extension/src/<path>/<file>.ts` → `tests/extension/<path>/<file>.test.ts`; landing `src/<path>/<file>.ts` → `tests/landing/<path>/<file>.test.ts`. See [`tests/README.md`](tests/README.md).
 
 ---
 
@@ -342,7 +352,7 @@ Pure UI tweak with no logic change?
 | Store actions | camelCase verbs |
 | DB fields | snake_case (`parent_id`, `created_at`, `doc_c`) |
 | CSS | `ko-` prefix, `--ko-*` variables |
-| Tests | `*.test.ts` beside source |
+| Tests | `tests/<surface>/…/<file>.test.ts` mirroring source path |
 
 ### 5.3 Error handling
 
@@ -425,6 +435,7 @@ Do not share React components across packages without an explicit build boundary
 | [`.cursor/rules/`](.cursor/rules/) | Scoped Cursor rules (`.mdc`) |
 | [`.cursor/rules/constants-policy.mdc`](.cursor/rules/constants-policy.mdc) | Single-source constants policy (always apply) |
 | [`shared/constants.ts`](shared/constants.ts) | Canonical product constants (landing + extension) |
+| [`tests/README.md`](tests/README.md) | Source ↔ test path mapping contract |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Human contributor guide |
 | [`extension/README.md`](extension/README.md) | Extension architecture deep-dive |
 | [`src/routes/README.md`](src/routes/README.md) | TanStack Router conventions |
@@ -450,7 +461,7 @@ npm run dev:web
 npm run generate:seo
 
 # Landing SEO unit tests
-npm run test -- src/lib/seo.test.ts
+npm run test -- tests/landing/lib/seo.test.ts
 
 # Package extension for download button
 npm run package:extension
