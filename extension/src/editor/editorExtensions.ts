@@ -18,6 +18,7 @@ import { VoiceNote } from "@/editor/voiceNote";
 import { BackgroundColor } from "@/editor/backgroundColor";
 import { HighlightWithMarkdown } from "@/editor/highlightMarkdown";
 import { ImagePasteDrop } from "@/editor/imagePasteDrop";
+import { ListBackspace } from "@/editor/listBackspace";
 import { MarkdownPaste } from "@/editor/markdownPaste";
 import { codeLowlight } from "@/editor/codeLowlight";
 
@@ -29,6 +30,7 @@ export function createEditorExtensions() {
       codeBlock: false,
       bulletList: false,
     }),
+    ListBackspace,
     MarkdownBulletList,
     CodeBlockLowlight.configure({
       lowlight: codeLowlight,
