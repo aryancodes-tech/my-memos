@@ -45,7 +45,12 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --prefix extension",
     "test": "vitest run",
     "test:watch": "vitest",
-    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build:extension && npm run build:web"
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build:extension && npm run build:web",
+    "prepare": "simple-git-hooks",
+    "pre-commit": "node scripts/pre-commit-package-extension.mjs"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npm run pre-commit"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
@@ -74,6 +79,7 @@
     "happy-dom": "^17.4.7",
     "nitro": "^3.0.260603-beta",
     "prettier": "^3.7.3",
+    "simple-git-hooks": "^2.13.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1",

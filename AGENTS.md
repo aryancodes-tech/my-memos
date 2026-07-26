@@ -48,7 +48,7 @@ Before adding imports, confirm which package you are editing. Product constants:
 | Path | Produced by |
 |------|-------------|
 | `public/demo/**` | `npm run build:app` (extension web build) |
-| `public/mymemos-extension.zip` | `npm run package:extension` |
+| `public/mymemos-extension.zip` | `npm run package:extension` (also via pre-commit when `extension/` / `shared/` change) |
 | `public/robots.txt`, `public/sitemap.xml`, `public/llms.txt` | `npm run generate:seo` (also `predev:web` / `prebuild:web`) |
 | `src/routeTree.gen.ts` | TanStack Router codegen |
 | `extension/dist/**` | `npm run dev` or `npm run build:extension` |

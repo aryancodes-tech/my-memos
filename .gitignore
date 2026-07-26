@@ -19,7 +19,8 @@ dist-ssr
 .dev-session
 coverage/
 
-# Built extension artifacts - generate via npm run package:extension
+# Built extension ZIPs are tracked (landing download). Refresh via npm run package:extension
+# or the pre-commit hook when extension/shared sources change.
 # public/mymemos-extension.zip
 # extension/mymemos-extension.zip
 

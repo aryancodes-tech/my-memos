@@ -123,7 +123,7 @@ All commands run from the **repo root** unless noted.
 | `npm run generate:seo` | Regenerate `public/robots.txt`, `sitemap.xml`, `llms.txt` |
 | `npm run dev:app` | Demo only (port 5174) |
 | `npm run build:extension` | Production extension → `extension/dist/` |
-| `npm run package:extension` | Zip extension → `public/mymemos-extension.zip` |
+| `npm run package:extension` | Zip extension → `public/mymemos-extension.zip` (also runs on pre-commit when extension sources change) |
 | `npm run build:web` | Demo build + landing production build |
 | `npm run preview` | Preview production landing build |
 | `npm run ci` | Full local CI (lint, test, build) |

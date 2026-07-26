@@ -143,10 +143,10 @@ Set `VITE_SITE_URL` on your hosting provider (e.g. `https://www.mymemos.in`) so 
 
 ## Release artifacts
 
-Extension ZIPs for the landing page are built via:
+Extension ZIPs for the landing download button live at `public/mymemos-extension.zip`.
 
 ```bash
 npm run package:extension
 ```
 
-Do not commit `public/mymemos-extension.zip` - CI and release workflows build it on demand.
+A **pre-commit hook** rebuilds and stages that ZIP when extension-related files are committed (`extension/`, `shared/`, lockfiles). Skip with `SKIP_EXTENSION_PACKAGE=1` if `npm run dev` is running or you intentionally want to commit without refreshing the artifact.
