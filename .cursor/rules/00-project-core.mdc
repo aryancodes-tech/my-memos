@@ -15,8 +15,8 @@ alwaysApply: true
 | Surface | Path | React | Constants |
 |---------|------|-------|-----------|
 | Landing | `src/` | 19 | `@/lib/constants` → `shared/constants.ts` |
-| Extension | `extension/src/` | 18 | `@/lib/constants` → `shared/constants.ts` |
-| Web demo | `extension/src/` (web build) | 18 | same as extension |
+| Extension | `extension/src/` | 19 | `@/lib/constants` → `shared/constants.ts` |
+| Web demo | `extension/src/` (web build) | 19 | same as extension |
 
 `@/` alias points to different roots per package. Check `tsconfig.json` before importing. Product constants live in `shared/constants.ts` (`@shared/*`).
 

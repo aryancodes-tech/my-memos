@@ -19,7 +19,7 @@ This document is the **source of truth** for how an AI agent should reason about
 └───────────────────────────────┬──────────────────────────────────────────┘
                                 │ `/demo/` embeds built SPA
 ┌───────────────────────────────▼──────────────────────────────────────────┐
-│ SURFACE B - Web demo (`extension/` → `public/demo/`, React 18)           │
+│ SURFACE B - Web demo (`extension/` → `public/demo/`, React 19)           │
 │   Entry: `extension/index.html`, build: `vite.web.config.ts`             │
 │   Settings: `localStorage` · Pages: IndexedDB · Attachments: OPFS        │
 │   (separate origin from extension — data does not sync)                │
@@ -397,14 +397,16 @@ Agents must inspect adjacent implementations before proposing new abstractions. 
 - For UI changes: describe what to click AND verify in dev server when possible.
 - For regressions: reproduce → hypothesize → fix → re-run failing check.
 
-### 6.3 Respect dual React versions
+### 6.3 Keep packages separate (even on the same React major)
 
-| Surface | React |
-|---------|-------|
-| Extension + demo | 18 |
-| Landing | 19 |
+Both landing and extension use **React 19**, but they remain separate apps:
 
-Do not share React components across packages without an explicit build boundary.
+| Surface | React | Styling / build |
+|---------|-------|-----------------|
+| Extension + demo | 19 | Tailwind 3, Vite 5 + CRXJS / web Vite |
+| Landing | 19 | Tailwind 4, TanStack Start / Vite 7 |
+
+Do not share React components across packages without an explicit build boundary — different CSS systems and entrypoints, not React major mismatch.
 
 ### 6.4 Security & privacy posture
 

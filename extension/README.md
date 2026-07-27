@@ -132,7 +132,7 @@ npm run dev   # record, play, rename label, delete, reload page
 
 | Layer | Choice |
 | ----- | ------ |
-| UI | React 18 |
+| UI | React 19 |
 | State | Zustand |
 | Editor | Tiptap 2 + ProseMirror |
 | Styling | Tailwind CSS 3 |
@@ -141,7 +141,7 @@ npm run dev   # record, play, rename label, delete, reload page
 | Search | FlexSearch (in-memory) |
 | Language | TypeScript 5 |
 
-The landing site (`../src/`) is a separate TanStack Start app - React 19, Tailwind 4, Vite 7.
+The landing site (`../src/`) is a separate TanStack Start app - also React 19, Tailwind 4, Vite 7.
 
 ---
 
