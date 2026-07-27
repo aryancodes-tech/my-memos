@@ -152,6 +152,6 @@ Extension ZIPs for the landing download button live at `public/mymemos-extension
 npm run package:extension
 ```
 
-A **pre-commit hook** rebuilds and stages that ZIP when extension-related files are committed (`extension/`, `shared/`, lockfiles). Skip with `SKIP_EXTENSION_PACKAGE=1` if `npm run dev` is running or you intentionally want to commit without refreshing the artifact.
+Run that when extension UI/storage changes should refresh the download artifact (not on every commit).
 
-A **pre-push hook** runs `npm run ci` (same gate as GitHub Actions) before the push proceeds. Skip with `SKIP_PRE_PUSH_CI=1` only when necessary (for example an emergency push while CI is known-green on the PR).
+A **pre-push hook** auto-fixes Prettier/ESLint formatting when possible, then runs `npm run check` (lint, format, typecheck, tests). If files were rewritten, commit them and push again. Full builds remain on `npm run ci` and GitHub Actions. Skip with `SKIP_PRE_PUSH_CI=1` only when necessary.

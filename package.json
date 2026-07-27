@@ -31,7 +31,6 @@
     "dev:web": "vite dev",
     "generate:seo": "node scripts/generate-sitemap.mjs",
     "dev:app": "npm run dev:web --prefix extension",
-    "dev:extension": "npm run dev --prefix extension",
     "build:app": "npm run build:web --prefix extension",
     "prebuild:web": "node scripts/check-node-version.mjs && node scripts/generate-sitemap.mjs",
     "build:web": "npm run build:app && vite build",
@@ -45,13 +44,12 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --prefix extension",
     "test": "vitest run",
     "test:watch": "vitest",
-    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build:extension && npm run build:web",
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm run test",
+    "ci": "npm run check && npm run build:extension && npm run build:web",
     "prepare": "simple-git-hooks",
-    "pre-commit": "node scripts/pre-commit-package-extension.mjs",
     "pre-push": "node scripts/pre-push-ci.mjs"
   },
   "simple-git-hooks": {
-    "pre-commit": "npm run pre-commit",
     "pre-push": "npm run pre-push"
   },
   "dependencies": {

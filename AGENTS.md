@@ -45,14 +45,14 @@ Before adding imports, confirm which package you are editing. Product constants:
 
 ### Generated artifacts - never hand-edit
 
-| Path                                                         | Produced by                                                                            |
-| ------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| `public/demo/**`                                             | `npm run build:app` (extension web build)                                              |
-| `public/mymemos-extension.zip`                               | `npm run package:extension` (also via pre-commit when `extension/` / `shared/` change) |
-| `public/robots.txt`, `public/sitemap.xml`, `public/llms.txt` | `npm run generate:seo` (also `predev:web` / `prebuild:web`)                            |
-| `src/routeTree.gen.ts`                                       | TanStack Router codegen                                                                |
-| `extension/dist/**`                                          | `npm run dev` or `npm run build:extension`                                             |
-| `.output/**`, `dist/**` (root)                               | `npm run build:web`                                                                    |
+| Path                                                         | Produced by                                                 |
+| ------------------------------------------------------------ | ----------------------------------------------------------- |
+| `public/demo/**`                                             | `npm run build:app` (extension web build)                   |
+| `public/mymemos-extension.zip`                               | `npm run package:extension`                                 |
+| `public/robots.txt`, `public/sitemap.xml`, `public/llms.txt` | `npm run generate:seo` (also `predev:web` / `prebuild:web`) |
+| `src/routeTree.gen.ts`                                       | TanStack Router codegen                                     |
+| `extension/dist/**`                                          | `npm run dev` or `npm run build:extension`                  |
+| `.output/**`, `dist/**` (root)                               | `npm run build:web`                                         |
 
 ---
 
@@ -96,7 +96,7 @@ Ask explicitly:
 | Landing SEO        | `npm run test -- tests/landing/lib/seo.test.ts` + `curl` `/robots.txt`, `/sitemap.xml`, `/llms.txt` |
 | Build/scripts      | `npm run ci`                                                                                        |
 
-**CI contract:** `npm run ci` must pass before merge. It mirrors `.github/workflows/ci.yml` exactly.
+**CI contract:** `npm run ci` (`check` + builds) must pass before merge. It mirrors `.github/workflows/ci.yml`.
 
 ---
 
@@ -420,7 +420,7 @@ Do not share React components across packages without an explicit build boundary
 - **Do not commit** unless the user explicitly asks.
 - **Do not force-push** `main`.
 - PRs via `gh` per user rules; include test plan.
-- Local hooks: **pre-commit** packages the extension ZIP when needed; **pre-push** runs `npm run ci`. Skip with `SKIP_EXTENSION_PACKAGE=1` / `SKIP_PRE_PUSH_CI=1` only when necessary.
+- Local hooks: **pre-push** auto-fixes format/lint when possible, then runs `npm run check`. If the tree was rewritten, commit and push again. Full builds: `npm run ci` / GitHub Actions. Skip with `SKIP_PRE_PUSH_CI=1` only when necessary. Refresh the landing download ZIP with `npm run package:extension` when shipping extension UI changes.
 
 ---
 
@@ -463,7 +463,10 @@ Do not share React components across packages without an explicit build boundary
 ## 9. Quick command reference
 
 ```bash
-# Full local CI (run before PR)
+# Fast gate (also pre-push)
+npm run check
+
+# Full local CI (run before PR) — check + builds
 npm run ci
 
 # Extension development
@@ -479,7 +482,7 @@ npm run generate:seo
 # Landing SEO unit tests
 npm run test -- tests/landing/lib/seo.test.ts
 
-# Package extension for download button
+# Package extension for download button (manual when shipping UI)
 npm run package:extension
 
 # Watch tests
