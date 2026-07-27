@@ -52,7 +52,7 @@ if (workingTreeDirty()) {
       "[MyMemos pre-push] Auto-fixed formatting/lint issues in the working tree.",
       "Commit those changes, then push again:",
       "",
-      "  git add -u && git commit -m \"chore: format\" && git push",
+      '  git add -u && git commit -m "chore: format" && git push',
       "",
     ].join("\n"),
   );
