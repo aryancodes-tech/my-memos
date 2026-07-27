@@ -19,7 +19,7 @@ Before adding or changing any user-facing string, label, error message, timeout,
 | Role | Path |
 |------|------|
 | **Source of truth** | `shared/constants.ts` |
-| Theme type helpers | `shared/theme-types.ts` |
+| Theme type helpers | `shared/themeTypes.ts` |
 | Landing re-export | `src/lib/constants.ts` → `export * from "@shared/constants"` |
 | Extension re-export | `extension/src/lib/constants.ts` → `export * from "@shared/constants"` |
 

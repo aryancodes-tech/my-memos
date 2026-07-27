@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { reportClientError } from "@/lib/client-error-reporting";
+import { reportClientError } from "@/lib/clientErrorReporting";
 
 describe("reportClientError", () => {
   afterEach(() => {

@@ -10,7 +10,7 @@
  * Do not hardcode user-facing strings or tunables in components — add them here.
  */
 
-import type { BuiltInThemeName, CustomThemeColors } from "./theme-types";
+import type { BuiltInThemeName, CustomThemeColors } from "./themeTypes";
 
 // ---------------------------------------------------------------------------
 // Product identity
@@ -565,6 +565,9 @@ export const IMAGE_COPY_LABEL = "Copy image";
 
 /** Overflow menu / button label for deleting an embedded image. */
 export const IMAGE_DELETE_LABEL = "Delete";
+
+/** Checkerboard cell size (px) behind transparent images. */
+export const IMAGE_TRANSPARENCY_CHECKER_SIZE_PX = 12;
 
 /** Hidden OPFS directory name for attachment files (images, audio). */
 export const ATTACHMENT_OPFS_ROOT_DIR = "mymemos-attachments";

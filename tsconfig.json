@@ -4,7 +4,7 @@
     "src/**/*.tsx",
     "shared/**/*.ts",
     "vite.config.ts",
-    "web-app-dev-plugin.ts",
+    "webAppDevPlugin.ts",
     "vitest.config.ts",
     "eslint.config.js"
   ],

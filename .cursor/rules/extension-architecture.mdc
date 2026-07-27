@@ -51,7 +51,7 @@ View type: `{ kind: "dashboard" }` | `{ kind: "page"; id: string }`
 
 ## Components conventions
 
-- `Sidebar.tsx` - workspace tree UI; DnD helpers live in `lib/workspace-drag.ts`
+- `Sidebar.tsx` - workspace tree UI; DnD helpers live in `lib/workspaceDrag.ts`
 - `SearchPalette.tsx` - ⌘K, FlexSearch (ephemeral index)
 - `ThemeDropdown.tsx` - built-in + custom themes
 - Dialogs - delete confirm, etc.

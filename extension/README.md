@@ -167,15 +167,15 @@ extension/
 │   └── lib/
 │       ├── constants.ts  ← re-export of ../../shared/constants.ts
 │       ├── attachments/  ← OPFS I/O, sanitize, recorder (no TipTap)
-│       ├── workspace-tree.ts
-│       └── workspace-drag.ts ← sidebar DnD helpers
+│       ├── workspaceTree.ts
+│       └── workspaceDrag.ts ← sidebar DnD helpers
 ├── vite.config.ts        ← Chrome extension build
 ├── vite.web.config.ts    ← Web demo → ../public/demo/
 └── package.json
 
 ../shared/
 ├── constants.ts          ← product constants (canonical)
-└── theme-types.ts
+└── themeTypes.ts
 ```
 
 ---

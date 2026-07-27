@@ -6,7 +6,7 @@ import {
   scheduleWorkspaceDragCleanup,
   shouldStartWorkspaceRowDrag,
   startWorkspaceRowDrag,
-} from "@/lib/workspace-drag";
+} from "@/lib/workspaceDrag";
 
 function mockDragEvent(overrides: {
   target?: EventTarget | null;

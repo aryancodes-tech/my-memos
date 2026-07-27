@@ -57,7 +57,7 @@ const aiContent = JSON.parse(
   readFileSync(resolve(process.cwd(), "src/lib/ai-content.json"), "utf8"),
 );
 
-/** @see src/lib/landing-faq-content.ts flattenFaqAnswerForSchema - keep logic aligned. */
+/** @see src/lib/landingFaqContent.ts flattenFaqAnswerForSchema - keep logic aligned. */
 function flattenFaqAnswer(item, origin) {
   if (!item.answerSegments?.length) {
     return item.answer;

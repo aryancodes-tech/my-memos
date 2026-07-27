@@ -29,8 +29,8 @@ src/lib/seo.ts                     →  tests/landing/lib/seo.test.ts
 | `lib/text.test.ts` | `len`, `extractPlainText` |
 | `lib/themes.test.ts` | hex/id helpers, tokens, swatches, DOM apply |
 | `lib/platform.test.ts` | extension vs web context detection |
-| `lib/workspace-tree.test.ts` | section normalize, move/drop validators |
-| `lib/workspace-drag.test.ts` | drag start guards, MIME precedence, cleanup |
+| `lib/workspaceTree.test.ts` | section normalize, move/drop validators |
+| `lib/workspaceDrag.test.ts` | drag start guards, MIME precedence, cleanup |
 | `lib/attachments/sanitizeBlockDoc.test.ts` | persist sanitize, path collect, orphan GC |
 | `lib/attachments/fileName.test.ts` | names, unique collision suffixes, format helpers |
 | `lib/attachments/imageClipboard.test.ts` | paste/drop files, HTML imgs, data:/http fetch |
@@ -53,10 +53,10 @@ src/lib/seo.ts                     →  tests/landing/lib/seo.test.ts
 | Test | Covers |
 | ---- | ------ |
 | `lib/seo.test.ts` | meta, links, JSON-LD, robots, sitemap, llms |
-| `lib/landing-faq-content.test.ts` | FAQ link resolve + schema flatten |
+| `lib/landingFaqContent.test.ts` | FAQ link resolve + schema flatten |
 | `lib/url.test.ts` | absolute URL joining edge cases |
-| `lib/client-error-reporting.test.ts` | optional reporter wiring |
-| `lib/error-capture.test.ts` | SSR error capture TTL / consume |
+| `lib/clientErrorReporting.test.ts` | optional reporter wiring |
+| `lib/errorCapture.test.ts` | SSR error capture TTL / consume |
 
 ## Not unit-tested here (needs browser / heavy mocks)
 

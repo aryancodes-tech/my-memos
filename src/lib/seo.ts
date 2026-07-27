@@ -12,7 +12,7 @@ import {
 import {
   flattenFaqAnswerForSchema,
   resolveLandingFaqItems,
-} from "@/lib/landing-faq-content";
+} from "@/lib/landingFaqContent";
 import { buildAbsoluteUrl } from "@/lib/url";
 
 export { buildAbsoluteUrl };
