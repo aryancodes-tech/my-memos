@@ -1251,7 +1251,9 @@ body {
   color: var(--ko-text-muted);
   text-align: left;
   cursor: pointer;
-  transition: background 0.1s ease, color 0.1s ease;
+  transition:
+    background 0.1s ease,
+    color 0.1s ease;
 }
 .ko-sidebar-show-more:hover {
   color: var(--ko-text);
@@ -1903,7 +1905,9 @@ body {
   color: var(--ko-text-muted);
   cursor: pointer;
   line-height: 0;
-  transition: background-color 0.12s ease, color 0.12s ease;
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease;
 }
 
 .ko-attachment-tool-btn:hover {
@@ -2199,7 +2203,9 @@ body {
   background: var(--ko-accent);
   color: var(--ko-bg);
   cursor: pointer;
-  transition: transform 0.12s ease, opacity 0.12s ease;
+  transition:
+    transform 0.12s ease,
+    opacity 0.12s ease;
 }
 
 .ko-voice-note-play:hover {
@@ -2231,7 +2237,10 @@ body {
   font-family: inherit;
   line-height: 1.2;
   text-overflow: ellipsis;
-  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
 }
 
 .ko-voice-note-label::placeholder {
@@ -2276,7 +2285,9 @@ body {
   background: transparent;
   color: var(--ko-text-muted);
   cursor: pointer;
-  transition: background-color 0.12s ease, color 0.12s ease;
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease;
 }
 
 .ko-voice-note-icon-btn:hover {
@@ -2304,7 +2315,9 @@ body {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
-  transition: background-color 0.12s ease, color 0.12s ease;
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease;
 }
 
 .ko-voice-note-speed-btn:hover {
@@ -2449,7 +2462,9 @@ body {
   background: var(--ko-accent);
   color: var(--ko-bg);
   cursor: pointer;
-  transition: transform 0.12s ease, opacity 0.12s ease;
+  transition:
+    transform 0.12s ease,
+    opacity 0.12s ease;
 }
 
 .ko-voice-note-send-btn:disabled {

@@ -73,7 +73,8 @@ export const LANDING_PAGE_TITLE = `${PRODUCT_NAME} - Your notes, on every new ta
 
 /**
  * Canonical site origin without a trailing slash.
- * Set `VITE_SITE_URL` at build/deploy time (e.g. `https://mymemos.app`).
+ * Set `VITE_SITE_URL` at build/deploy time (e.g. `https://www.mymemos.in`).
+ * Prefer one canonical host (usually `www` + HTTPS). Apex/HTTP should 301 there.
  * Safe when `import.meta.env` is absent (e.g. Node loading Vite config via manifest).
  */
 export const SITE_ORIGIN = (
@@ -604,8 +605,7 @@ export const IMAGE_INSERT_PARTIAL_FAILURE_MESSAGE =
   "Could not save one or more images. Please try again.";
 
 /** Error when attaching an audio file from the picker fails. */
-export const AUDIO_ATTACH_FAILURE_MESSAGE =
-  "Could not attach the audio file. Please try again.";
+export const AUDIO_ATTACH_FAILURE_MESSAGE = "Could not attach the audio file. Please try again.";
 
 /** Shown when an attachment image file cannot be loaded from OPFS. */
 export const IMAGE_UNAVAILABLE_MESSAGE = "Image unavailable.";

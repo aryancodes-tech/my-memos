@@ -23,9 +23,7 @@ describe("resolveLandingFaqItems", () => {
     const items = resolveLandingFaqItems("https://www.mymemos.in");
     expect(items.length).toBeGreaterThan(0);
 
-    const demo = items.find((item) =>
-      item.question.includes("try MyMemos before installing"),
-    );
+    const demo = items.find((item) => item.question.includes("try MyMemos before installing"));
     expect(demo?.answerSegments?.some((segment) => segment.type === "link")).toBe(true);
     const link = demo?.answerSegments?.find((segment) => segment.type === "link");
     expect(link && link.type === "link" ? link.href : "").toBe("https://www.mymemos.in/demo/");

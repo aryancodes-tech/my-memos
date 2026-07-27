@@ -56,12 +56,10 @@ function resolveView(lastView: View | undefined, pages: Page[]): View {
   return lastView;
 }
 
-export const createPagesWorkspaceSlice: StateCreator<
-  StoreState,
-  [],
-  [],
-  PagesWorkspaceSlice
-> = (set, get) => ({
+export const createPagesWorkspaceSlice: StateCreator<StoreState, [], [], PagesWorkspaceSlice> = (
+  set,
+  get,
+) => ({
   ready: false,
   pages: [],
   view: { kind: "dashboard" },

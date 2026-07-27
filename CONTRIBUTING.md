@@ -48,14 +48,14 @@ After changing extension UI code, `npm run dev:web` picks up changes via HMR at 
 
 ## Project layout
 
-| Path                     | Purpose                                  |
-| ------------------------ | ---------------------------------------- |
-| `extension/`             | Core product - Chrome MV3 + web demo     |
-| `shared/`                | Shared product constants (`constants.ts`) |
-| `src/`                   | Landing / download site (TanStack Start) |
-| `extension/src/storage/` | IndexedDB layer and document codec       |
+| Path                     | Purpose                                               |
+| ------------------------ | ----------------------------------------------------- |
+| `extension/`             | Core product - Chrome MV3 + web demo                  |
+| `shared/`                | Shared product constants (`constants.ts`)             |
+| `src/`                   | Landing / download site (TanStack Start)              |
+| `extension/src/storage/` | IndexedDB layer and document codec                    |
 | `extension/src/lib/`     | Shared utilities; `constants.ts` re-exports `shared/` |
-| `extension/src/editor/`  | Tiptap editor, slash menu, toolbar       |
+| `extension/src/editor/`  | Tiptap editor, slash menu, toolbar                    |
 
 See [`extension/README.md`](extension/README.md) for architecture details.
 
@@ -73,27 +73,27 @@ This runs lint, typecheck, tests, and production builds for both apps.
 
 Individual commands:
 
-| Command                   | Description                   |
-| ------------------------- | ----------------------------- |
-| `npm run lint`            | ESLint across the repo        |
-| `npm run format`          | Prettier write                |
-| `npm run format:check`    | Prettier check (CI)           |
-| `npm run typecheck`       | TypeScript - web + extension  |
-| `npm run test`            | Vitest unit tests             |
+| Command                   | Description                                               |
+| ------------------------- | --------------------------------------------------------- |
+| `npm run lint`            | ESLint across the repo                                    |
+| `npm run format`          | Prettier write                                            |
+| `npm run format:check`    | Prettier check (CI)                                       |
+| `npm run typecheck`       | TypeScript - web + extension                              |
+| `npm run test`            | Vitest unit tests                                         |
 | `npm run generate:seo`    | Regenerate `public/robots.txt`, `sitemap.xml`, `llms.txt` |
-| `npm run build:extension` | Production extension build    |
-| `npm run build:web`       | Production landing site build |
+| `npm run build:extension` | Production extension build                                |
+| `npm run build:web`       | Production landing site build                             |
 
 ## AI-assisted development
 
 This repo includes structured agent documentation for Cursor and other AI coding tools:
 
-| Doc | Purpose |
-| --- | ------- |
-| [`AGENTS.md`](AGENTS.md) | Architecture invariants, shipped capabilities (§2.5), verification contracts |
-| [`.cursor/SKILLS.md`](.cursor/SKILLS.md) | Task → skill routing (extension, storage, editor, landing, CI) |
-| [`.cursor/rules/`](.cursor/rules/) | Scoped rules injected by file type (`.mdc`) |
-| [`.cursor/README.md`](.cursor/README.md) | Index of the above |
+| Doc                                      | Purpose                                                                      |
+| ---------------------------------------- | ---------------------------------------------------------------------------- |
+| [`AGENTS.md`](AGENTS.md)                 | Architecture invariants, shipped capabilities (§2.5), verification contracts |
+| [`.cursor/SKILLS.md`](.cursor/SKILLS.md) | Task → skill routing (extension, storage, editor, landing, CI)               |
+| [`.cursor/rules/`](.cursor/rules/)       | Scoped rules injected by file type (`.mdc`)                                  |
+| [`.cursor/README.md`](.cursor/README.md) | Index of the above                                                           |
 
 Human contributors benefit from the same docs - especially `AGENTS.md` §3 (storage invariants) before your first storage or editor PR.
 
@@ -110,12 +110,12 @@ Human contributors benefit from the same docs - especially `AGENTS.md` §3 (stor
 
 Tests live under `tests/` and **mirror** source paths (see [`tests/README.md`](tests/README.md)):
 
-| Source | Test |
-| ------ | ---- |
+| Source                           | Test                                    |
+| -------------------------------- | --------------------------------------- |
 | `extension/src/storage/codec.ts` | `tests/extension/storage/codec.test.ts` |
-| `extension/src/lib/text.ts` | `tests/extension/lib/text.test.ts` |
-| `extension/src/lib/themes.ts` | `tests/extension/lib/themes.test.ts` |
-| `src/lib/seo.ts` | `tests/landing/lib/seo.test.ts` |
+| `extension/src/lib/text.ts`      | `tests/extension/lib/text.test.ts`      |
+| `extension/src/lib/themes.ts`    | `tests/extension/lib/themes.test.ts`    |
+| `src/lib/seo.ts`                 | `tests/landing/lib/seo.test.ts`         |
 
 Add tests for new logic at the mirrored path, especially storage, state management, and parsing.
 
@@ -153,3 +153,5 @@ npm run package:extension
 ```
 
 A **pre-commit hook** rebuilds and stages that ZIP when extension-related files are committed (`extension/`, `shared/`, lockfiles). Skip with `SKIP_EXTENSION_PACKAGE=1` if `npm run dev` is running or you intentionally want to commit without refreshing the artifact.
+
+A **pre-push hook** runs `npm run ci` (same gate as GitHub Actions) before the push proceeds. Skip with `SKIP_PRE_PUSH_CI=1` only when necessary (for example an emergency push while CI is known-green on the PR).

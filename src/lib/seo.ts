@@ -9,10 +9,7 @@ import {
   SITE_OG_IMAGE_PATH,
   SITE_ORIGIN,
 } from "@/lib/constants";
-import {
-  flattenFaqAnswerForSchema,
-  resolveLandingFaqItems,
-} from "@/lib/landingFaqContent";
+import { flattenFaqAnswerForSchema, resolveLandingFaqItems } from "@/lib/landingFaqContent";
 import { buildAbsoluteUrl } from "@/lib/url";
 
 export { buildAbsoluteUrl };

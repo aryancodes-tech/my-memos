@@ -310,14 +310,14 @@ npm run package:extension   # if download artifact needed
 
 ## Skill composition (multi-domain tasks)
 
-| Combined task | Apply skills in order |
-|---------------|----------------------|
-| Editor feature + persistence | `editor-markdown` → `storage-migration` → `extension-feature` |
-| Voice notes / attachments | `attachments-voice-notes` → `editor-markdown` → `storage-migration` |
-| Landing download + extension build | `ci-release` → `landing-marketing` |
-| SEO / FAQ / llms.txt changes | `landing-seo` → `landing-marketing` |
-| Web demo parity with extension UI | `dual-build-web` → `extension-feature` |
-| Workspace UX + store refactor | `workspace-dnd` → `extension-feature` → `ci-release` |
+| Combined task                      | Apply skills in order                                               |
+| ---------------------------------- | ------------------------------------------------------------------- |
+| Editor feature + persistence       | `editor-markdown` → `storage-migration` → `extension-feature`       |
+| Voice notes / attachments          | `attachments-voice-notes` → `editor-markdown` → `storage-migration` |
+| Landing download + extension build | `ci-release` → `landing-marketing`                                  |
+| SEO / FAQ / llms.txt changes       | `landing-seo` → `landing-marketing`                                 |
+| Web demo parity with extension UI  | `dual-build-web` → `extension-feature`                              |
+| Workspace UX + store refactor      | `workspace-dnd` → `extension-feature` → `ci-release`                |
 
 ---
 
@@ -335,14 +335,14 @@ Stop and ask the user when:
 
 ## Skill → rules map
 
-| Skill | Primary rules |
-|-------|---------------|
-| `core-onboard` | `00-project-core.mdc`, `ai-operating-model.mdc` |
-| `constants-copy` | `constants-policy.mdc` |
-| `extension-feature` | `extension-architecture.mdc` |
-| `storage-migration` | `storage-invariants.mdc` |
-| `editor-markdown` | `editor-markdown.mdc` |
+| Skill                     | Primary rules                                          |
+| ------------------------- | ------------------------------------------------------ |
+| `core-onboard`            | `00-project-core.mdc`, `ai-operating-model.mdc`        |
+| `constants-copy`          | `constants-policy.mdc`                                 |
+| `extension-feature`       | `extension-architecture.mdc`                           |
+| `storage-migration`       | `storage-invariants.mdc`                               |
+| `editor-markdown`         | `editor-markdown.mdc`                                  |
 | `attachments-voice-notes` | `storage-invariants.mdc`, `extension-architecture.mdc` |
-| `landing-marketing` | `landing-site.mdc` |
-| `landing-seo` | `landing-site.mdc`, `testing-ci.mdc` |
-| `ci-release` | `testing-ci.mdc` |
+| `landing-marketing`       | `landing-site.mdc`                                     |
+| `landing-seo`             | `landing-site.mdc`, `testing-ci.mdc`                   |
+| `ci-release`              | `testing-ci.mdc`                                       |

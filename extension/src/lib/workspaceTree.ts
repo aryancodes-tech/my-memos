@@ -99,7 +99,11 @@ export function canDropOntoFolder(
   dragPageId: string,
   folder: Pick<Page, "id">,
 ): boolean {
-  return canMoveWorkspaceItem(pages, dragPageId, resolveFolderDropParentId(pages, dragPageId, folder));
+  return canMoveWorkspaceItem(
+    pages,
+    dragPageId,
+    resolveFolderDropParentId(pages, dragPageId, folder),
+  );
 }
 
 /**

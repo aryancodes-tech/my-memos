@@ -15,10 +15,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import {
-  deleteAttachment,
-  saveImageAttachment,
-} from "@/lib/attachments/attachmentManager";
+import { deleteAttachment, saveImageAttachment } from "@/lib/attachments/attachmentManager";
 import { splitAttachmentPath } from "@/lib/attachments/fileName";
 import {
   EDITOR_ALIGN_CENTER_LABEL,
@@ -433,12 +430,7 @@ export default function AttachmentImageNodeView({
               className="ko-attachment-lightbox-matte"
               onClick={(event) => event.stopPropagation()}
             >
-              <img
-                src={src}
-                alt={alt}
-                className="ko-attachment-lightbox-img"
-                draggable={false}
-              />
+              <img src={src} alt={alt} className="ko-attachment-lightbox-img" draggable={false} />
             </div>
             {len(caption) > 0 && <p className="ko-attachment-lightbox-caption">{caption}</p>}
           </div>,
