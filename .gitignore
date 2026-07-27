@@ -20,7 +20,7 @@ dist-ssr
 coverage/
 
 # Built extension ZIPs are tracked (landing download). Refresh via npm run package:extension
-# or the pre-commit hook when extension/shared sources change.
+# when shipping extension changes that should update the download button.
 # public/mymemos-extension.zip
 # extension/mymemos-extension.zip
 

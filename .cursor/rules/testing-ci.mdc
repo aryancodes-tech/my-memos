@@ -104,9 +104,16 @@ npm run package:extension
 # → public/mymemos-extension.zip
 ```
 
-Required for landing download button. Warn in UI if missing.
+Required for landing download button. Warn in UI if missing. Run manually when shipping extension changes that should refresh the download ZIP (not hooked on every commit).
 
-Pre-commit (`simple-git-hooks` → `npm run pre-commit`) rebuilds and stages the ZIP when staged changes touch `extension/`, `shared/`, or root lockfiles. Skip with `SKIP_EXTENSION_PACKAGE=1`. The hook refuses to package while `npm run dev` is active so it does not overwrite live `extension/dist/`.
+## Local quality gates
+
+| Gate | Command |
+|------|---------|
+| Pre-push | `npm run check` |
+| Full / CI | `npm run ci` (`check` + builds) |
+
+Skip pre-push with `SKIP_PRE_PUSH_CI=1` only when necessary.
 
 ## Build guards
 

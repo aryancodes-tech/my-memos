@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Pre-push: run the same local CI gate as GitHub Actions (`npm run ci`).
+ * Pre-push: fast local gate (`npm run check` = lint, format, typecheck, tests).
+ * Full builds stay on `npm run ci` / GitHub Actions.
  *
  * Skip with: SKIP_PRE_PUSH_CI=1 git push ...
  */
@@ -12,13 +13,13 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 if (process.env.SKIP_PRE_PUSH_CI === "1") {
-  console.log("[MyMemos pre-push] Skipping CI (SKIP_PRE_PUSH_CI=1).");
+  console.log("[MyMemos pre-push] Skipping checks (SKIP_PRE_PUSH_CI=1).");
   process.exit(0);
 }
 
-console.log("[MyMemos pre-push] Running npm run ci…");
+console.log("[MyMemos pre-push] Running npm run check…");
 
-const result = spawnSync("npm", ["run", "ci"], {
+const result = spawnSync("npm", ["run", "check"], {
   cwd: root,
   stdio: "inherit",
   shell: process.platform === "win32",
@@ -26,7 +27,7 @@ const result = spawnSync("npm", ["run", "ci"], {
 });
 
 if (result.error) {
-  console.error("[MyMemos pre-push] Failed to start CI:", result.error.message);
+  console.error("[MyMemos pre-push] Failed to start checks:", result.error.message);
   process.exit(1);
 }
 

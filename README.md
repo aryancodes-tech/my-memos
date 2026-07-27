@@ -130,17 +130,18 @@ Do **not** try to get apex URLs indexed separately — that splits ranking signa
 
 All commands run from the **repo root** unless noted.
 
-| Command                     | What it does                                                                                           |
-| --------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `npm run dev`               | Extension dev server (port 5173)                                                                       |
-| `npm run dev:web`           | Landing + `/demo/` (port 8080)                                                                         |
-| `npm run generate:seo`      | Regenerate `public/robots.txt`, `sitemap.xml`, `llms.txt`                                              |
-| `npm run dev:app`           | Demo only (port 5174)                                                                                  |
-| `npm run build:extension`   | Production extension → `extension/dist/`                                                               |
-| `npm run package:extension` | Zip extension → `public/mymemos-extension.zip` (also runs on pre-commit when extension sources change) |
-| `npm run build:web`         | Demo build + landing production build                                                                  |
-| `npm run preview`           | Preview production landing build                                                                       |
-| `npm run ci`                | Full local CI (lint, test, build)                                                                      |
+| Command                     | What it does                                                      |
+| --------------------------- | ----------------------------------------------------------------- |
+| `npm run dev`               | Extension dev server (port 5173)                                  |
+| `npm run dev:web`           | Landing + `/demo/` (port 8080)                                    |
+| `npm run generate:seo`      | Regenerate `public/robots.txt`, `sitemap.xml`, `llms.txt`         |
+| `npm run dev:app`           | Demo only (port 5174)                                             |
+| `npm run build:extension`   | Production extension → `extension/dist/`                          |
+| `npm run package:extension` | Zip extension → `public/mymemos-extension.zip` (landing download) |
+| `npm run build:web`         | Demo build + landing production build                             |
+| `npm run preview`           | Preview production landing build                                  |
+| `npm run check`             | Lint, format, typecheck, tests (also runs on pre-push)            |
+| `npm run ci`                | `check` + extension and web builds (GitHub Actions)               |
 
 **Dev tip:** Don't run `build:extension` while actively developing - it replaces the dev bundle in `dist/`. Use `npm run dev` for day-to-day work.
 
