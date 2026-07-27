@@ -1836,6 +1836,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   line-height: 0;
+  background: transparent;
 }
 
 .ko-attachment-image {
@@ -1961,6 +1962,21 @@ body {
   background: var(--ko-surface);
 }
 
+.ko-attachment-menu-item.is-active {
+  background: color-mix(in srgb, var(--ko-accent) 12%, transparent);
+}
+
+.ko-attachment-menu-item.is-danger:hover {
+  background: color-mix(in srgb, #c0392b 14%, transparent);
+  color: #c0392b;
+}
+
+.ko-attachment-menu-divider {
+  height: 1px;
+  margin: 0.25rem 0.4rem;
+  background: var(--ko-border);
+}
+
 .ko-attachment-caption {
   width: 100%;
   max-width: 100%;
@@ -2047,12 +2063,36 @@ body {
   cursor: zoom-out;
 }
 
-.ko-attachment-lightbox-img {
+.ko-attachment-lightbox-matte {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   max-width: min(96vw, 1400px);
   max-height: 84vh;
-  object-fit: contain;
-  border-radius: 10px;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, #fff 18%, transparent);
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e8e8e8 25%, transparent 25%),
+    linear-gradient(-45deg, #e8e8e8 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e8e8e8 75%),
+    linear-gradient(-45deg, transparent 75%, #e8e8e8 75%);
+  background-size: 12px 12px;
+  background-position:
+    0 0,
+    0 6px,
+    6px -6px,
+    -6px 0;
   box-shadow: 0 16px 48px color-mix(in srgb, #000 40%, transparent);
+  cursor: default;
+}
+
+.ko-attachment-lightbox-img {
+  max-width: min(92vw, 1360px);
+  max-height: calc(84vh - 2.5rem);
+  object-fit: contain;
+  border-radius: 4px;
   cursor: default;
 }
 

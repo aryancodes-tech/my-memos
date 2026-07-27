@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type RefObject } from "react";
 import { getAttachmentObjectUrl } from "@/lib/attachments/attachmentManager";
-import { IMAGE_UNAVAILABLE_MESSAGE } from "@/lib/constants";
+import { IMAGE_TOOLBAR_COMPACT_MAX_WIDTH_PX, IMAGE_UNAVAILABLE_MESSAGE } from "@/lib/constants";
 import { len } from "@/lib/text";
 
 /** Loads an OPFS (or legacy) image URL for the attachment image node. */
@@ -85,4 +85,40 @@ export function useAttachmentImageChrome() {
     setMenuOpen,
     closeMenuOnOutside,
   };
+}
+
+/**
+ * True when the image frame is narrower than the full toolbar, so chrome
+ * should collapse into a single overflow menu.
+ */
+export function useAttachmentImageCompactToolbar(
+  frameRef: RefObject<HTMLElement | null>,
+  enabled: boolean,
+): boolean {
+  const [compact, setCompact] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) {
+      setCompact(false);
+      return;
+    }
+
+    const el = frameRef.current;
+    if (!el) return;
+
+    const update = (width: number) => {
+      setCompact(width > 0 && width < IMAGE_TOOLBAR_COMPACT_MAX_WIDTH_PX);
+    };
+
+    update(el.getBoundingClientRect().width);
+
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width ?? 0;
+      update(width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [enabled, frameRef]);
+
+  return compact;
 }

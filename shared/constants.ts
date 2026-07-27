@@ -545,6 +545,27 @@ export const IMAGE_ALIGN_DEFAULT: (typeof IMAGE_ALIGNMENTS)[number] = "center";
 /** Placeholder shown under an image until the user adds a caption. */
 export const IMAGE_CAPTION_PLACEHOLDER = "Write a caption…";
 
+/**
+ * Image frame width (px) below which the floating toolbar collapses to a single
+ * overflow menu so controls do not overflow narrow images.
+ */
+export const IMAGE_TOOLBAR_COMPACT_MAX_WIDTH_PX = 240;
+
+/** Tooltip / aria for downloading an embedded image. */
+export const IMAGE_DOWNLOAD_LABEL = "Download";
+
+/** Tooltip / aria for the image overflow ("more") menu. */
+export const IMAGE_MORE_OPTIONS_LABEL = "More options";
+
+/** Overflow menu label for replacing the image file. */
+export const IMAGE_REPLACE_LABEL = "Replace";
+
+/** Overflow menu label for copying the image to the clipboard. */
+export const IMAGE_COPY_LABEL = "Copy image";
+
+/** Overflow menu / button label for deleting an embedded image. */
+export const IMAGE_DELETE_LABEL = "Delete";
+
 /** Hidden OPFS directory name for attachment files (images, audio). */
 export const ATTACHMENT_OPFS_ROOT_DIR = "mymemos-attachments";
 

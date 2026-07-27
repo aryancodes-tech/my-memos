@@ -21,14 +21,23 @@ import {
 } from "@/lib/attachments/attachmentManager";
 import { splitAttachmentPath } from "@/lib/attachments/fileName";
 import {
+  EDITOR_ALIGN_CENTER_LABEL,
+  EDITOR_ALIGN_LEFT_LABEL,
+  EDITOR_ALIGN_RIGHT_LABEL,
   IMAGE_ALIGN_DEFAULT,
   IMAGE_ALIGNMENTS,
   IMAGE_CAPTION_PLACEHOLDER,
   IMAGE_ALIGN_GROUP_ARIA,
+  IMAGE_COPY_LABEL,
+  IMAGE_DELETE_LABEL,
+  IMAGE_DOWNLOAD_LABEL,
+  IMAGE_MORE_OPTIONS_LABEL,
   IMAGE_REMOVE_LABEL,
+  IMAGE_REPLACE_LABEL,
 } from "@/lib/constants";
 import {
   useAttachmentImageChrome,
+  useAttachmentImageCompactToolbar,
   useAttachmentImageSource,
 } from "@/editor/hooks/useAttachmentImage";
 import { useStore } from "@/store/useStore";
@@ -60,8 +69,13 @@ export default function AttachmentImageNodeView({
     useAttachmentImageChrome();
 
   const [captionDraft, setCaptionDraft] = useState(caption);
+  const frameRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const moreBtnRef = useRef<HTMLButtonElement>(null);
+  const compactToolbar = useAttachmentImageCompactToolbar(
+    frameRef,
+    !loading && !error && len(src ?? "") > 0,
+  );
 
   useEffect(() => {
     setCaptionDraft(caption);
@@ -71,6 +85,10 @@ export default function AttachmentImageNodeView({
     () => closeMenuOnOutside(menuRef.current, moreBtnRef.current),
     [closeMenuOnOutside, menuOpen],
   );
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [compactToolbar, setMenuOpen]);
 
   const commitCaption = useCallback(() => {
     const next = captionDraft.trim();
@@ -103,7 +121,8 @@ export default function AttachmentImageNodeView({
     anchor.href = src!;
     anchor.download = fileName;
     anchor.click();
-  }, [attachmentPath, src]);
+    setMenuOpen(false);
+  }, [attachmentPath, setMenuOpen, src]);
 
   const handleCopyImage = useCallback(async () => {
     if (len(src ?? "") === 0 || !navigator.clipboard?.write) return;
@@ -150,6 +169,92 @@ export default function AttachmentImageNodeView({
     event.stopPropagation();
   };
 
+  const moreMenu = menuOpen && (
+    <div ref={menuRef} className="ko-attachment-menu" role="menu">
+      {compactToolbar && (
+        <>
+          <button
+            type="button"
+            className={`ko-attachment-menu-item ${align === "left" ? "is-active" : ""}`}
+            role="menuitemradio"
+            aria-checked={align === "left"}
+            onClick={() => {
+              setAlign("left");
+              setMenuOpen(false);
+            }}
+          >
+            <AlignLeft size={14} strokeWidth={1.75} />
+            <span>{EDITOR_ALIGN_LEFT_LABEL}</span>
+          </button>
+          <button
+            type="button"
+            className={`ko-attachment-menu-item ${align === "center" ? "is-active" : ""}`}
+            role="menuitemradio"
+            aria-checked={align === "center"}
+            onClick={() => {
+              setAlign("center");
+              setMenuOpen(false);
+            }}
+          >
+            <AlignCenter size={14} strokeWidth={1.75} />
+            <span>{EDITOR_ALIGN_CENTER_LABEL}</span>
+          </button>
+          <button
+            type="button"
+            className={`ko-attachment-menu-item ${align === "right" ? "is-active" : ""}`}
+            role="menuitemradio"
+            aria-checked={align === "right"}
+            onClick={() => {
+              setAlign("right");
+              setMenuOpen(false);
+            }}
+          >
+            <AlignRight size={14} strokeWidth={1.75} />
+            <span>{EDITOR_ALIGN_RIGHT_LABEL}</span>
+          </button>
+          <div className="ko-attachment-menu-divider" role="separator" />
+          <button
+            type="button"
+            className="ko-attachment-menu-item"
+            role="menuitem"
+            onClick={handleDownload}
+          >
+            <Download size={14} strokeWidth={1.75} />
+            <span>{IMAGE_DOWNLOAD_LABEL}</span>
+          </button>
+          <button
+            type="button"
+            className="ko-attachment-menu-item is-danger"
+            role="menuitem"
+            onClick={handleDelete}
+          >
+            <Trash2 size={14} strokeWidth={1.75} />
+            <span>{IMAGE_DELETE_LABEL}</span>
+          </button>
+          <div className="ko-attachment-menu-divider" role="separator" />
+        </>
+      )}
+      <button
+        type="button"
+        className="ko-attachment-menu-item"
+        role="menuitem"
+        onClick={handleReplace}
+      >
+        <Replace size={14} strokeWidth={1.75} />
+        <span>{IMAGE_REPLACE_LABEL}</span>
+      </button>
+      <button
+        type="button"
+        className="ko-attachment-menu-item"
+        role="menuitem"
+        onClick={() => void handleCopyImage()}
+      >
+        <Copy size={14} strokeWidth={1.75} />
+        <span>{IMAGE_COPY_LABEL}</span>
+      </button>
+    </div>
+  );
+
   return (
     <NodeViewWrapper
       className={`ko-attachment-image-wrap ${selected ? "is-selected" : ""}`}
@@ -184,6 +289,7 @@ export default function AttachmentImageNodeView({
       {!loading && !error && src && (
         <div className="ko-attachment-image-block">
           <div
+            ref={frameRef}
             className="ko-attachment-image-frame"
             onClick={() => setLightboxOpen(true)}
             onKeyDown={(event) => {
@@ -198,103 +304,89 @@ export default function AttachmentImageNodeView({
           >
             <img src={src} alt={alt} className="ko-attachment-image" draggable={false} />
 
-            <div className="ko-attachment-toolbar" onClick={stop} onMouseDown={stop}>
-              <div
-                className="ko-attachment-tool-group"
-                role="group"
-                aria-label={IMAGE_ALIGN_GROUP_ARIA}
-              >
-                <button
-                  type="button"
-                  className={`ko-attachment-tool-btn ${align === "left" ? "is-active" : ""}`}
-                  title="Align left"
-                  aria-label="Align left"
-                  aria-pressed={align === "left"}
-                  onClick={() => setAlign("left")}
-                >
-                  <AlignLeft size={14} strokeWidth={1.75} />
-                </button>
-                <button
-                  type="button"
-                  className={`ko-attachment-tool-btn ${align === "center" ? "is-active" : ""}`}
-                  title="Align center"
-                  aria-label="Align center"
-                  aria-pressed={align === "center"}
-                  onClick={() => setAlign("center")}
-                >
-                  <AlignCenter size={14} strokeWidth={1.75} />
-                </button>
-                <button
-                  type="button"
-                  className={`ko-attachment-tool-btn ${align === "right" ? "is-active" : ""}`}
-                  title="Align right"
-                  aria-label="Align right"
-                  aria-pressed={align === "right"}
-                  onClick={() => setAlign("right")}
-                >
-                  <AlignRight size={14} strokeWidth={1.75} />
-                </button>
-              </div>
+            <div
+              className={`ko-attachment-toolbar ${compactToolbar ? "is-compact" : ""}`}
+              onClick={stop}
+              onMouseDown={stop}
+            >
+              {!compactToolbar && (
+                <>
+                  <div
+                    className="ko-attachment-tool-group"
+                    role="group"
+                    aria-label={IMAGE_ALIGN_GROUP_ARIA}
+                  >
+                    <button
+                      type="button"
+                      className={`ko-attachment-tool-btn ${align === "left" ? "is-active" : ""}`}
+                      title={EDITOR_ALIGN_LEFT_LABEL}
+                      aria-label={EDITOR_ALIGN_LEFT_LABEL}
+                      aria-pressed={align === "left"}
+                      onClick={() => setAlign("left")}
+                    >
+                      <AlignLeft size={14} strokeWidth={1.75} />
+                    </button>
+                    <button
+                      type="button"
+                      className={`ko-attachment-tool-btn ${align === "center" ? "is-active" : ""}`}
+                      title={EDITOR_ALIGN_CENTER_LABEL}
+                      aria-label={EDITOR_ALIGN_CENTER_LABEL}
+                      aria-pressed={align === "center"}
+                      onClick={() => setAlign("center")}
+                    >
+                      <AlignCenter size={14} strokeWidth={1.75} />
+                    </button>
+                    <button
+                      type="button"
+                      className={`ko-attachment-tool-btn ${align === "right" ? "is-active" : ""}`}
+                      title={EDITOR_ALIGN_RIGHT_LABEL}
+                      aria-label={EDITOR_ALIGN_RIGHT_LABEL}
+                      aria-pressed={align === "right"}
+                      onClick={() => setAlign("right")}
+                    >
+                      <AlignRight size={14} strokeWidth={1.75} />
+                    </button>
+                  </div>
 
-              <span className="ko-attachment-tool-divider" aria-hidden />
+                  <span className="ko-attachment-tool-divider" aria-hidden />
 
-              <button
-                type="button"
-                className="ko-attachment-tool-btn"
-                title="Download"
-                aria-label="Download image"
-                onClick={handleDownload}
-              >
-                <Download size={14} strokeWidth={1.75} />
-              </button>
-              <button
-                type="button"
-                className="ko-attachment-tool-btn ko-attachment-tool-danger"
-                title="Delete"
-                aria-label="Delete image"
-                onClick={handleDelete}
-              >
-                <Trash2 size={14} strokeWidth={1.75} />
-              </button>
+                  <button
+                    type="button"
+                    className="ko-attachment-tool-btn"
+                    title={IMAGE_DOWNLOAD_LABEL}
+                    aria-label={IMAGE_DOWNLOAD_LABEL}
+                    onClick={handleDownload}
+                  >
+                    <Download size={14} strokeWidth={1.75} />
+                  </button>
+                  <button
+                    type="button"
+                    className="ko-attachment-tool-btn ko-attachment-tool-danger"
+                    title={IMAGE_DELETE_LABEL}
+                    aria-label={IMAGE_DELETE_LABEL}
+                    onClick={handleDelete}
+                  >
+                    <Trash2 size={14} strokeWidth={1.75} />
+                  </button>
 
-              <span className="ko-attachment-tool-divider" aria-hidden />
+                  <span className="ko-attachment-tool-divider" aria-hidden />
+                </>
+              )}
 
               <div className="ko-attachment-more-wrap">
                 <button
                   ref={moreBtnRef}
                   type="button"
                   className={`ko-attachment-tool-btn ${menuOpen ? "is-active" : ""}`}
-                  title="More options"
-                  aria-label="More options"
+                  title={IMAGE_MORE_OPTIONS_LABEL}
+                  aria-label={IMAGE_MORE_OPTIONS_LABEL}
                   aria-expanded={menuOpen}
                   aria-haspopup="menu"
                   onClick={() => setMenuOpen((open) => !open)}
                 >
                   <MoreHorizontal size={14} strokeWidth={1.75} />
                 </button>
-
-                {menuOpen && (
-                  <div ref={menuRef} className="ko-attachment-menu" role="menu">
-                    <button
-                      type="button"
-                      className="ko-attachment-menu-item"
-                      role="menuitem"
-                      onClick={handleReplace}
-                    >
-                      <Replace size={14} strokeWidth={1.75} />
-                      <span>Replace</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="ko-attachment-menu-item"
-                      role="menuitem"
-                      onClick={() => void handleCopyImage()}
-                    >
-                      <Copy size={14} strokeWidth={1.75} />
-                      <span>Copy image</span>
-                    </button>
-                  </div>
-                )}
+                {moreMenu}
               </div>
             </div>
           </div>
@@ -337,13 +429,17 @@ export default function AttachmentImageNodeView({
             >
               <X size={18} strokeWidth={1.75} />
             </button>
-            <img
-              src={src}
-              alt={alt}
-              className="ko-attachment-lightbox-img"
-              draggable={false}
+            <div
+              className="ko-attachment-lightbox-matte"
               onClick={(event) => event.stopPropagation()}
-            />
+            >
+              <img
+                src={src}
+                alt={alt}
+                className="ko-attachment-lightbox-img"
+                draggable={false}
+              />
+            </div>
             {len(caption) > 0 && <p className="ko-attachment-lightbox-caption">{caption}</p>}
           </div>,
           document.body,
