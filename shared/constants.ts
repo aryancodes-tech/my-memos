@@ -73,7 +73,8 @@ export const LANDING_PAGE_TITLE = `${PRODUCT_NAME} - Your notes, on every new ta
 
 /**
  * Canonical site origin without a trailing slash.
- * Set `VITE_SITE_URL` at build/deploy time (e.g. `https://mymemos.app`).
+ * Set `VITE_SITE_URL` at build/deploy time (e.g. `https://www.mymemos.in`).
+ * Prefer one canonical host (usually `www` + HTTPS). Apex/HTTP should 301 there.
  * Safe when `import.meta.env` is absent (e.g. Node loading Vite config via manifest).
  */
 export const SITE_ORIGIN = (

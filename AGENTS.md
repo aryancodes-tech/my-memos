@@ -244,7 +244,8 @@ Markdown paste: `extension/src/editor/markdownPaste.ts` + tests in `tests/extens
 
 **Rules:**
 
-- Set `VITE_SITE_URL` at deploy time (no trailing slash). Drives canonical URLs, JSON-LD, FAQ demo links, and generated static SEO files.
+- Set `VITE_SITE_URL` at deploy time (no trailing slash; prefer `https://www…`). Drives canonical URLs, JSON-LD, FAQ demo links, and generated static SEO files.
+- Apex / HTTP hosts must **301/308** to that origin (`vercel.json` or host-equivalent). GSC "Page with redirect" on apex is expected — only the canonical host should be indexed.
 - FAQ link segments in `ai-content.json` use `"path": "/demo/"` - never hardcode production domains in JSON.
 - Keep `scripts/generate-sitemap.mjs` and `buildLlmsTxt()` in `seo.ts` structurally aligned.
 - `/demo/` stays `Disallow` in `robots.txt` (`SEO_ROBOTS_DISALLOW_PATHS`).

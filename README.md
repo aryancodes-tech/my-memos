@@ -110,6 +110,20 @@ npm run dev:web
 
 After deploy, confirm live URLs (replace with your domain): `https://www.mymemos.in/robots.txt`, `/sitemap.xml`, `/llms.txt`.
 
+### Google Search Console: "Page with redirect"
+
+Apex / HTTP URLs (`https://mymemos.in/`, `http://mymemos.in/`) **should not** be indexed when the canonical host is `https://www.mymemos.in/`. Google lists them under **Page with redirect** — that is expected.
+
+What to do:
+
+1. Set `VITE_SITE_URL=https://www.mymemos.in` (include `www`, HTTPS, no trailing slash).
+2. Prefer **one** Search Console property for the canonical host (`https://www.mymemos.in`), or a Domain property covering all variants.
+3. Submit / inspect **`https://www.mymemos.in/`** (not the apex) and request indexing there.
+4. Submit the sitemap: `https://www.mymemos.in/sitemap.xml`.
+5. On your host, configure a **permanent** redirect (301/308) from apex → www. This repo includes `vercel.json` for that; other hosts need an equivalent rule. After deploy, `curl -sI https://mymemos.in/` should show `301` or `308` to `https://www.mymemos.in/`.
+
+Do **not** try to get apex URLs indexed separately — that splits ranking signals.
+
 ---
 
 ## Commands
@@ -140,12 +154,14 @@ Landing page + `/demo/` deploy together as a Node/SSR app (TanStack Start + Nitr
 
 Works on any hosting provider (Netlify, AWS, Fly.io, a VPS, etc.). Example build settings:
 
-| Setting | Value                                                                                            |
-| ------- | ------------------------------------------------------------------------------------------------ |
-| Install | `npm ci && npm ci --prefix extension`                                                            |
-| Build   | `npm run package:extension && npm run build:web`                                                 |
-| Node    | 20.x or 24.x (`>= 20.19.0`)                                                                      |
-| Env     | `VITE_SITE_URL=https://your-domain.example` (canonical origin for SEO files, JSON-LD, FAQ links) |
+| Setting | Value                                                                                                       |
+| ------- | ----------------------------------------------------------------------------------------------------------- |
+| Install | `npm ci && npm ci --prefix extension`                                                                       |
+| Build   | `npm run package:extension && npm run build:web`                                                            |
+| Node    | 20.x or 24.x (`>= 20.19.0`)                                                                                 |
+| Env     | `VITE_SITE_URL=https://www.example.com` (canonical origin — use your preferred host, usually `www` + HTTPS) |
+
+Point apex and HTTP variants at that canonical origin with a **permanent** (301/308) redirect. See `vercel.json` for a www example, or configure the same rule on Netlify / nginx / your CDN.
 
 The landing site optionally includes web analytics via `@vercel/analytics` in `src/routes/__root.tsx` - remove or swap it if your host uses a different analytics tool. The `/demo/` SPA is a separate static bundle and is not tracked by that component.
 
@@ -196,6 +212,7 @@ Not shipped as user features today: tag editing UI, archive UI, workspace export
 | Download button 404 on landing            | Run `npm run package:extension` first                                  |
 | Can't find `public/llms.txt` in git       | Expected - gitignored; run `npm run generate:seo` or `npm run dev:web` |
 | SEO files show `localhost` URLs           | Set `VITE_SITE_URL` and rebuild/redeploy                               |
+| GSC "Page with redirect" for apex / HTTP  | Expected — index `https://www…/` only; use permanent apex→www redirect |
 
 ---
 
