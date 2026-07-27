@@ -28,12 +28,12 @@ function run(command, args) {
   }
 }
 
-function workingTreeDirty() {
-  const out = execFileSync("git", ["status", "--porcelain"], {
+/** Porcelain status snapshot for before/after auto-fix comparison. */
+function gitPorcelain() {
+  return execFileSync("git", ["status", "--porcelain"], {
     cwd: root,
     encoding: "utf8",
-  }).trim();
-  return out.length > 0;
+  });
 }
 
 if (process.env.SKIP_PRE_PUSH_CI === "1") {
@@ -41,11 +41,15 @@ if (process.env.SKIP_PRE_PUSH_CI === "1") {
   process.exit(0);
 }
 
+const before = gitPorcelain();
+
 console.log("[MyMemos pre-push] Auto-fixing format/lint…");
 run("npm", ["run", "format"]);
 run("npx", ["eslint", ".", "--fix"]);
 
-if (workingTreeDirty()) {
+const after = gitPorcelain();
+
+if (after !== before) {
   console.error(
     [
       "",
