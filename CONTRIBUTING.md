@@ -154,4 +154,4 @@ npm run package:extension
 
 Run that when extension UI/storage changes should refresh the download artifact (not on every commit).
 
-A **pre-push hook** runs `npm run check` (lint, format, typecheck, tests). Full builds remain on `npm run ci` and GitHub Actions. Skip with `SKIP_PRE_PUSH_CI=1` only when necessary.
+A **pre-push hook** auto-fixes Prettier/ESLint formatting when possible, then runs `npm run check` (lint, format, typecheck, tests). If files were rewritten, commit them and push again. Full builds remain on `npm run ci` and GitHub Actions. Skip with `SKIP_PRE_PUSH_CI=1` only when necessary.
