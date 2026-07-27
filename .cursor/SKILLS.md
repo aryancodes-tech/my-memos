@@ -327,7 +327,7 @@ Stop and ask the user when:
 
 - Request requires **cloud sync**, accounts, or backend - out of product scope
 - Schema migration would **delete user data** without explicit approval
-- Change touches **both** React 18 and 19 component sharing
+- Change would **share React components** across landing and extension packages
 - Landing scroll architecture rewrite - confirm UX goal first
 - `npm run ci` fails after 2 distinct fix attempts - report blocker with logs
 
