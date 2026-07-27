@@ -112,7 +112,9 @@
   font-weight: 500;
   color: var(--ko-text-muted);
   text-decoration: none;
-  transition: background 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
 }
 
 .landing-nav-link:hover {
@@ -136,7 +138,9 @@
   color: var(--ko-text);
   text-decoration: none;
   overflow: visible;
-  transition: background 0.12s ease, opacity 0.12s ease;
+  transition:
+    background 0.12s ease,
+    opacity 0.12s ease;
 }
 
 .landing-nav-github:hover {
@@ -165,7 +169,10 @@
   text-decoration: none;
   cursor: pointer;
   padding: 0.5rem 0.9rem;
-  transition: background 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease,
+    opacity 0.12s ease;
 }
 
 .landing-btn:disabled {
@@ -206,7 +213,9 @@
 .landing-hero-overlay {
   display: flex;
   justify-content: center;
-  transition: opacity 0.15s ease, visibility 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease;
 }
 
 .landing-hero-shell {
@@ -974,7 +983,9 @@
   height: 1.5px;
   background: var(--ko-text-muted);
   transform: translate(-50%, -50%);
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .landing-faq-icon::after {

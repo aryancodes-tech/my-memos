@@ -46,9 +46,7 @@ try {
 }
 
 if (!devServerUp) {
-  console.error(
-    "\n[MyMemos] Dev manifest is correct, but the Vite dev server is not reachable.",
-  );
+  console.error("\n[MyMemos] Dev manifest is correct, but the Vite dev server is not reachable.");
   console.error(`Start it with: npm run dev`);
   console.error("Then reload the extension in chrome://extensions.\n");
   process.exit(1);

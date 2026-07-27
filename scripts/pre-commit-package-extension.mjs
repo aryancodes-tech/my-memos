@@ -74,9 +74,7 @@ async function isExtensionDevActive() {
   if (portBusy) return { active: true, reason: `port ${DEV_PORT} is in use` };
   if (hasSession) {
     fs.rmSync(sessionPath, { force: true });
-    console.log(
-      "[MyMemos pre-commit] Cleared stale extension/.dev-session (dev port is free).",
-    );
+    console.log("[MyMemos pre-commit] Cleared stale extension/.dev-session (dev port is free).");
   }
   return { active: false, reason: "" };
 }
@@ -107,9 +105,7 @@ if (!shouldPackage(files)) {
 }
 
 if (process.env.SKIP_EXTENSION_PACKAGE === "1") {
-  console.log(
-    "[MyMemos pre-commit] Skipping extension package (SKIP_EXTENSION_PACKAGE=1).",
-  );
+  console.log("[MyMemos pre-commit] Skipping extension package (SKIP_EXTENSION_PACKAGE=1).");
   process.exit(0);
 }
 

@@ -47,10 +47,12 @@
     "test:watch": "vitest",
     "ci": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build:extension && npm run build:web",
     "prepare": "simple-git-hooks",
-    "pre-commit": "node scripts/pre-commit-package-extension.mjs"
+    "pre-commit": "node scripts/pre-commit-package-extension.mjs",
+    "pre-push": "node scripts/pre-push-ci.mjs"
   },
   "simple-git-hooks": {
-    "pre-commit": "npm run pre-commit"
+    "pre-commit": "npm run pre-commit",
+    "pre-push": "npm run pre-push"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",

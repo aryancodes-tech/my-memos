@@ -4,10 +4,7 @@ import { IMAGE_TOOLBAR_COMPACT_MAX_WIDTH_PX, IMAGE_UNAVAILABLE_MESSAGE } from "@
 import { len } from "@/lib/text";
 
 /** Loads an OPFS (or legacy) image URL for the attachment image node. */
-export function useAttachmentImageSource(
-  attachmentPath: string | null,
-  legacySrc: string | null,
-) {
+export function useAttachmentImageSource(attachmentPath: string | null, legacySrc: string | null) {
   const [src, setSrc] = useState<string | null>(len(legacySrc ?? "") > 0 ? legacySrc : null);
   const [loading, setLoading] = useState(
     len(attachmentPath ?? "") > 0 && len(legacySrc ?? "") === 0,

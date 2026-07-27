@@ -2,11 +2,7 @@ import type { StateCreator } from "zustand";
 import { nanoid } from "nanoid";
 import * as db from "@/storage/db";
 import type { CustomTheme } from "@/storage/types";
-import {
-  CUSTOM_THEMES_SETTING,
-  DEFAULT_THEME,
-  SETTINGS_KEYS,
-} from "@/lib/constants";
+import { CUSTOM_THEMES_SETTING, DEFAULT_THEME, SETTINGS_KEYS } from "@/lib/constants";
 import { len } from "@/lib/text";
 import {
   applyThemeToDocument,

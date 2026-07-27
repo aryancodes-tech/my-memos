@@ -78,7 +78,10 @@ export default function Sidebar() {
         >
           <Search size={16} strokeWidth={1.75} />
         </IconRailButton>
-        <IconRailButton title={SIDEBAR_DASHBOARD_LABEL} onClick={() => setView({ kind: "dashboard" })}>
+        <IconRailButton
+          title={SIDEBAR_DASHBOARD_LABEL}
+          onClick={() => setView({ kind: "dashboard" })}
+        >
           <LayoutDashboard size={16} strokeWidth={1.75} />
         </IconRailButton>
       </aside>

@@ -64,9 +64,7 @@ function flattenFaqAnswer(item, origin) {
   }
 
   return item.answerSegments
-    .map((segment) =>
-      segment.type === "link" ? `${origin}${segment.path}` : segment.text,
-    )
+    .map((segment) => (segment.type === "link" ? `${origin}${segment.path}` : segment.text))
     .join("");
 }
 

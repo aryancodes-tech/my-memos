@@ -10,17 +10,17 @@ Agent-facing capability inventory (shipped vs schema-only): [`AGENTS.md`](../AGE
 
 ## Current capabilities
 
-| Area | Behavior |
-| ---- | -------- |
-| Workspace | Nested pages/folders, DnD move/reorder, rename, delete (with descendant warning), collapsible sidebar |
-| Favorites / Recent | Starred pages; Favorites and Recent sidebar views (not separate storage sections) |
-| Dashboard | Recent pages and quick create |
-| Editor | Headings, lists/tasks, tables, code blocks, colors, links, slash menu, toolbar, markdown paste |
-| Images | Insert via toolbar/slash/drop/paste → OPFS; align, caption, lightbox, replace, alt text, delete |
-| Voice / audio | Inline mic recording, attach audio file, waveform playback and speed, rename, download, delete |
-| Search | ⌘K over title and body text (FlexSearch, ephemeral) |
-| Themes | 7 built-in plus custom themes |
-| Platforms | Chrome New Tab extension **or** `/demo/` web SPA (separate origins; data does not sync) |
+| Area               | Behavior                                                                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| Workspace          | Nested pages/folders, DnD move/reorder, rename, delete (with descendant warning), collapsible sidebar |
+| Favorites / Recent | Starred pages; Favorites and Recent sidebar views (not separate storage sections)                     |
+| Dashboard          | Recent pages and quick create                                                                         |
+| Editor             | Headings, lists/tasks, tables, code blocks, colors, links, slash menu, toolbar, markdown paste        |
+| Images             | Insert via toolbar/slash/drop/paste → OPFS; align, caption, lightbox, replace, alt text, delete       |
+| Voice / audio      | Inline mic recording, attach audio file, waveform playback and speed, rename, download, delete        |
+| Search             | ⌘K over title and body text (FlexSearch, ephemeral)                                                   |
+| Themes             | 7 built-in plus custom themes                                                                         |
+| Platforms          | Chrome New Tab extension **or** `/demo/` web SPA (separate origins; data does not sync)               |
 
 **Not exposed in UI:** tag editing, archive, workspace export/import (`storage/db.ts` retains helpers only).
 
@@ -30,10 +30,10 @@ Agent-facing capability inventory (shipped vs schema-only): [`AGENTS.md`](../AGE
 
 ### Two delivery modes
 
-| Mode | Entry | Build | Storage |
-| ---- | ----- | ----- | ------- |
-| **Chrome extension** | `newtab.html` + `manifest.config.ts` | `vite.config.ts` (CRXJS) → `dist/` | IndexedDB + `chrome.storage.local` |
-| **Web demo** | `index.html` | `vite.web.config.ts` → `public/demo/` | IndexedDB + `localStorage` |
+| Mode                 | Entry                                | Build                                 | Storage                            |
+| -------------------- | ------------------------------------ | ------------------------------------- | ---------------------------------- |
+| **Chrome extension** | `newtab.html` + `manifest.config.ts` | `vite.config.ts` (CRXJS) → `dist/`    | IndexedDB + `chrome.storage.local` |
+| **Web demo**         | `index.html`                         | `vite.web.config.ts` → `public/demo/` | IndexedDB + `localStorage`         |
 
 The two modes use different browser origins; data does not sync between them.
 
@@ -89,12 +89,12 @@ IndexedDB (pages)          OPFS (mymemos-attachments/)
 │       attachmentPath ────────────────┘
 ```
 
-| Feature | Entry points | Key modules |
-| ------- | ------------ | ----------- |
-| Inline voice recording | Toolbar mic, `/` → Voice note | `editor/commands/insertVoiceRecording.ts`, `VoiceNoteNodeView` + hooks, `voiceRecorder.ts` |
-| Attach audio file | Toolbar paperclip, `/` → Audio file | `editor/commands/insertAudioFromFile.ts` |
-| Images | Toolbar image, `/` → Image, drag-drop, paste (file/screenshot/webpage `<img>`) | `editor/commands/insertImage.ts`, `imageClipboard.ts`, `imagePasteDrop.ts`, `AttachmentImageNodeView` + hooks |
-| Delete attachment | Trash on voice note / image block | `AttachmentDeleteDialog`, store `pendingAttachmentDelete`, `attachmentManager.ts` |
+| Feature                | Entry points                                                                   | Key modules                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Inline voice recording | Toolbar mic, `/` → Voice note                                                  | `editor/commands/insertVoiceRecording.ts`, `VoiceNoteNodeView` + hooks, `voiceRecorder.ts`                    |
+| Attach audio file      | Toolbar paperclip, `/` → Audio file                                            | `editor/commands/insertAudioFromFile.ts`                                                                      |
+| Images                 | Toolbar image, `/` → Image, drag-drop, paste (file/screenshot/webpage `<img>`) | `editor/commands/insertImage.ts`, `imageClipboard.ts`, `imagePasteDrop.ts`, `AttachmentImageNodeView` + hooks |
+| Delete attachment      | Trash on voice note / image block                                              | `AttachmentDeleteDialog`, store `pendingAttachmentDelete`, `attachmentManager.ts`                             |
 
 **Layering:** TipTap insert helpers live under `editor/commands/`; OPFS I/O stays in `lib/attachments/` (no TipTap types there).
 
@@ -130,16 +130,16 @@ npm run dev   # manual: record, play, rename, delete, reload
 
 ### Tech stack (this package)
 
-| Layer | Choice |
-| ----- | ------ |
-| UI | React 19 |
-| State | Zustand |
-| Editor | Tiptap 2 + ProseMirror |
-| Styling | Tailwind CSS 3 |
-| Build | Vite 5 + CRXJS (extension), Vite 5 (web demo) |
-| Storage | IndexedDB (`idb`) + LZString |
-| Search | FlexSearch (in-memory) |
-| Language | TypeScript 5 |
+| Layer    | Choice                                        |
+| -------- | --------------------------------------------- |
+| UI       | React 19                                      |
+| State    | Zustand                                       |
+| Editor   | Tiptap 2 + ProseMirror                        |
+| Styling  | Tailwind CSS 3                                |
+| Build    | Vite 5 + CRXJS (extension), Vite 5 (web demo) |
+| Storage  | IndexedDB (`idb`) + LZString                  |
+| Search   | FlexSearch (in-memory)                        |
+| Language | TypeScript 5                                  |
 
 The landing site (`../src/`) is a separate TanStack Start app (also React 19, Tailwind 4, Vite 7).
 
@@ -194,10 +194,10 @@ Chrome load (one-time):
 2. **Load unpacked** and select `extension/dist/`
 3. The loaded extension name is **MyMemos (Dev)**; the UI appears on a **new tab**
 
-| Command | `dist/` output | Extension name |
-| ------- | -------------- | -------------- |
-| `npm run dev` | Dev bundle (HMR via `localhost:5173`) | **MyMemos (Dev)** |
-| `npm run build` | Static production bundle | **MyMemos** |
+| Command         | `dist/` output                        | Extension name    |
+| --------------- | ------------------------------------- | ----------------- |
+| `npm run dev`   | Dev bundle (HMR via `localhost:5173`) | **MyMemos (Dev)** |
+| `npm run build` | Static production bundle              | **MyMemos**       |
 
 `npm run build` replaces the HMR-oriented `dist/` bundle and should not run during an active `npm run dev` session. The `predev` script clears `dist/` and `.vite/` before each dev start.
 
@@ -211,10 +211,10 @@ If HMR stalls, `npm run dev:reset`, reload the extension in Chrome, and open a n
 npm run dev:web      # from extension/, or npm run dev:app from repo root
 ```
 
-| Context | URL |
-| ------- | --- |
+| Context                                         | URL                           |
+| ----------------------------------------------- | ----------------------------- |
 | With landing (`npm run dev:web` from repo root) | `http://localhost:8080/demo/` |
-| Standalone (`extension/` only) | `http://localhost:5174/demo/` |
+| Standalone (`extension/` only)                  | `http://localhost:5174/demo/` |
 
 Production demo output: `npm run build:web` → `../public/demo/` (served by the landing deploy).
 

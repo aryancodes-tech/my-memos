@@ -7,6 +7,5 @@ export const LANDING_DESIGN = {
   text: "#1f1f1e",
   textMuted: "#6b6b6b",
   accent: "#1f1f1e",
-  font:
-    'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif',
+  font: 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif',
 } as const;

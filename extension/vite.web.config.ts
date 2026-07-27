@@ -37,8 +37,6 @@ export default defineConfig({
     port: 5174,
     strictPort: true,
     // Standalone `extension dev:web` only - embedded /demo/ HMR is configured in webAppDevPlugin.ts.
-    ...(isEmbeddedDev
-      ? { hmr: { path: EMBEDDED_HMR_PATH } }
-      : { hmr: { port: 5175 } }),
+    ...(isEmbeddedDev ? { hmr: { path: EMBEDDED_HMR_PATH } } : { hmr: { port: 5175 } }),
   },
 });

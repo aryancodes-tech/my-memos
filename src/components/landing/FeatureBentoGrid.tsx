@@ -84,7 +84,9 @@ type FeatureBentoGridProps = {
 /**
  * Asymmetric bento grid of feature tiles with CSS UI mockups and optional demo clips.
  */
-export function FeatureBentoGrid({ clipBasePath = LANDING_FEATURE_CLIP_BASE }: FeatureBentoGridProps) {
+export function FeatureBentoGrid({
+  clipBasePath = LANDING_FEATURE_CLIP_BASE,
+}: FeatureBentoGridProps) {
   return (
     <section className="landing-bento" aria-labelledby="features-heading">
       <div className="landing-section-header">

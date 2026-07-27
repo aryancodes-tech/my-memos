@@ -6,10 +6,7 @@ import {
   LANDING_FAQ_SECTION_ID,
   LANDING_FAQ_TITLE,
 } from "@/lib/constants";
-import {
-  LANDING_FAQ_ITEMS,
-  type LandingFaqItem,
-} from "@/lib/landingFaqContent";
+import { LANDING_FAQ_ITEMS, type LandingFaqItem } from "@/lib/landingFaqContent";
 
 export { LANDING_FAQ_ITEMS, type LandingFaqItem };
 
@@ -24,11 +21,7 @@ function LandingFaqAnswer({ item }: { item: LandingFaqItem }) {
       {item.answerSegments.map((segment, index) => {
         if (segment.type === "link") {
           return (
-            <a
-              key={`${segment.href}-${index}`}
-              href={segment.href}
-              className="landing-faq-link"
-            >
+            <a key={`${segment.href}-${index}`} href={segment.href} className="landing-faq-link">
               {segment.label}
             </a>
           );

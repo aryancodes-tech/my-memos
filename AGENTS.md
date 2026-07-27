@@ -36,23 +36,23 @@ This document is the **source of truth** for how an AI agent should reason about
 
 Aliases resolve differently depending on which `tsconfig` is active:
 
-| Package | Alias `@/` → | Alias `@shared/` → |
-|---------|----------------|---------------------|
-| Root / landing | `src/*` | `shared/*` |
-| Extension | `extension/src/*` | `../shared/*` |
+| Package        | Alias `@/` →      | Alias `@shared/` → |
+| -------------- | ----------------- | ------------------ |
+| Root / landing | `src/*`           | `shared/*`         |
+| Extension      | `extension/src/*` | `../shared/*`      |
 
 Before adding imports, confirm which package you are editing. Product constants: edit `shared/constants.ts` only.
 
 ### Generated artifacts - never hand-edit
 
-| Path | Produced by |
-|------|-------------|
-| `public/demo/**` | `npm run build:app` (extension web build) |
-| `public/mymemos-extension.zip` | `npm run package:extension` (also via pre-commit when `extension/` / `shared/` change) |
-| `public/robots.txt`, `public/sitemap.xml`, `public/llms.txt` | `npm run generate:seo` (also `predev:web` / `prebuild:web`) |
-| `src/routeTree.gen.ts` | TanStack Router codegen |
-| `extension/dist/**` | `npm run dev` or `npm run build:extension` |
-| `.output/**`, `dist/**` (root) | `npm run build:web` |
+| Path                                                         | Produced by                                                                            |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `public/demo/**`                                             | `npm run build:app` (extension web build)                                              |
+| `public/mymemos-extension.zip`                               | `npm run package:extension` (also via pre-commit when `extension/` / `shared/` change) |
+| `public/robots.txt`, `public/sitemap.xml`, `public/llms.txt` | `npm run generate:seo` (also `predev:web` / `prebuild:web`)                            |
+| `src/routeTree.gen.ts`                                       | TanStack Router codegen                                                                |
+| `extension/dist/**`                                          | `npm run dev` or `npm run build:extension`                                             |
+| `.output/**`, `dist/**` (root)                               | `npm run build:web`                                                                    |
 
 ---
 
@@ -62,13 +62,13 @@ Every non-trivial agent session **must** follow this sequence before writing cod
 
 ### Phase A - Classify the task
 
-| Task class | Examples | Primary docs |
-|------------|----------|--------------|
-| **Extension product** | Sidebar, editor, storage, themes, search | `extension/README.md`, `.cursor/rules/extension-architecture.mdc` |
-| **Landing / marketing** | Hero, scroll video, download flow | `src/routes/README.md`, `.cursor/rules/landing-site.mdc` |
-| **Landing SEO / GEO** | Meta tags, FAQ schema, `llms.txt`, sitemap | `src/lib/seo.ts`, `.cursor/SKILLS.md` → `landing-seo` |
-| **Build / CI / tooling** | Vite, workflows, scripts | `package.json`, `.cursor/rules/testing-ci.mdc` |
-| **Cross-cutting** | Constants, naming, security | This file §3–§5 |
+| Task class               | Examples                                   | Primary docs                                                      |
+| ------------------------ | ------------------------------------------ | ----------------------------------------------------------------- |
+| **Extension product**    | Sidebar, editor, storage, themes, search   | `extension/README.md`, `.cursor/rules/extension-architecture.mdc` |
+| **Landing / marketing**  | Hero, scroll video, download flow          | `src/routes/README.md`, `.cursor/rules/landing-site.mdc`          |
+| **Landing SEO / GEO**    | Meta tags, FAQ schema, `llms.txt`, sitemap | `src/lib/seo.ts`, `.cursor/SKILLS.md` → `landing-seo`             |
+| **Build / CI / tooling** | Vite, workflows, scripts                   | `package.json`, `.cursor/rules/testing-ci.mdc`                    |
+| **Cross-cutting**        | Constants, naming, security                | This file §3–§5                                                   |
 
 ### Phase B - Trace data flow
 
@@ -88,13 +88,13 @@ Ask explicitly:
 
 ### Phase D - Verify
 
-| Change type | Minimum verification |
-|-------------|---------------------|
-| Extension UI/logic | `npm run test` + manual new-tab check |
-| Storage/schema | `tests/extension/storage/` + migration review |
-| Landing | `npm run dev:web` + visual check at `/` |
-| Landing SEO | `npm run test -- tests/landing/lib/seo.test.ts` + `curl` `/robots.txt`, `/sitemap.xml`, `/llms.txt` |
-| Build/scripts | `npm run ci` |
+| Change type        | Minimum verification                                                                                |
+| ------------------ | --------------------------------------------------------------------------------------------------- |
+| Extension UI/logic | `npm run test` + manual new-tab check                                                               |
+| Storage/schema     | `tests/extension/storage/` + migration review                                                       |
+| Landing            | `npm run dev:web` + visual check at `/`                                                             |
+| Landing SEO        | `npm run test -- tests/landing/lib/seo.test.ts` + `curl` `/robots.txt`, `/sitemap.xml`, `/llms.txt` |
+| Build/scripts      | `npm run ci`                                                                                        |
 
 **CI contract:** `npm run ci` must pass before merge. It mirrors `.github/workflows/ci.yml` exactly.
 
@@ -106,38 +106,38 @@ Document only what users can do today. Schema fields or storage helpers without 
 
 ### Shipped (extension + web demo)
 
-| Area | Capabilities |
-|------|----------------|
-| Workspace | Nested pages & folders, drag-and-drop reparent/reorder, inline rename, delete with descendant warning, collapsible sidebar & folders |
-| Favorites / Recent | Star/unstar pages (`favorite` boolean persisted); Favorites and Recent are sidebar **views** (not separate sections) |
-| Dashboard | Recent pages list, quick-create page/folder |
-| Editor | Tiptap blocks: headings H1–H4, bullet/ordered/task lists, blockquote, HR, tables, code blocks (lowlight); inline bold/italic/underline/strike/code/link; text/highlight colors; alignment |
-| Slash + toolbar | `/` slash menu; formatting toolbar; voice note, audio file, image insert |
-| Markdown paste | GFM-oriented paste (headings, task lists, tables, links, images, highlights, code fences) |
-| Images | Picker, drag-drop, paste file/screenshot/webpage `<img>` → OPFS; align, caption, lightbox, replace, copy, alt text, delete |
-| Voice notes | Inline record (mic on start), pause/resume, waveform playback + speed cycle, rename, download, delete; attach existing audio file |
-| Search | ⌘K FlexSearch over **title + body text** (in-memory; rebuilt on demand) |
-| Themes | 7 built-ins + user custom themes (persisted in settings tier) |
-| Persistence | Debounced autosave; BlockDoc JSON in IndexedDB (`doc_c`); settings in chrome.storage / localStorage; binaries in OPFS |
+| Area               | Capabilities                                                                                                                                                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Workspace          | Nested pages & folders, drag-and-drop reparent/reorder, inline rename, delete with descendant warning, collapsible sidebar & folders                                                      |
+| Favorites / Recent | Star/unstar pages (`favorite` boolean persisted); Favorites and Recent are sidebar **views** (not separate sections)                                                                      |
+| Dashboard          | Recent pages list, quick-create page/folder                                                                                                                                               |
+| Editor             | Tiptap blocks: headings H1–H4, bullet/ordered/task lists, blockquote, HR, tables, code blocks (lowlight); inline bold/italic/underline/strike/code/link; text/highlight colors; alignment |
+| Slash + toolbar    | `/` slash menu; formatting toolbar; voice note, audio file, image insert                                                                                                                  |
+| Markdown paste     | GFM-oriented paste (headings, task lists, tables, links, images, highlights, code fences)                                                                                                 |
+| Images             | Picker, drag-drop, paste file/screenshot/webpage `<img>` → OPFS; align, caption, lightbox, replace, copy, alt text, delete                                                                |
+| Voice notes        | Inline record (mic on start), pause/resume, waveform playback + speed cycle, rename, download, delete; attach existing audio file                                                         |
+| Search             | ⌘K FlexSearch over **title + body text** (in-memory; rebuilt on demand)                                                                                                                   |
+| Themes             | 7 built-ins + user custom themes (persisted in settings tier)                                                                                                                             |
+| Persistence        | Debounced autosave; BlockDoc JSON in IndexedDB (`doc_c`); settings in chrome.storage / localStorage; binaries in OPFS                                                                     |
 
 ### Landing site
 
-| Area | Capabilities |
-|------|----------------|
+| Area      | Capabilities                                                                                                                                      |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Marketing | Hero, scroll-linked launch video (Cloudinary-hosted), feature bento (CSS mockups; per-feature clips gated off by `LANDING_FEATURE_CLIPS_ENABLED`) |
-| Install | ZIP download (`mymemos-extension.zip`), get-started steps, FAQ accordion |
-| Demo | `/demo/` embeds the web SPA (separate origin from the extension) |
-| SEO / GEO | Meta + OG/Twitter, JSON-LD, `robots.txt`, `sitemap.xml`, `/llms.txt` |
+| Install   | ZIP download (`mymemos-extension.zip`), get-started steps, FAQ accordion                                                                          |
+| Demo      | `/demo/` embeds the web SPA (separate origin from the extension)                                                                                  |
+| SEO / GEO | Meta + OG/Twitter, JSON-LD, `robots.txt`, `sitemap.xml`, `/llms.txt`                                                                              |
 
 ### Present in code but **not** user-facing today
 
 Do **not** claim these as product features in README, FAQ, SEO, or agent summaries:
 
-| Item | Reality |
-|------|---------|
-| `Page.tags` | Schema + FlexSearch index field; **no UI** to add/edit tags |
-| `Page.archived` | Schema + filtered from selectors; **no UI** to archive |
-| `exportWorkspace` / `importWorkspace` | Implemented + tested in `db.ts`; **no UI** entry point |
+| Item                                      | Reality                                                           |
+| ----------------------------------------- | ----------------------------------------------------------------- |
+| `Page.tags`                               | Schema + FlexSearch index field; **no UI** to add/edit tags       |
+| `Page.archived`                           | Schema + filtered from selectors; **no UI** to archive            |
+| `exportWorkspace` / `importWorkspace`     | Implemented + tested in `db.ts`; **no UI** entry point            |
 | Cloud sync, accounts, backlinks/wikilinks | Out of scope / roadmap only (`extension/README.md` Roadmap-ready) |
 
 ---
@@ -187,14 +187,14 @@ Branch settings I/O only - page data path is shared (IndexedDB). Web and extensi
 
 Single Zustand facade: `extension/src/store/useStore.ts` (composes slices under `store/slices/`).
 
-| Concern | Owner |
-|---------|-------|
-| Pages, CRUD, workspace tree | `slices/pagesWorkspace.ts` |
-| View routing (`dashboard` \| `page`) | pages slice + `lastView` setting |
-| Theme | `slices/themeUi.ts` + `data-theme` on `<html>` |
-| Dialogs (serializable payloads) | `slices/dialogs.ts` |
-| TipTap bridge (`pageEditor`, links, attachment delete) | `slices/editorBridge.ts` |
-| Editor debounced saves | `PageView` + `EDITOR_SAVE_DEBOUNCE_MS` |
+| Concern                                                | Owner                                          |
+| ------------------------------------------------------ | ---------------------------------------------- |
+| Pages, CRUD, workspace tree                            | `slices/pagesWorkspace.ts`                     |
+| View routing (`dashboard` \| `page`)                   | pages slice + `lastView` setting               |
+| Theme                                                  | `slices/themeUi.ts` + `data-theme` on `<html>` |
+| Dialogs (serializable payloads)                        | `slices/dialogs.ts`                            |
+| TipTap bridge (`pageEditor`, links, attachment delete) | `slices/editorBridge.ts`                       |
+| Editor debounced saves                                 | `PageView` + `EDITOR_SAVE_DEBOUNCE_MS`         |
 
 Prefer **selectors** (`selectSearchablePages`, etc.) for derived data. Do not duplicate tree logic in components. Do not store `onConfirm` closures in dialog state.
 
@@ -262,11 +262,11 @@ curl -s http://localhost:8080/llms.txt | head
 
 Agents **must** read `.cursor/rules/constants-policy.mdc` before changing copy, labels, errors, or tunables.
 
-| Role | Path |
-|------|------|
-| **Canonical source** | `shared/constants.ts` |
-| Landing re-export | `src/lib/constants.ts` (`export * from "@shared/constants"`) |
-| Extension re-export | `extension/src/lib/constants.ts` (`export * from "@shared/constants"`) |
+| Role                 | Path                                                                   |
+| -------------------- | ---------------------------------------------------------------------- |
+| **Canonical source** | `shared/constants.ts`                                                  |
+| Landing re-export    | `src/lib/constants.ts` (`export * from "@shared/constants"`)           |
+| Extension re-export  | `extension/src/lib/constants.ts` (`export * from "@shared/constants"`) |
 
 **Rules:**
 
@@ -345,35 +345,35 @@ Pure UI tweak with no logic change?
 
 ### 5.2 Naming
 
-| Artifact | Convention |
-|----------|------------|
-| **Filenames** | See below (also `.cursor/rules/file-naming.mdc`) |
-| React components | PascalCase, default export |
-| Hooks | `use` prefix |
-| Store actions | camelCase verbs |
-| DB fields | snake_case (`parent_id`, `created_at`, `doc_c`) |
-| CSS | `ko-` prefix, `--ko-*` variables |
-| Tests | `tests/<surface>/…/<file>.test.ts` mirroring source path |
+| Artifact         | Convention                                               |
+| ---------------- | -------------------------------------------------------- |
+| **Filenames**    | See below (also `.cursor/rules/file-naming.mdc`)         |
+| React components | PascalCase, default export                               |
+| Hooks            | `use` prefix                                             |
+| Store actions    | camelCase verbs                                          |
+| DB fields        | snake_case (`parent_id`, `created_at`, `doc_c`)          |
+| CSS              | `ko-` prefix, `--ko-*` variables                         |
+| Tests            | `tests/<surface>/…/<file>.test.ts` mirroring source path |
 
 **Filename conventions (source of truth for agents):**
 
-| Kind | Convention | Example |
-|------|------------|---------|
-| React component modules | PascalCase | `Sidebar.tsx` |
-| Hooks | camelCase + `use` | `useStore.ts` |
-| Non-component TS modules | camelCase | `workspaceTree.ts`, `errorCapture.ts` |
-| CLI scripts (`.mjs`) | kebab-case | `generate-sitemap.mjs` |
+| Kind                     | Convention        | Example                               |
+| ------------------------ | ----------------- | ------------------------------------- |
+| React component modules  | PascalCase        | `Sidebar.tsx`                         |
+| Hooks                    | camelCase + `use` | `useStore.ts`                         |
+| Non-component TS modules | camelCase         | `workspaceTree.ts`, `errorCapture.ts` |
+| CLI scripts (`.mjs`)     | kebab-case        | `generate-sitemap.mjs`                |
 
 Exceptions: generated/framework routes (`__root.tsx`, `routeTree.gen.ts`), package-mirrored `.d.ts` names.
 
 ### 5.3 Error handling
 
-| Layer | Pattern |
-|-------|---------|
-| Storage decode | Safe fallback + warn |
-| User actions (download) | Inline error state, no `alert()` |
-| SSR | `errorCapture.ts` + `ErrorComponent` in `__root.tsx` |
-| Missing entities | Inline empty states |
+| Layer                   | Pattern                                              |
+| ----------------------- | ---------------------------------------------------- |
+| Storage decode          | Safe fallback + warn                                 |
+| User actions (download) | Inline error state, no `alert()`                     |
+| SSR                     | `errorCapture.ts` + `ErrorComponent` in `__root.tsx` |
+| Missing entities        | Inline empty states                                  |
 
 ### 5.4 Formatting & lint
 
@@ -401,10 +401,10 @@ Agents must inspect adjacent implementations before proposing new abstractions. 
 
 Both landing and extension use **React 19**, but they remain separate apps:
 
-| Surface | React | Styling / build |
-|---------|-------|-----------------|
-| Extension + demo | 19 | Tailwind 3, Vite 5 + CRXJS / web Vite |
-| Landing | 19 | Tailwind 4, TanStack Start / Vite 7 |
+| Surface          | React | Styling / build                       |
+| ---------------- | ----- | ------------------------------------- |
+| Extension + demo | 19    | Tailwind 3, Vite 5 + CRXJS / web Vite |
+| Landing          | 19    | Tailwind 4, TanStack Start / Vite 7   |
 
 Do not share React components across packages without an explicit build boundary — different CSS systems and entrypoints, not React major mismatch.
 
@@ -419,42 +419,43 @@ Do not share React components across packages without an explicit build boundary
 - **Do not commit** unless the user explicitly asks.
 - **Do not force-push** `main`.
 - PRs via `gh` per user rules; include test plan.
+- Local hooks: **pre-commit** packages the extension ZIP when needed; **pre-push** runs `npm run ci`. Skip with `SKIP_EXTENSION_PACKAGE=1` / `SKIP_PRE_PUSH_CI=1` only when necessary.
 
 ---
 
 ## 7. Domain glossary
 
-| Term | Meaning |
-|------|---------|
-| **BlockDoc** | ProseMirror-compatible JSON document tree |
-| **Page** | Core entity: title, metadata, `doc`, tree position |
-| **Directory** | Folder node (`kind: "directory"`) in workspace tree |
-| **Workspace** | User-organized tree under Pages section |
-| **Dashboard** | Home view: recent pages, quick create |
-| **Search palette** | ⌘K fuzzy search over titles and body text (tags field indexed but no tag UI) |
-| **OPFS attachments** | Images and voice/audio binaries under `mymemos-attachments/` |
-| **New Tab override** | `chrome_url_overrides.newtab` → extension UI |
-| **Scroll runway** | Landing sticky-scroll section driving launch video |
-| **Web demo** | Static SPA at `/demo/` for try-before-install |
-| **llms.txt** | Machine-readable product summary for AI crawlers |
-| **GEO** | Generative Engine Optimization - structured FAQ/schema for AI search |
+| Term                 | Meaning                                                                      |
+| -------------------- | ---------------------------------------------------------------------------- |
+| **BlockDoc**         | ProseMirror-compatible JSON document tree                                    |
+| **Page**             | Core entity: title, metadata, `doc`, tree position                           |
+| **Directory**        | Folder node (`kind: "directory"`) in workspace tree                          |
+| **Workspace**        | User-organized tree under Pages section                                      |
+| **Dashboard**        | Home view: recent pages, quick create                                        |
+| **Search palette**   | ⌘K fuzzy search over titles and body text (tags field indexed but no tag UI) |
+| **OPFS attachments** | Images and voice/audio binaries under `mymemos-attachments/`                 |
+| **New Tab override** | `chrome_url_overrides.newtab` → extension UI                                 |
+| **Scroll runway**    | Landing sticky-scroll section driving launch video                           |
+| **Web demo**         | Static SPA at `/demo/` for try-before-install                                |
+| **llms.txt**         | Machine-readable product summary for AI crawlers                             |
+| **GEO**              | Generative Engine Optimization - structured FAQ/schema for AI search         |
 
 ---
 
 ## 8. Related files
 
-| File | Purpose |
-|------|---------|
-| [`.cursor/SKILLS.md`](.cursor/SKILLS.md) | Task → skill/workflow routing |
-| [`.cursor/rules/`](.cursor/rules/) | Scoped Cursor rules (`.mdc`) |
-| [`.cursor/rules/constants-policy.mdc`](.cursor/rules/constants-policy.mdc) | Single-source constants policy (always apply) |
-| [`shared/constants.ts`](shared/constants.ts) | Canonical product constants (landing + extension) |
-| [`tests/README.md`](tests/README.md) | Source ↔ test path mapping contract |
-| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Human contributor guide |
-| [`extension/README.md`](extension/README.md) | Extension architecture deep-dive |
-| [`src/routes/README.md`](src/routes/README.md) | TanStack Router conventions |
-| [`src/lib/seo.ts`](src/lib/seo.ts) | Meta tags, JSON-LD, robots/sitemap/llms builders |
-| [`scripts/generate-sitemap.mjs`](scripts/generate-sitemap.mjs) | Static SEO file generation |
+| File                                                                       | Purpose                                           |
+| -------------------------------------------------------------------------- | ------------------------------------------------- |
+| [`.cursor/SKILLS.md`](.cursor/SKILLS.md)                                   | Task → skill/workflow routing                     |
+| [`.cursor/rules/`](.cursor/rules/)                                         | Scoped Cursor rules (`.mdc`)                      |
+| [`.cursor/rules/constants-policy.mdc`](.cursor/rules/constants-policy.mdc) | Single-source constants policy (always apply)     |
+| [`shared/constants.ts`](shared/constants.ts)                               | Canonical product constants (landing + extension) |
+| [`tests/README.md`](tests/README.md)                                       | Source ↔ test path mapping contract               |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md)                                       | Human contributor guide                           |
+| [`extension/README.md`](extension/README.md)                               | Extension architecture deep-dive                  |
+| [`src/routes/README.md`](src/routes/README.md)                             | TanStack Router conventions                       |
+| [`src/lib/seo.ts`](src/lib/seo.ts)                                         | Meta tags, JSON-LD, robots/sitemap/llms builders  |
+| [`scripts/generate-sitemap.mjs`](scripts/generate-sitemap.mjs)             | Static SEO file generation                        |
 
 ---
 
@@ -486,4 +487,4 @@ npm run test:watch
 
 ---
 
-*Last structured for AI consumption. When human docs and this file diverge, trust generated artifacts and `package.json` scripts as runtime truth, then update this file.*
+_Last structured for AI consumption. When human docs and this file diverge, trust generated artifacts and `package.json` scripts as runtime truth, then update this file._

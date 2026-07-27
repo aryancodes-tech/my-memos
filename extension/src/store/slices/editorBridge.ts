@@ -26,12 +26,10 @@ function deleteEditorNodeByAttachmentPath(
     .run();
 }
 
-export const createEditorBridgeSlice: StateCreator<
-  StoreState,
-  [],
-  [],
-  EditorBridgeSlice
-> = (set, get) => ({
+export const createEditorBridgeSlice: StateCreator<StoreState, [], [], EditorBridgeSlice> = (
+  set,
+  get,
+) => ({
   pageEditor: null,
 
   setPageEditor(editor) {

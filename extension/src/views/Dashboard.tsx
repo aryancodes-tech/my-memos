@@ -59,9 +59,7 @@ export default function Dashboard() {
           <h2 id="ko-dashboard-recent-title" className="ko-dashboard-recent-title">
             Recent
           </h2>
-          {recent.length > 0 && (
-            <span className="ko-dashboard-recent-count">{recent.length}</span>
-          )}
+          {recent.length > 0 && <span className="ko-dashboard-recent-count">{recent.length}</span>}
         </div>
 
         {recent.length === 0 ? (

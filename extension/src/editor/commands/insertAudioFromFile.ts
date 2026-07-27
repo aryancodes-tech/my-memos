@@ -3,10 +3,7 @@ import { saveUploadedAudioAttachment } from "@/lib/attachments/attachmentManager
 import { AttachmentFsUnsupportedError } from "@/lib/attachments/errors";
 import { appendAfterSelectedNode } from "@/editor/commands/insertSelection";
 import { isAttachmentStorageSupported } from "@/lib/attachments/fileSystemManager";
-import {
-  ATTACHMENT_FS_UNSUPPORTED_MESSAGE,
-  AUDIO_ATTACH_FAILURE_MESSAGE,
-} from "@/lib/constants";
+import { ATTACHMENT_FS_UNSUPPORTED_MESSAGE, AUDIO_ATTACH_FAILURE_MESSAGE } from "@/lib/constants";
 import type { SlashRange } from "@/editor/slashBlock";
 import { focusVoiceInsertPosition } from "@/editor/commands/insertVoiceRecording";
 
