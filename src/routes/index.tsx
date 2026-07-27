@@ -17,7 +17,7 @@ import {
   buildLandingMetaTags,
   resolveSiteOrigin,
 } from "@/lib/seo";
-import { getSeoRequestOrigin } from "@/lib/seo-request-origin";
+import { getSeoRequestOrigin } from "@/lib/seoRequestOrigin";
 
 export const Route = createFileRoute("/")({
   loader: async () => ({

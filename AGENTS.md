@@ -203,14 +203,14 @@ Prefer **selectors** (`selectSearchablePages`, etc.) for derived data. Do not du
 - **`lib/attachments/`** — OPFS I/O, sanitize, recorder, waveform (no TipTap imports).
 - **`editor/commands/`** — TipTap insert helpers (`insertImage`, `insertAudioFromFile`, `insertVoiceRecording`, `insertSelection`).
 - **`editor/hooks/`** — fat node-view logic (voice record/playback, image chrome).
-- **`lib/workspace-drag.ts`** — sidebar workspace DnD session helpers.
+- **`lib/workspaceDrag.ts`** — sidebar workspace DnD session helpers.
 
 ### 3.4 Workspace model
 
 - `Page.kind`: `"page"` | `"directory"`
 - `Page.section`: workspace lives under `WORKSPACE_SECTION` (`"Pages"`)
 - `parent_id`: `""` (root) - check with `len(parent_id) === 0`
-- Drag-and-drop uses `WORKSPACE_DRAG_MIME`; validate moves via `workspace-tree.ts` helpers
+- Drag-and-drop uses `WORKSPACE_DRAG_MIME`; validate moves via `workspaceTree.ts` helpers
 - Favorites / Recent are sidebar **views**, not stored sections. The `favorite` flag is persisted on `Page`; Recent is derived from timestamps.
 - `tags` and `archived` exist on the schema for forward-compat / filtering — no product UI today (see §2.5).
 
@@ -233,7 +233,7 @@ Markdown paste: `extension/src/editor/markdownPaste.ts` + tests in `tests/extens
 ┌─────────────────────────────────────────────────────────────┐
 │ Content source: src/lib/ai-content.json (FAQ, llms summary) │
 ├─────────────────────────────────────────────────────────────┤
-│ Runtime helpers: src/lib/seo.ts, landing-faq-content.ts     │
+│ Runtime helpers: src/lib/seo.ts, landingFaqContent.ts     │
 ├─────────────────────────────────────────────────────────────┤
 │ Static output (gitignored): public/robots.txt, sitemap.xml, │
 │   llms.txt ← scripts/generate-sitemap.mjs                   │
@@ -272,7 +272,7 @@ Agents **must** read `.cursor/rules/constants-policy.mdc` before changing copy, 
 
 - Edit **`shared/constants.ts` only**. Do not add constants to the re-export files. Do not add `strings.ts`, `messages.ts`, `copy.ts`, or inline user-facing literals in components.
 - App code imports via `@/lib/constants` (preferred) or `@shared/constants`.
-- Exceptions: FAQ/llms body → `src/lib/ai-content.json`; SEO builders → `src/lib/seo.ts`; build-only knobs → Vite/manifest config; pure CSS tokens → stylesheets; theme type shapes → `shared/theme-types.ts`.
+- Exceptions: FAQ/llms body → `src/lib/ai-content.json`; SEO builders → `src/lib/seo.ts`; build-only knobs → Vite/manifest config; pure CSS tokens → stylesheets; theme type shapes → `shared/themeTypes.ts`.
 
 ```typescript
 // ✅
@@ -291,7 +291,7 @@ throw new Error("Microphone access was denied…");
 
 ```
 Is it FAQ / llms.txt / AI crawler body copy?
-  YES → src/lib/ai-content.json (+ resolve links in landing-faq-content.ts)
+  YES → src/lib/ai-content.json (+ resolve links in landingFaqContent.ts)
  NO ↓
 Is it SEO meta, JSON-LD, robots, or sitemap builders?
   YES → src/lib/seo.ts (+ scripts/generate-sitemap.mjs for static files)
@@ -315,7 +315,7 @@ Editing extension UI (Sidebar, Editor, Store)?
 
 Editing landing page?
   → npm run dev:web  (http://localhost:8080)
-  → Includes /demo/ via web-app-dev-plugin.ts
+  → Includes /demo/ via webAppDevPlugin.ts
 
 Editing web demo only (no landing)?
   → npm run dev:app
@@ -347,6 +347,7 @@ Pure UI tweak with no logic change?
 
 | Artifact | Convention |
 |----------|------------|
+| **Filenames** | See below (also `.cursor/rules/file-naming.mdc`) |
 | React components | PascalCase, default export |
 | Hooks | `use` prefix |
 | Store actions | camelCase verbs |
@@ -354,13 +355,24 @@ Pure UI tweak with no logic change?
 | CSS | `ko-` prefix, `--ko-*` variables |
 | Tests | `tests/<surface>/…/<file>.test.ts` mirroring source path |
 
+**Filename conventions (source of truth for agents):**
+
+| Kind | Convention | Example |
+|------|------------|---------|
+| React component modules | PascalCase | `Sidebar.tsx` |
+| Hooks | camelCase + `use` | `useStore.ts` |
+| Non-component TS modules | camelCase | `workspaceTree.ts`, `errorCapture.ts` |
+| CLI scripts (`.mjs`) | kebab-case | `generate-sitemap.mjs` |
+
+Exceptions: generated/framework routes (`__root.tsx`, `routeTree.gen.ts`), package-mirrored `.d.ts` names.
+
 ### 5.3 Error handling
 
 | Layer | Pattern |
 |-------|---------|
 | Storage decode | Safe fallback + warn |
 | User actions (download) | Inline error state, no `alert()` |
-| SSR | `error-capture.ts` + `ErrorComponent` in `__root.tsx` |
+| SSR | `errorCapture.ts` + `ErrorComponent` in `__root.tsx` |
 | Missing entities | Inline empty states |
 
 ### 5.4 Formatting & lint

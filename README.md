@@ -76,7 +76,7 @@ The landing site ships crawler-facing files for search engines and AI systems. *
 
 - FAQ copy & llms summary: `src/lib/ai-content.json`
 - Meta tags, JSON-LD, helpers: `src/lib/seo.ts`
-- FAQ UI + link resolution: `src/lib/landing-faq-content.ts`, `src/components/landing/LandingFaq.tsx`
+- FAQ UI + link resolution: `src/lib/landingFaqContent.ts`, `src/components/landing/LandingFaq.tsx`
 
 **Generate SEO files locally**
 

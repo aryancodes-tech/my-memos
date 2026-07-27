@@ -4,7 +4,7 @@ import {
   resolveFaqLinkHref,
   resolveLandingFaqItems,
   type LandingFaqItem,
-} from "@/lib/landing-faq-content";
+} from "@/lib/landingFaqContent";
 
 describe("resolveFaqLinkHref", () => {
   it("returns relative paths when origin is empty", () => {

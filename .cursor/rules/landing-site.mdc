@@ -63,14 +63,14 @@ Show inline error if 404 (do not `alert()`).
 
 ## Demo embed
 
-- Dev: `web-app-dev-plugin.ts` proxies `/demo/` to extension Vite
+- Dev: `webAppDevPlugin.ts` proxies `/demo/` to extension Vite
 - Prod: static files in `public/demo/` from `npm run build:web`
 - Do not edit `public/demo/` directly
 
 ## SSR errors
 
 - `src/server.ts` - custom handler
-- `error-capture.ts` - swallowed error recovery
+- `errorCapture.ts` - swallowed error recovery
 - `__root.tsx` - `ErrorComponent`, favicon links, global CSS
 
 ## SEO & AI discoverability
@@ -88,7 +88,7 @@ Show inline error if 404 (do not `alert()`).
 
 - Marketing copy → `shared/constants.ts`
 - FAQ / llms summary → `src/lib/ai-content.json`
-- FAQ link paths → `"path": "/demo/"` in JSON; resolved in `landing-faq-content.ts`
+- FAQ link paths → `"path": "/demo/"` in JSON; resolved in `landingFaqContent.ts`
 
 **Generate & test:**
 
@@ -104,7 +104,7 @@ Also runs automatically via `predev:web` and `prebuild:web`. Do **not** commit g
 ## Styling
 
 - Landing-specific CSS: `src/landing.css`
-- Design tokens: `src/lib/design-tokens.ts`
+- Design tokens: `src/lib/designTokens.ts`
 - Extension uses separate `ko-` theme - landing does not share CSS
 
 ## Verify

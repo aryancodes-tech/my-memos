@@ -47,7 +47,7 @@ Same basename. Import SUT via `@/` — do not co-locate `*.test.ts` under `src/`
 |--------|-----------|
 | `extension/src/storage/codec.ts` | `tests/extension/storage/codec.test.ts` |
 | `extension/src/storage/db.ts` | `tests/extension/storage/db.test.ts` |
-| `extension/src/lib/workspace-tree.ts` | `tests/extension/lib/workspace-tree.test.ts` |
+| `extension/src/lib/workspaceTree.ts` | `tests/extension/lib/workspaceTree.test.ts` |
 | `extension/src/store/useStore.ts` | `tests/extension/store/useStore.test.ts` (+ `moveWorkspaceItem.test.ts` for moves) |
 | `extension/src/editor/markdownPaste.ts` | `tests/extension/editor/markdownPaste.test.ts` |
 | `extension/src/lib/attachments/*` | `tests/extension/lib/attachments/*.test.ts` |

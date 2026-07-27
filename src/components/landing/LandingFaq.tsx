@@ -9,7 +9,7 @@ import {
 import {
   LANDING_FAQ_ITEMS,
   type LandingFaqItem,
-} from "@/lib/landing-faq-content";
+} from "@/lib/landingFaqContent";
 
 export { LANDING_FAQ_ITEMS, type LandingFaqItem };
 

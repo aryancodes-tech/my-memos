@@ -8,7 +8,7 @@ import {
   LEGACY_WORKSPACE_SECTIONS,
   normalizeWorkspaceSection,
   resolveFolderDropParentId,
-} from "@/lib/workspace-tree";
+} from "@/lib/workspaceTree";
 import type { Page } from "@/storage/types";
 
 function page(overrides: Partial<Page> & Pick<Page, "id">): Page {

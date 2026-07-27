@@ -10,7 +10,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportClientError } from "../lib/client-error-reporting";
+import { reportClientError } from "../lib/clientErrorReporting";
 import {
   SITE_APPLE_TOUCH_ICON_PATH,
   SITE_FAVICON_PATH,

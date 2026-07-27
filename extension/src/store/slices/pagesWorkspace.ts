@@ -14,7 +14,7 @@ import {
 import { len } from "@/lib/text";
 import { deleteAttachment } from "@/lib/attachments/attachmentManager";
 import { collectOrphanedAttachmentPaths } from "@/lib/attachments/sanitizeBlockDoc";
-import { canMoveWorkspaceItem, normalizeWorkspaceSection } from "@/lib/workspace-tree";
+import { canMoveWorkspaceItem, normalizeWorkspaceSection } from "@/lib/workspaceTree";
 import {
   applyThemeToDocument,
   getCustomThemeStorageId,

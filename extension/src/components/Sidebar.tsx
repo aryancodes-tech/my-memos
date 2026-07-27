@@ -34,14 +34,14 @@ import {
   canDropOntoPage,
   canMoveWorkspaceItem,
   resolveFolderDropParentId,
-} from "@/lib/workspace-tree";
+} from "@/lib/workspaceTree";
 import {
   resolveDragPageId,
   scheduleWorkspaceDragCleanup,
   startWorkspaceRowDrag,
   useWorkspaceDrag,
   type WorkspaceDragProps,
-} from "@/lib/workspace-drag";
+} from "@/lib/workspaceDrag";
 import { PageIcon } from "@/components/PageIcon";
 import {
   ChevronLeft,

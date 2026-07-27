@@ -160,7 +160,7 @@ npm run test -- tests/extension/editor/markdownPaste.test.ts
 
 **Read:**
 
-- `extension/src/lib/workspace-tree.ts`
+- `extension/src/lib/workspaceTree.ts`
 - `tests/extension/store/moveWorkspaceItem.test.ts`
 - `extension/src/components/Sidebar.tsx`
 
@@ -173,7 +173,7 @@ npm run test -- tests/extension/editor/markdownPaste.test.ts
 **Verify:**
 
 ```bash
-npm run test -- tests/extension/lib/workspace-tree.test.ts tests/extension/store/moveWorkspaceItem.test.ts
+npm run test -- tests/extension/lib/workspaceTree.test.ts tests/extension/store/moveWorkspaceItem.test.ts
 ```
 
 ---
@@ -214,7 +214,7 @@ npm run dev:web
 - `.cursor/rules/landing-site.mdc` (SEO section)
 - `src/lib/seo.ts`
 - `src/lib/ai-content.json`
-- `src/lib/landing-faq-content.ts`
+- `src/lib/landingFaqContent.ts`
 - `scripts/generate-sitemap.mjs`
 - `src/routes/llms[.]txt.ts`
 
@@ -253,7 +253,7 @@ VITE_SITE_URL=https://www.mymemos.in npm run generate:seo
 **Read:**
 
 - `extension/vite.web.config.ts`
-- `web-app-dev-plugin.ts`
+- `webAppDevPlugin.ts`
 - `extension/src/lib/platform.ts`
 
 **Patterns:**
