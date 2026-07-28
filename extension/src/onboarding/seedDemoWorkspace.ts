@@ -31,11 +31,6 @@ export type DemoSeedVoiceAttrs = {
 export function buildDemoSeedBlockDoc(voice?: DemoSeedVoiceAttrs | null): BlockDoc {
   const content: BlockNode[] = [
     {
-      type: "heading",
-      attrs: { level: 1 },
-      content: [{ type: "text", text: "Welcome to MyMemos" }],
-    },
-    {
       type: "paragraph",
       content: [
         {
