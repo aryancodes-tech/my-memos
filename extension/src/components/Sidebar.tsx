@@ -13,6 +13,7 @@ import {
   SIDEBAR_ADD_INSIDE_LABEL,
   SIDEBAR_ADD_NEW_ARIA_LABEL,
   SIDEBAR_ADD_TO_FAVORITES_LABEL,
+  SIDEBAR_BRAND_HOME_ARIA_LABEL,
   SIDEBAR_COLLAPSE_LABEL,
   SIDEBAR_DASHBOARD_LABEL,
   SIDEBAR_EXPAND_LABEL,
@@ -30,6 +31,7 @@ import {
   WORKSPACE_SECTION,
 } from "@/lib/constants";
 import { len } from "@/lib/text";
+import { isWebAppContext } from "@/lib/platform";
 import {
   canDropOntoFolder,
   canDropOntoPage,
@@ -98,9 +100,7 @@ export default function Sidebar() {
       }}
     >
       <div className="flex items-center justify-between px-3 py-3">
-        <div className="text-sm font-semibold tracking-tight text-[var(--ko-text)]">
-          {PRODUCT_NAME}
-        </div>
+        <SidebarBrandHome />
         <IconRailButton title={SIDEBAR_COLLAPSE_LABEL} onClick={toggleSidebar}>
           <ChevronLeft size={16} strokeWidth={1.75} />
         </IconRailButton>
@@ -139,6 +139,31 @@ export default function Sidebar() {
         </WorkspaceSection>
       </div>
     </aside>
+  );
+}
+
+function SidebarBrandHome() {
+  const setView = useStore((state) => state.setView);
+  const className =
+    "text-sm font-semibold tracking-tight text-[var(--ko-text)] hover:opacity-80 transition-opacity";
+
+  if (isWebAppContext()) {
+    return (
+      <a href="/" className={className} aria-label={SIDEBAR_BRAND_HOME_ARIA_LABEL}>
+        {PRODUCT_NAME}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className={className}
+      aria-label={SIDEBAR_BRAND_HOME_ARIA_LABEL}
+      onClick={() => setView({ kind: "dashboard" })}
+    >
+      {PRODUCT_NAME}
+    </button>
   );
 }
 

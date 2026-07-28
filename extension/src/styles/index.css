@@ -1772,11 +1772,11 @@ body {
   border: 1px solid var(--ko-border);
 }
 .ko-tour-btn-primary {
-  color: #fff;
-  background: var(--ko-accent);
+  color: var(--ko-bg);
+  background: var(--ko-text);
 }
 .ko-tour-btn-primary:hover {
-  filter: brightness(1.05);
+  opacity: 0.88;
 }
 @media (prefers-reduced-motion: reduce) {
   .ko-tour-root,
