@@ -27,6 +27,8 @@ import {
   SIDEBAR_RECENT_SHOW_MORE_LABEL,
   SIDEBAR_RECENT_VISIBLE_LIMIT,
   SIDEBAR_REMOVE_FROM_FAVORITES_LABEL,
+  SIDEBAR_TRUST_BODY,
+  SIDEBAR_TRUST_TITLE,
   SIDEBAR_WIDTH_PX,
   PRODUCT_TOUR_TARGETS,
   WORKSPACE_SECTION,
@@ -48,11 +50,14 @@ import {
 } from "@/lib/workspaceDrag";
 import { PageIcon } from "@/components/PageIcon";
 import {
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
   FileText,
   Folder,
   LayoutDashboard,
+  Lock,
   MoreHorizontal,
   Pencil,
   Plus,
@@ -63,7 +68,7 @@ import {
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 export default function Sidebar() {
-  const { pages, sidebarCollapsed, toggleSidebar, view, setView, setSearchOpen } = useStore();
+  const { pages, sidebarCollapsed, view, setView, setSearchOpen } = useStore();
   const workspaceDrag = useWorkspaceDrag();
 
   const favorites = useMemo(() => selectFavoritePages(pages), [pages]);
@@ -73,9 +78,6 @@ export default function Sidebar() {
   if (sidebarCollapsed) {
     return (
       <aside className="ko-sidebar w-11 shrink-0 border-r flex flex-col items-center py-3 gap-1">
-        <IconRailButton title={SIDEBAR_EXPAND_LABEL} onClick={toggleSidebar}>
-          <ChevronRight size={16} strokeWidth={1.75} />
-        </IconRailButton>
         <IconRailButton
           title={`Search (${SEARCH_SHORTCUT_LABEL})`}
           onClick={() => setSearchOpen(true)}
@@ -100,14 +102,7 @@ export default function Sidebar() {
         ["--ko-sidebar-menu-min-width" as string]: `${SIDEBAR_MENU_MIN_WIDTH_PX}px`,
       }}
     >
-      <div className="flex items-center justify-between px-3 py-3">
-        <SidebarBrandHome />
-        <IconRailButton title={SIDEBAR_COLLAPSE_LABEL} onClick={toggleSidebar}>
-          <ChevronLeft size={16} strokeWidth={1.75} />
-        </IconRailButton>
-      </div>
-
-      <div className="px-1.5 space-y-0.5 shrink-0">
+      <div className="ko-sidebar-nav-shell shrink-0">
         <NavItem
           icon={<Search size={15} strokeWidth={1.75} />}
           label="Search"
@@ -139,19 +134,47 @@ export default function Sidebar() {
           ))}
         </WorkspaceSection>
       </div>
+      <SidebarTrustCard />
     </aside>
+  );
+}
+
+export function SidebarHeader() {
+  const { sidebarCollapsed, toggleSidebar } = useStore();
+
+  if (sidebarCollapsed) {
+    return (
+      <div className="ko-sidebar-topbar w-11 shrink-0 border-r justify-center">
+        <IconRailButton title={SIDEBAR_EXPAND_LABEL} onClick={toggleSidebar}>
+          <ChevronRight size={16} strokeWidth={1.75} />
+        </IconRailButton>
+      </div>
+    );
+  }
+
+  return (
+    <div className="ko-sidebar-topbar shrink-0 border-r" style={{ width: SIDEBAR_WIDTH_PX }}>
+      <SidebarBrandHome />
+      <IconRailButton title={SIDEBAR_COLLAPSE_LABEL} onClick={toggleSidebar}>
+        <ChevronLeft size={16} strokeWidth={1.75} />
+      </IconRailButton>
+    </div>
   );
 }
 
 function SidebarBrandHome() {
   const setView = useStore((state) => state.setView);
-  const className =
-    "text-sm font-semibold tracking-tight text-[var(--ko-text)] hover:opacity-80 transition-opacity";
+  const className = "ko-sidebar-brand hover:opacity-95 transition-opacity";
+  const content = (
+    <>
+      <span className="ko-sidebar-brand-label">{PRODUCT_NAME}</span>
+    </>
+  );
 
   if (isWebAppContext()) {
     return (
       <a href="/" className={className} aria-label={SIDEBAR_BRAND_HOME_ARIA_LABEL}>
-        {PRODUCT_NAME}
+        {content}
       </a>
     );
   }
@@ -163,7 +186,7 @@ function SidebarBrandHome() {
       aria-label={SIDEBAR_BRAND_HOME_ARIA_LABEL}
       onClick={() => setView({ kind: "dashboard" })}
     >
-      {PRODUCT_NAME}
+      {content}
     </button>
   );
 }
@@ -221,7 +244,7 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <div className="mt-5 first:mt-0">
+    <div className="mt-4 first:mt-0">
       <div className="ko-sidebar-section-header">
         <div className="ko-sidebar-section-title">{title}</div>
         {action}
@@ -252,6 +275,11 @@ function RecentSection({ pages }: { pages: Page[] }) {
               className="ko-sidebar-show-more"
               onClick={() => setExpanded((value) => !value)}
             >
+              {expanded ? (
+                <ChevronUp size={13} strokeWidth={1.9} aria-hidden />
+              ) : (
+                <ChevronDown size={13} strokeWidth={1.9} aria-hidden />
+              )}
               {expanded ? SIDEBAR_RECENT_SHOW_LESS_LABEL : SIDEBAR_RECENT_SHOW_MORE_LABEL}
             </button>
           )}
@@ -264,12 +292,31 @@ function RecentSection({ pages }: { pages: Page[] }) {
 /** Pages section containing the workspace tree. */
 function WorkspaceSection({ action, children }: { action: ReactNode; children: ReactNode }) {
   return (
-    <div className="mt-5 first:mt-0 ko-workspace-section">
+    <div
+      className="mt-4 first:mt-0 ko-workspace-section"
+      data-tour-target={PRODUCT_TOUR_TARGETS.workspaceTree}
+    >
       <div className="ko-sidebar-section-header">
         <div className="ko-sidebar-section-title">{WORKSPACE_SECTION}</div>
         {action}
       </div>
       <div className="ko-workspace-tree">{children}</div>
+    </div>
+  );
+}
+
+function SidebarTrustCard() {
+  return (
+    <div className="ko-sidebar-trust-wrap shrink-0">
+      <div className="ko-sidebar-trust-card">
+        <div className="ko-sidebar-trust-copy">
+          <div className="ko-sidebar-trust-title">{SIDEBAR_TRUST_TITLE}</div>
+          <p className="ko-sidebar-trust-body">{SIDEBAR_TRUST_BODY}</p>
+        </div>
+        <div className="ko-sidebar-trust-icon" aria-hidden>
+          <Lock size={14} strokeWidth={1.9} />
+        </div>
+      </div>
     </div>
   );
 }
@@ -559,7 +606,7 @@ function PageRow({
     <div
       ref={ref}
       className={`ko-sidebar-row group relative ${active ? "is-active" : ""} ${dropTarget ? "is-drop-target" : ""} ${dragPageId === page.id ? "is-dragging" : ""}`}
-      style={{ paddingLeft: `${depth * SIDEBAR_INDENT_PX + (depth > 0 ? 24 : 6)}px` }}
+      style={{ paddingLeft: `${depth * SIDEBAR_INDENT_PX + (depth > 0 ? 30 : 8)}px` }}
       draggable={isWorkspace && !menuOpen}
       onDragStart={
         isWorkspace && workspaceDrag

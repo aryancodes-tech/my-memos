@@ -99,7 +99,7 @@ Human contributors benefit from the same docs - especially `AGENTS.md` §3 (stor
 
 ## Code conventions
 
-- **Constants** - single source: `shared/constants.ts`. Landing/extension `*/lib/constants.ts` only re-export. Import via `@/lib/constants`; do not hardcode strings in components. See `.cursor/rules/constants-policy.mdc` and `AGENTS.md` §3.7. FAQ/AI crawler prose stays in `src/lib/ai-content.json`.
+- **Constants** - single source: `shared/constants.ts`. Landing/extension `*/lib/constants.ts` only re-export. Import via `@/lib/constants`; do not hardcode strings in components. See `.cursor/rules/constants-policy.mdc` and `AGENTS.md` §3.8. FAQ/AI crawler prose stays in `src/lib/ai-content.json`.
 - **Empty strings** - use `len(value) === 0` / `len(value) > 0` from `extension/src/lib/text.ts` (never `!value` for strings)
 - **Storage** - persist block JSON only; attachment binaries go in OPFS (paths in block attrs)
 - **Capabilities** - do not document schema-only / unwired APIs as user features (`AGENTS.md` §2.5)

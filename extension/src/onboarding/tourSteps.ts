@@ -9,9 +9,9 @@ export function tourStepNeedsPage(stepId: string): boolean {
   return stepId === "slash-menu" || stepId === "add-image" || stepId === "add-voice";
 }
 
-/** True when the step spotlights create-page targets (prefer dashboard). */
+/** True when the step spotlights create-page / workspace targets (prefer dashboard). */
 export function tourStepPrefersDashboard(stepId: string): boolean {
-  return stepId === "create-page";
+  return stepId === "create-page" || stepId === "workspace-drag";
 }
 
 export { PRODUCT_TOUR_STEPS, PRODUCT_TOUR_TARGETS };

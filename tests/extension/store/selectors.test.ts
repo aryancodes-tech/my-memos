@@ -101,18 +101,32 @@ describe("workspace selectors edge cases", () => {
     expect(selectWorkspaceChildren(pages, "missing")).toEqual([]);
   });
 
-  it("sorts directories before pages, then by updated_at", () => {
+  it("sorts folders before pages, then by created_at (stable; ignores updated_at)", () => {
     const pages = [
-      page({ id: "page-new", updated_at: 20 }),
-      page({ id: "dir-old", kind: "directory", updated_at: 1 }),
-      page({ id: "dir-new", kind: "directory", updated_at: 30 }),
-      page({ id: "page-old", updated_at: 2 }),
+      page({ id: "page-new", created_at: 20, updated_at: 99 }),
+      page({ id: "dir-old", kind: "directory", created_at: 1, updated_at: 50 }),
+      page({ id: "dir-new", kind: "directory", created_at: 30, updated_at: 1 }),
+      page({ id: "page-old", created_at: 2, updated_at: 80 }),
     ];
     expect(selectWorkspaceRoots(pages).map((p) => p.id)).toEqual([
-      "dir-new",
       "dir-old",
-      "page-new",
+      "dir-new",
       "page-old",
+      "page-new",
     ]);
+  });
+
+  it("keeps sibling order when a page is edited (updated_at changes)", () => {
+    const before = [
+      page({ id: "a", parent_id: "folder", created_at: 1, updated_at: 1 }),
+      page({ id: "b", parent_id: "folder", created_at: 2, updated_at: 2 }),
+      page({ id: "c", parent_id: "folder", created_at: 3, updated_at: 3 }),
+    ];
+    expect(selectWorkspaceChildren(before, "folder").map((p) => p.id)).toEqual(["a", "b", "c"]);
+
+    const afterEdit = before.map((p) =>
+      p.id === "c" ? { ...p, updated_at: 999 } : p,
+    );
+    expect(selectWorkspaceChildren(afterEdit, "folder").map((p) => p.id)).toEqual(["a", "b", "c"]);
   });
 });

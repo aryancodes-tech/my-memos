@@ -62,11 +62,15 @@ export function selectDashboardRecentPages(pages: Page[]): Page[] {
   return selectRecentSorted(pages);
 }
 
+/** Stable sidebar tree order: folders first, then creation time (oldest first). */
 function sortWorkspaceItems(a: Page, b: Page): number {
   if (a.kind !== b.kind) {
     return a.kind === "directory" ? -1 : 1;
   }
-  return b.updated_at - a.updated_at;
+  if (a.created_at !== b.created_at) {
+    return a.created_at - b.created_at;
+  }
+  return a.id.localeCompare(b.id);
 }
 
 export function selectWorkspaceRoots(pages: Page[]): Page[] {
