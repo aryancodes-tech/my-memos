@@ -365,23 +365,8 @@ export const DEMO_SEED_VOICE_PUBLIC_PATH = `/${DEMO_SEED_VOICE_FILE_NAME}`;
 /** Display title for the seeded demo voice note block. */
 export const DEMO_SEED_VOICE_TITLE = "Sample voice note";
 
-/** Filename of the sample image seeded into the web demo workspace. */
-export const DEMO_SEED_IMAGE_FILE_NAME = "my-memos-demo-landing-page.png";
-
-/**
- * Site-root path for the demo landing screenshot (landing `public/`).
- * Also available under the demo base via `extension/public/` symlink.
- */
-export const DEMO_SEED_IMAGE_PUBLIC_PATH = `/${DEMO_SEED_IMAGE_FILE_NAME}`;
-
-/** Alt text for the seeded demo landing screenshot. */
-export const DEMO_SEED_IMAGE_ALT = "MyMemos landing page hero";
-
-/** Caption shown under the seeded demo landing screenshot. */
-export const DEMO_SEED_IMAGE_CAPTION = "The MyMemos marketing page - your notes on every new tab";
-
 /** Bump when the empty-demo seed content changes (forces reseed on empty workspaces). */
-export const DEMO_WORKSPACE_SEED_VERSION = 3;
+export const DEMO_WORKSPACE_SEED_VERSION = 4;
 
 /** Horizontal padding for page content in pixels. */
 export const PAGE_CONTENT_PADDING_X_PX = 96;
