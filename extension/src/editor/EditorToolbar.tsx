@@ -362,10 +362,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           >
             <ImageIcon size={14} strokeWidth={1.75} />
           </ToolbarButton>
-          <AudioSelect
-            onRecord={startVoiceRecording}
-            onAttachFile={attachAudioFile}
-          />
+          <AudioSelect onRecord={startVoiceRecording} onAttachFile={attachAudioFile} />
         </ToolbarGroup>
       </div>
     </div>

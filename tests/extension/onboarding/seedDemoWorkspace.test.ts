@@ -70,9 +70,7 @@ describe("buildDemoSeedBlockDoc", () => {
     const types = doc.content.map((node) => node.type);
     const voiceIndex = types.indexOf("voiceNote");
     const tryTheseIndex = doc.content.findIndex(
-      (node) =>
-        node.type === "heading" &&
-        node.content?.[0]?.text === "Try these",
+      (node) => node.type === "heading" && node.content?.[0]?.text === "Try these",
     );
 
     expect(voiceIndex).toBeGreaterThan(0);
