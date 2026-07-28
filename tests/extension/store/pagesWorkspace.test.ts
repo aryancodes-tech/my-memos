@@ -193,7 +193,14 @@ describe("pages workspace actions", () => {
     expect(ready).toBe(true);
     expect(pages).toHaveLength(6);
     expect(pages.map((p) => p.title).sort()).toEqual(
-      ["Launch plan", "Networking", "Personal", "Reading notes", DEMO_SEED_PAGE_TITLE, "Work"].sort(),
+      [
+        "Launch plan",
+        "Networking",
+        "Personal",
+        "Reading notes",
+        DEMO_SEED_PAGE_TITLE,
+        "Work",
+      ].sort(),
     );
     expect(pages.filter((p) => p.kind === "directory")).toHaveLength(2);
     expect(view).toEqual({ kind: "page", id: pages.find((p) => p.title === "Launch plan")?.id });
