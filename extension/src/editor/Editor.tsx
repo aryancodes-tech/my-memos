@@ -1,7 +1,7 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { useEffect, useRef } from "react";
 import type { BlockDoc } from "@/storage/types";
-import { EDITOR_SAVE_DEBOUNCE_MS, EDITOR_TAB_INSERT } from "@/lib/constants";
+import { EDITOR_SAVE_DEBOUNCE_MS, EDITOR_TAB_INSERT, PRODUCT_TOUR_TARGETS } from "@/lib/constants";
 import { sanitizeBlockDocForPersistence } from "@/lib/attachments/sanitizeBlockDoc";
 import { useStore } from "@/store/useStore";
 import { createEditorExtensions } from "@/editor/editorExtensions";
@@ -97,7 +97,7 @@ export default function Editor({ docKey, initial, onChange }: Props) {
   }, [docKey]);
 
   return (
-    <div className="ko-editor-wrap">
+    <div className="ko-editor-wrap" data-tour-target={PRODUCT_TOUR_TARGETS.slashMenu}>
       <div className="relative">
         <EditorContent editor={editor} className="ko-editor max-w-none" />
         {editor && <SlashMenu editor={editor} />}

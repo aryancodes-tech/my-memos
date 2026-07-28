@@ -1,5 +1,5 @@
 ---
-description: Chrome extension and web demo - Zustand, views, platform, components
+description: Browser extension and web demo - Zustand, views, platform, components
 globs: extension/**/*.{ts,tsx}
 alwaysApply: false
 ---
@@ -10,7 +10,7 @@ alwaysApply: false
 
 | Mode | HTML | Vite config | Output |
 |------|------|-------------|--------|
-| Chrome MV3 | `newtab.html` | `vite.config.ts` | `extension/dist/` |
+| Browser MV3 | `newtab.html` | `vite.config.ts` | `extension/dist/` |
 | Web demo | `index.html` | `vite.web.config.ts` | `public/demo/` |
 
 Manifest source of truth: `extension/manifest.config.ts` (CRXJS).
@@ -111,7 +111,7 @@ Dialogs: `AttachmentDeleteDialog` confirms via store `pendingAttachmentDelete` (
 
 **Canonical source:** `shared/constants.ts` (see `.cursor/rules/constants-policy.mdc` and `AGENTS.md` §3.7).
 
-- `extension/src/lib/constants.ts` is a re-export only — edit `shared/constants.ts`
+- `extension/src/lib/constants.ts` is a re-export only - edit `shared/constants.ts`
 - UI labels, error messages, attachment/OPFS paths, MIME types, debounce/limits → named exports there
-- Import via `@/lib/constants` — do not hardcode copy in components or attachment helpers
+- Import via `@/lib/constants` - do not hardcode copy in components or attachment helpers
 - Do not add parallel string modules

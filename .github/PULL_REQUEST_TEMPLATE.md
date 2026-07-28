@@ -14,7 +14,7 @@
 <!-- How did you verify this works? -->
 
 - [ ] `npm run ci` passes locally
-- [ ] Extension tested in Chrome (load unpacked from `extension/dist/`)
+- [ ] Extension tested in browser (load unpacked from `extension/dist/`)
 - [ ] Landing site tested (if `src/` changed)
 
 ## Screenshots / recordings

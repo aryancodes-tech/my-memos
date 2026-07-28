@@ -41,7 +41,7 @@ Steps in order:
 | `extension/src/<path>/<file>.ts` | `tests/extension/<path>/<file>.test.ts` |
 | `src/<path>/<file>.ts` | `tests/landing/<path>/<file>.test.ts` |
 
-Same basename. Import SUT via `@/` — do not co-locate `*.test.ts` under `src/`.
+Same basename. Import SUT via `@/` - do not co-locate `*.test.ts` under `src/`.
 
 | Change | Test path |
 |--------|-----------|

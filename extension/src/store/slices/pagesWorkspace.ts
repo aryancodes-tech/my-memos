@@ -21,6 +21,8 @@ import {
   isCustomThemeId,
   syncCustomThemeStyles,
 } from "@/lib/themes";
+import { isWebAppContext } from "@/lib/platform";
+import { maybeSeedDemoWorkspace } from "@/onboarding/seedDemoWorkspace";
 import type { CustomTheme, ThemeName } from "@/storage/types";
 import type { PagesWorkspaceSlice, StoreState, View } from "@/store/types";
 
@@ -85,14 +87,26 @@ export const createPagesWorkspaceSlice: StateCreator<StoreState, [], [], PagesWo
       !savedCustomThemes.some((item) => item.id === getCustomThemeStorageId(activeTheme));
     const resolvedTheme = themeIsMissingCustom ? DEFAULT_THEME : activeTheme;
 
-    const pages = rawPages.map(normalizePage);
-    const resolvedView = resolveView(lastView, pages);
-    const toPersist = pages.filter((normalized, index) => {
+    const pagesNormalized = rawPages.map(normalizePage);
+    const toPersist = pagesNormalized.filter((normalized, index) => {
       const original = rawPages[index];
       return original.kind !== normalized.kind || original.section !== normalized.section;
     });
     if (toPersist.length > 0) {
       await Promise.all(toPersist.map((page) => db.putPage(page)));
+    }
+
+    let pages = pagesNormalized;
+    let resolvedView = resolveView(lastView, pages);
+    let seededView = false;
+
+    if (isWebAppContext()) {
+      const seeded = await maybeSeedDemoWorkspace(pages);
+      if (seeded) {
+        pages = seeded.pages;
+        resolvedView = seeded.view;
+        seededView = true;
+      }
     }
 
     set({
@@ -107,7 +121,7 @@ export const createPagesWorkspaceSlice: StateCreator<StoreState, [], [], PagesWo
     if (themeIsMissingCustom) {
       void db.setSetting(SETTINGS_KEYS.theme, resolvedTheme);
     }
-    if (lastView && resolvedView !== lastView) {
+    if (seededView || (lastView && resolvedView !== lastView)) {
       void db.setSetting(SETTINGS_KEYS.lastView, resolvedView);
     }
   },

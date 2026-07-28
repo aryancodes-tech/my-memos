@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { FeatureBentoGrid } from "@/components/landing/FeatureBentoGrid";
+import { LandingDemoTour } from "@/components/landing/LandingDemoTour";
 import { LandingGetStarted } from "@/components/landing/LandingGetStarted";
 import { LandingHero } from "@/components/landing/LandingHero";
 import { LandingNav } from "@/components/landing/LandingNav";
@@ -68,6 +69,7 @@ function Index() {
       }}
     >
       <LandingNav hidden={navHidden} />
+      <LandingDemoTour />
 
       <ScrollVideoShowcase
         onVideoFullscreenChange={setNavHidden}

@@ -2,14 +2,14 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**A Notion-style notes app that replaces your Chrome New Tab.** Local-first, offline, no account.
+**A Notion-style notes app that replaces your browser New Tab.** Local-first, offline, no account.
 
 Same React UI in two places:
 
-| Where                | URL / install                    | Storage                      |
-| -------------------- | -------------------------------- | ---------------------------- |
-| **Chrome extension** | Load `extension/dist/` in Chrome | IndexedDB + `chrome.storage` |
-| **Live demo**        | `/demo/` on the landing site     | IndexedDB + `localStorage`   |
+| Where                 | URL / install                          | Storage                      |
+| --------------------- | -------------------------------------- | ---------------------------- |
+| **Browser extension** | Load `extension/dist/` in your browser | IndexedDB + `chrome.storage` |
+| **Live demo**         | `/demo/` on the landing site           | IndexedDB + `localStorage`   |
 
 Extension data and demo data are separate (different origins).
 
@@ -19,7 +19,7 @@ Extension data and demo data are separate (different origins).
 
 ## Quick start (extension)
 
-**Requires:** Node `>= 20.19.0` ([`.nvmrc`](.nvmrc) recommends `24.16.0`), npm, Chrome.
+**Requires:** Node `>= 20.19.0` ([`.nvmrc`](.nvmrc) recommends `24.16.0`), npm, and a Chromium-based browser with extension support.
 
 ```bash
 git clone https://github.com/aryancodes-tech/my-memos.git
@@ -30,9 +30,9 @@ npm install --prefix extension
 npm run dev                # extension HMR on :5173
 ```
 
-Then in Chrome:
+Then in your browser:
 
-1. `chrome://extensions` → **Developer mode** on
+1. Open the extensions page → **Developer mode** on
 2. **Load unpacked** → select `extension/dist/`
 3. Name should be **MyMemos (Dev)** - open a **new tab**
 
@@ -112,7 +112,7 @@ After deploy, confirm live URLs (replace with your domain): `https://www.mymemos
 
 ### Google Search Console: "Page with redirect"
 
-Apex / HTTP URLs (`https://mymemos.in/`, `http://mymemos.in/`) **should not** be indexed when the canonical host is `https://www.mymemos.in/`. Google lists them under **Page with redirect** — that is expected.
+Apex / HTTP URLs (`https://mymemos.in/`, `http://mymemos.in/`) **should not** be indexed when the canonical host is `https://www.mymemos.in/`. Google lists them under **Page with redirect** - that is expected.
 
 What to do:
 
@@ -122,7 +122,7 @@ What to do:
 4. Submit the sitemap: `https://www.mymemos.in/sitemap.xml`.
 5. On your host, configure a **permanent** redirect (301/308) from apex → www. This repo includes `vercel.json` for that; other hosts need an equivalent rule. After deploy, `curl -sI https://mymemos.in/` should show `301` or `308` to `https://www.mymemos.in/`.
 
-Do **not** try to get apex URLs indexed separately — that splits ranking signals.
+Do **not** try to get apex URLs indexed separately - that splits ranking signals.
 
 ---
 
@@ -151,7 +151,7 @@ Extension-only helpers: `npm run dev:reset --prefix extension`, `npm run dev:che
 
 ## Deploy the landing site
 
-Landing page + `/demo/` deploy together as a Node/SSR app (TanStack Start + Nitro). The Chrome extension does **not** run on your host - only the ZIP download (if you build it).
+Landing page + `/demo/` deploy together as a Node/SSR app (TanStack Start + Nitro). The browser extension does **not** run on your host - only the ZIP download (if you build it).
 
 Works on any hosting provider (Netlify, AWS, Fly.io, a VPS, etc.). Example build settings:
 
@@ -160,7 +160,7 @@ Works on any hosting provider (Netlify, AWS, Fly.io, a VPS, etc.). Example build
 | Install | `npm ci && npm ci --prefix extension`                                                                       |
 | Build   | `npm run package:extension && npm run build:web`                                                            |
 | Node    | 20.x or 24.x (`>= 20.19.0`)                                                                                 |
-| Env     | `VITE_SITE_URL=https://www.example.com` (canonical origin — use your preferred host, usually `www` + HTTPS) |
+| Env     | `VITE_SITE_URL=https://www.example.com` (canonical origin - use your preferred host, usually `www` + HTTPS) |
 
 Point apex and HTTP variants at that canonical origin with a **permanent** (301/308) redirect. See `vercel.json` for a www example, or configure the same rule on Netlify / nginx / your CDN.
 
@@ -172,7 +172,7 @@ The landing site optionally includes web analytics via `@vercel/analytics` in `s
 
 ```
 my-memos/
-├── extension/     # Core app - editor, sidebar, storage (Chrome + /demo/)
+├── extension/     # Core app - editor, sidebar, storage (browser extension + /demo/)
 ├── shared/        # Shared product constants (`shared/constants.ts`)
 ├── src/           # Landing site (TanStack Start)
 ├── public/demo/   # Built web demo (generated - do not edit)
@@ -185,12 +185,12 @@ Architecture, storage design, and extension internals → [`extension/README.md`
 
 ## Features (shipped)
 
-- **New Tab workspace** — dashboard, nested pages & folders, drag-and-drop tree, favorites, recent
-- **Block editor** — slash commands, toolbar, headings, lists/tasks, tables, code blocks, colors, markdown paste
-- **Attachments** — images (picker / drop / paste) and voice notes (inline record or attach audio) stored in OPFS
-- **`⌘K` search** — FlexSearch over titles and page body text (in-memory index)
-- **Themes** — 7 built-ins + custom themes
-- **Local-first persistence** — page BlockDoc JSON in IndexedDB (compressed); settings in `chrome.storage.local` (extension) or `localStorage` (web demo)
+- **New Tab workspace** - dashboard, nested pages & folders, drag-and-drop tree, favorites, recent
+- **Block editor** - slash commands, toolbar, headings, lists/tasks, tables, code blocks, colors, markdown paste
+- **Attachments** - images (picker / drop / paste) and voice notes (inline record or attach audio) stored in OPFS
+- **`⌘K` search** - FlexSearch over titles and page body text (in-memory index)
+- **Themes** - 7 built-ins + custom themes
+- **Local-first persistence** - page BlockDoc JSON in IndexedDB (compressed); settings in `chrome.storage.local` (extension) or `localStorage` (web demo)
 
 Not shipped as user features today: tag editing UI, archive UI, workspace export/import UI, cloud sync. See [`AGENTS.md`](AGENTS.md) §2.5 for the agent-facing inventory.
 
@@ -213,7 +213,7 @@ Not shipped as user features today: tag editing UI, archive UI, workspace export
 | Download button 404 on landing            | Run `npm run package:extension` first                                  |
 | Can't find `public/llms.txt` in git       | Expected - gitignored; run `npm run generate:seo` or `npm run dev:web` |
 | SEO files show `localhost` URLs           | Set `VITE_SITE_URL` and rebuild/redeploy                               |
-| GSC "Page with redirect" for apex / HTTP  | Expected — index `https://www…/` only; use permanent apex→www redirect |
+| GSC "Page with redirect" for apex / HTTP  | Expected - index `https://www…/` only; use permanent apex→www redirect |
 
 ---
 

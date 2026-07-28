@@ -94,8 +94,8 @@ export function buildLandingJsonLdScripts(origin: string): SeoScriptTag[] {
     name: PRODUCT_NAME,
     alternateName: aiContent.alternateNames,
     applicationCategory: "ProductivityApplication",
-    operatingSystem: "Chrome",
-    browserRequirements: "Requires Google Chrome",
+    operatingSystem: "Any",
+    browserRequirements: "Requires a Chromium-based browser with extension support",
     description: LANDING_META_DESCRIPTION,
     url: pageUrl,
     image: imageUrl,
@@ -107,7 +107,7 @@ export function buildLandingJsonLdScripts(origin: string): SeoScriptTag[] {
       priceCurrency: "USD",
     },
     featureList: [
-      "Replaces Chrome New Tab",
+      "Replaces browser New Tab",
       "Local-first storage (IndexedDB + OPFS)",
       "Notion-style block editor with slash commands and markdown paste",
       "Image attachments and voice notes",
@@ -204,7 +204,7 @@ export function buildLlmsTxt(origin: string): string {
 
 ## Product
 
-- [Homepage](${homeUrl}): Official site - download the Chrome extension and read feature overview.
+- [Homepage](${homeUrl}): Official site - download the browser extension and read feature overview.
 - [Live demo](${demoUrl}): Try the full MyMemos UI in your browser without installing.
 - [GitHub repository](${GITHUB_REPO_URL}): Open-source MIT-licensed codebase.
 

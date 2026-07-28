@@ -69,7 +69,7 @@ describe("buildLandingJsonLdScripts", () => {
     const faqPage = JSON.parse(scripts[3].children);
     const demoQuestion = faqPage.mainEntity.find(
       (item: { name: string }) =>
-        item.name === "Can I try MyMemos before installing the Chrome extension?",
+        item.name === "Can I try MyMemos before installing the browser extension?",
     );
 
     expect(demoQuestion.acceptedAnswer.text).toContain("https://www.mymemos.in/demo/");
@@ -100,7 +100,7 @@ describe("buildLlmsTxt", () => {
     const llms = buildLlmsTxt("https://www.mymemos.in");
 
     expect(llms).toContain("# MyMemos");
-    expect(llms).toContain("local-first Chrome extension");
+    expect(llms).toContain("local-first browser extension");
     expect(llms).toContain("https://www.mymemos.in/");
     expect(llms).toContain("What is MyMemos?");
     expect(llms).toContain("https://www.mymemos.in/demo/");

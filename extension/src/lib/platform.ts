@@ -1,5 +1,5 @@
 /**
- * True when the UI runs inside the Chrome extension (new-tab page or extension origin).
+ * True when the UI runs inside the browser extension (new-tab page or extension origin).
  * Uses runtime id because content scripts and ordinary pages do not expose it.
  */
 export function isExtensionContext(): boolean {

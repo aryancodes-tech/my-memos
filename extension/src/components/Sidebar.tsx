@@ -26,6 +26,7 @@ import {
   SIDEBAR_RECENT_VISIBLE_LIMIT,
   SIDEBAR_REMOVE_FROM_FAVORITES_LABEL,
   SIDEBAR_WIDTH_PX,
+  PRODUCT_TOUR_TARGETS,
   WORKSPACE_SECTION,
 } from "@/lib/constants";
 import { len } from "@/lib/text";
@@ -262,6 +263,7 @@ function WorkspaceAddButton() {
         className="ko-icon-btn !p-1"
         title="Add new"
         aria-label={SIDEBAR_ADD_NEW_ARIA_LABEL}
+        data-tour-target={PRODUCT_TOUR_TARGETS.createPage}
         onClick={() => setOpen((value) => !value)}
       >
         <Plus size={13} strokeWidth={1.75} />

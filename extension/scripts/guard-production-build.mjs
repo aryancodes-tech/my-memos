@@ -34,7 +34,7 @@ if (!forceBuild && (devPortBusy || hasDevSession)) {
   console.error("  npm run dev");
   console.error("  npm run dev:check");
   console.error(
-    '\nThen reload the extension in chrome://extensions (name must be "MyMemos (Dev)").',
+    '\nThen reload the extension on your browser\'s extensions page (name must be "MyMemos (Dev)").',
   );
   console.error("\nTo build for production anyway:");
   console.error("  1. Stop npm run dev (Ctrl+C)");

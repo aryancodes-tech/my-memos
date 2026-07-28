@@ -45,7 +45,7 @@ Regenerate via `npm run build:web`, `npm run package:extension`, `npm run genera
 
 - Smallest correct diff; no drive-by refactors
 - Match sibling file patterns (imports, error handling, naming)
-- **Filenames:** PascalCase components, camelCase modules, kebab-case scripts — see `.cursor/rules/file-naming.mdc`
+- **Filenames:** PascalCase components, camelCase modules, kebab-case scripts - see `.cursor/rules/file-naming.mdc`
 - Run `npm run ci` before declaring PR-ready
 - Do not commit unless user explicitly asks
 

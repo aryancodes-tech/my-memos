@@ -23,7 +23,7 @@ Before adding or changing any user-facing string, label, error message, timeout,
 | Landing re-export | `src/lib/constants.ts` → `export * from "@shared/constants"` |
 | Extension re-export | `extension/src/lib/constants.ts` → `export * from "@shared/constants"` |
 
-Do not create `copy.ts`, `strings.ts`, `messages.ts`, or a second constants module. Do not put product constants only in `src/lib/` or `extension/src/lib/` — always edit `shared/constants.ts`.
+Do not create `copy.ts`, `strings.ts`, `messages.ts`, or a second constants module. Do not put product constants only in `src/lib/` or `extension/src/lib/` - always edit `shared/constants.ts`.
 
 ## Allowed exceptions (not `shared/constants.ts`)
 
@@ -59,5 +59,5 @@ import { SIDEBAR_RECENT_SHOW_MORE_LABEL, EDITOR_SAVE_DEBOUNCE_MS, MICROPHONE_DEN
 
 - [ ] Grepped `shared/constants.ts` for an existing name before adding a duplicate
 - [ ] New exports have JSDoc describing purpose/units
-- [ ] Call sites import constants — no new user-facing string literals in TSX/TS (except test fixtures)
+- [ ] Call sites import constants - no new user-facing string literals in TSX/TS (except test fixtures)
 - [ ] Did not edit only the thin re-export files in `src/lib/constants.ts` / `extension/src/lib/constants.ts`

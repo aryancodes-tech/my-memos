@@ -11,7 +11,7 @@ alwaysApply: false
 | Tier | Technology | Contents |
 |------|------------|----------|
 | Heavy | IndexedDB `mymemos` | Pages (`doc_c` compressed), images |
-| Light | chrome.storage / localStorage | theme, lastView, customThemes, collapsedDirs |
+| Light | chrome.storage / localStorage | theme, lastView, customThemes, collapsedDirs, productTour, demoWorkspaceSeeded |
 
 ## Block JSON only
 
@@ -53,7 +53,7 @@ len(page.parent_id ?? "") === 0
   - Paths like `images/img_*.png`, `audio/voice_*.webm` in block attrs
   - Files under OPFS root `mymemos-attachments/` (see `ATTACHMENT_OPFS_ROOT_DIR`)
 - **Never** embed attachment binaries in `doc_c`.
-- **Recording blocks** (`voiceNote` with `status: "recording"`) are ephemeral — `sanitizeBlockDocForPersistence()` removes them before IndexedDB write.
+- **Recording blocks** (`voiceNote` with `status: "recording"`) are ephemeral - `sanitizeBlockDocForPersistence()` removes them before IndexedDB write.
 - **Page delete** must call `collectOrphanedAttachmentPaths()` and delete unreferenced OPFS files.
 - **IndexedDB `images` store** and **`fs_handles` store** are legacy; new attachment flow uses OPFS only.
 
@@ -61,13 +61,13 @@ len(page.parent_id ?? "") === 0
 
 - **FlexSearch is never persisted**
 - Rebuilt from pages in memory when palette opens
-- Indexes `title`, body `text`, and `tags` — but there is **no UI** to edit tags today, so user-facing search is effectively title + body
+- Indexes `title`, body `text`, and `tags` - but there is **no UI** to edit tags today, so user-facing search is effectively title + body
 - If adding indexed fields, update search builder only
 
 ## Schema vs product UI
 
-- `exportWorkspace` / `importWorkspace` exist in `db.ts` and are tested — **not wired to any UI**
-- `Page.archived` is filtered in selectors — **no archive action in UI**
+- `exportWorkspace` / `importWorkspace` exist in `db.ts` and are tested - **not wired to any UI**
+- `Page.archived` is filtered in selectors - **no archive action in UI**
 - Do not document these as user features until exposed (see `AGENTS.md` §2.5)
 
 ## Platform note

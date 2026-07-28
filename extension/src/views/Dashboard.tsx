@@ -4,6 +4,7 @@ import {
   CONTENT_MAX_WIDTH_PX,
   PAGE_CONTENT_PADDING_X_PX,
   PAGE_CONTENT_PADDING_TOP_PX,
+  PRODUCT_TOUR_TARGETS,
 } from "@/lib/constants";
 import { FileText, Folder, ChevronRight, Plus } from "lucide-react";
 import { useMemo } from "react";
@@ -91,7 +92,12 @@ interface CreateWorkspaceCtaProps {
 function CreateWorkspaceCta({ onCreatePage, onCreateFolder }: CreateWorkspaceCtaProps) {
   return (
     <div className="ko-dashboard-create">
-      <button type="button" className="ko-dashboard-create-action" onClick={onCreatePage}>
+      <button
+        type="button"
+        className="ko-dashboard-create-action"
+        data-tour-target={PRODUCT_TOUR_TARGETS.createPage}
+        onClick={onCreatePage}
+      >
         <span className="ko-dashboard-create-icon" aria-hidden>
           <FileText size={18} strokeWidth={1.75} />
         </span>

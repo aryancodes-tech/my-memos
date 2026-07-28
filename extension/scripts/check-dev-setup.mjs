@@ -7,7 +7,7 @@ const manifestPath = path.join(root, "dist", "manifest.json");
 if (!fs.existsSync(manifestPath)) {
   console.error("\n[MyMemos] dist/manifest.json is missing.");
   console.error("Run: npm run dev");
-  console.error("Then load extension/dist in chrome://extensions\n");
+  console.error("Then load extension/dist from your browser's extensions page\n");
   process.exit(1);
 }
 
@@ -20,13 +20,13 @@ const isDev =
 if (!isDev) {
   console.error("\n[MyMemos] dist/ contains a PRODUCTION build.");
   console.error(
-    "Chrome is loading static bundled files, so edits will NOT appear until you rebuild.",
+    "The browser is loading static bundled files, so edits will NOT appear until you rebuild.",
   );
   console.error("This usually happens after running npm run build while developing.");
   console.error("\nFix (one-time):");
   console.error("  1. Stop npm run dev if running (Ctrl+C)");
   console.error("  2. npm run dev:reset");
-  console.error('  3. In chrome://extensions → Reload (name must be "MyMemos (Dev)")');
+  console.error('  3. On the extensions page → Reload (name must be "MyMemos (Dev)")');
   console.error("  4. Open a NEW tab");
   console.error("\nDaily workflow:");
   console.error("  - Keep `npm run dev` running in extension/");
@@ -48,11 +48,11 @@ try {
 if (!devServerUp) {
   console.error("\n[MyMemos] Dev manifest is correct, but the Vite dev server is not reachable.");
   console.error(`Start it with: npm run dev`);
-  console.error("Then reload the extension in chrome://extensions.\n");
+  console.error("Then reload the extension on your browser's extensions page.\n");
   process.exit(1);
 }
 
 console.log("[MyMemos] Dev setup looks correct.");
 console.log("  - dist/ is a dev build");
 console.log(`  - Vite is running on http://localhost:${devPort}`);
-console.log('  - Extension name in Chrome should be "MyMemos (Dev)"');
+console.log('  - Extension name in the browser should be "MyMemos (Dev)"');

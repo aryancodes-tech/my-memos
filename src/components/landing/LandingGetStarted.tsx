@@ -1,6 +1,7 @@
 import {
   DEMO_PATH,
   LANDING_GET_STARTED_DESC,
+  LANDING_GET_STARTED_DEMO_CTA,
   LANDING_GET_STARTED_SECTION_ID,
   LANDING_FOOTER_TAGLINE,
   PRODUCT_NAME,
@@ -17,9 +18,8 @@ const INSTALL_STEPS: Array<{
     body: "Grab the extension bundle and extract it to a folder on your machine.",
   },
   {
-    title: "Open Chrome extensions",
-    body: "Navigate to chrome://extensions in your browser.",
-    code: "chrome://extensions",
+    title: "Open browser extensions",
+    body: "Open your browser's extensions page from the menu (Extensions → Manage extensions).",
   },
   {
     title: "Enable developer mode",
@@ -69,7 +69,7 @@ export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStart
               {isDownloading ? "Downloading…" : "Download extension"}
             </button>
             <a href={DEMO_PATH} className="landing-btn landing-btn-ghost">
-              Try live demo
+              {LANDING_GET_STARTED_DEMO_CTA}
             </a>
           </div>
         </div>

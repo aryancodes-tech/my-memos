@@ -36,9 +36,9 @@ body:
       required: true
 
   - type: input
-    id: chrome-version
+    id: browser-version
     attributes:
-      label: Chrome version
+      label: Browser version
       placeholder: e.g. 136.0.7103.49
     validations:
       required: true

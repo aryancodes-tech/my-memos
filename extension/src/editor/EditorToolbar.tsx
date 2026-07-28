@@ -49,6 +49,7 @@ import {
   EDITOR_TOOLBAR_STRIKETHROUGH_LABEL,
   EDITOR_TOOLBAR_TEXT_ALIGN_ARIA,
   ATTACHMENT_FS_UNSUPPORTED_MESSAGE,
+  PRODUCT_TOUR_TARGETS,
 } from "@/lib/constants";
 import { normalizeHexColor } from "@/lib/themes";
 import { insertImageFromPicker } from "@/editor/commands/insertImage";
@@ -350,10 +351,18 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           >
             <Link2 size={14} strokeWidth={1.75} />
           </ToolbarButton>
-          <ToolbarButton title="Image" onClick={openImagePicker}>
+          <ToolbarButton
+            title="Image"
+            tourTarget={PRODUCT_TOUR_TARGETS.addImage}
+            onClick={openImagePicker}
+          >
             <ImageIcon size={14} strokeWidth={1.75} />
           </ToolbarButton>
-          <ToolbarButton title="Voice" onClick={startVoiceRecording}>
+          <ToolbarButton
+            title="Voice"
+            tourTarget={PRODUCT_TOUR_TARGETS.addVoice}
+            onClick={startVoiceRecording}
+          >
             <Mic size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton title="Audio" onClick={attachAudioFile}>
@@ -630,12 +639,15 @@ function ToolbarButton({
   active,
   disabled,
   onClick,
+  tourTarget,
   children,
 }: {
   title: string;
   active?: boolean;
   disabled?: boolean;
   onClick: () => void;
+  /** Optional product-tour spotlight anchor. */
+  tourTarget?: string;
   children: ReactNode;
 }) {
   const { tip, showTip, hideTip } = useInstantTip();
@@ -647,6 +659,7 @@ function ToolbarButton({
         className={`ko-toolbar-btn ${active ? "is-active" : ""}`}
         aria-label={title}
         disabled={disabled}
+        data-tour-target={tourTarget}
         onMouseDown={preventEditorBlur}
         onMouseEnter={(event) => {
           if (!disabled) showTip(title, event.currentTarget);
