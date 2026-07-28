@@ -82,7 +82,7 @@ function buildLlmsTxt(siteOrigin) {
 
 ## Product
 
-- [Homepage](${homeUrl}): Official site - download the Chrome extension and read feature overview.
+- [Homepage](${homeUrl}): Official site - download the browser extension and read feature overview.
 - [Live demo](${demoUrl}): Try the full MyMemos UI in your browser without installing.
 - [GitHub repository](https://github.com/aryancodes-tech/my-memos): Open-source MIT-licensed codebase.
 

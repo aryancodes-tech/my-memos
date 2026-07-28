@@ -15,7 +15,7 @@ Use one convention per file kind. Do not mix kebab-case and camelCase for the sa
 | Tests | Match source basename + `.test.ts` | `workspaceTree.test.ts` under `tests/<surface>/…` |
 | CLI / Node scripts | **kebab-case** | `generate-sitemap.mjs`, `guard-production-build.mjs` |
 | CSS / static assets | Existing patterns | `index.css`; prefer kebab for new asset files |
-| CSS class names / HTML ids | **kebab-case** (unchanged) | `ko-workspace-tree`, `landing-faq` — not the same as TS filenames |
+| CSS class names / HTML ids | **kebab-case** (unchanged) | `ko-workspace-tree`, `landing-faq` - not the same as TS filenames |
 
 ## Exceptions (do not rename to force the rule)
 

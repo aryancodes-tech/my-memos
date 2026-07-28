@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { CircleHelp } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import { revokeAllAttachmentObjectUrls } from "@/lib/attachments/attachmentManager";
 import Sidebar from "@/components/Sidebar";
@@ -11,14 +12,29 @@ import AttachmentDeleteDialog from "@/components/AttachmentDeleteDialog";
 import EditorToolbar from "@/editor/EditorToolbar";
 import MobileExperienceNotice from "@/components/MobileExperienceNotice";
 import WebInstallBanner from "@/components/WebInstallBanner";
-import { MOBILE_EXPERIENCE_MAX_WIDTH_PX } from "@/lib/constants";
+import ProductTour from "@/onboarding/ProductTour";
+import {
+  MOBILE_EXPERIENCE_MAX_WIDTH_PX,
+  PRODUCT_TOUR_REPLAY_ARIA_LABEL,
+  PRODUCT_TOUR_REPLAY_LABEL,
+} from "@/lib/constants";
 import { isWebAppContext } from "@/lib/platform";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 import Dashboard from "@/views/Dashboard";
 import PageView from "@/views/PageView";
 
 export default function App() {
-  const { ready, init, view, setSearchOpen, searchOpen, pageEditor } = useStore();
+  const {
+    ready,
+    init,
+    view,
+    setSearchOpen,
+    searchOpen,
+    pageEditor,
+    hydrateTour,
+    startTour,
+    tourActive,
+  } = useStore();
   const isDemoWebApp = isWebAppContext();
   const isMobileViewport = useMobileViewport(MOBILE_EXPERIENCE_MAX_WIDTH_PX, isDemoWebApp);
   const showMobileNotice = isDemoWebApp && isMobileViewport;
@@ -27,6 +43,10 @@ export default function App() {
     void init();
     return () => revokeAllAttachmentObjectUrls();
   }, [init]);
+
+  useEffect(() => {
+    if (ready) void hydrateTour();
+  }, [ready, hydrateTour]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -75,7 +95,18 @@ export default function App() {
             <div className="justify-self-center max-w-full overflow-x-auto overflow-y-hidden ko-scroll">
               {view.kind === "page" && pageEditor && <EditorToolbar editor={pageEditor} />}
             </div>
-            <div className="justify-self-end shrink-0">
+            <div className="ko-header-actions justify-self-end shrink-0">
+              <button
+                type="button"
+                className="ko-header-tour-btn"
+                aria-label={PRODUCT_TOUR_REPLAY_ARIA_LABEL}
+                title={PRODUCT_TOUR_REPLAY_ARIA_LABEL}
+                disabled={tourActive}
+                onClick={() => startTour()}
+              >
+                <CircleHelp size={14} strokeWidth={1.75} aria-hidden />
+                {PRODUCT_TOUR_REPLAY_LABEL}
+              </button>
               <ThemeDropdown />
             </div>
           </header>
@@ -89,6 +120,7 @@ export default function App() {
         <LinkDialog />
         <AttachmentDeleteDialog />
         <CustomThemeDialog />
+        <ProductTour />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 > **Audience:** Cursor agents, Claude Code, Copilot Workspace, and human reviewers evaluating AI-assisted engineering depth (e.g. Forward Deployed Engineer workflows).
 >
-> **Product:** **MyMemos** - local-first personal knowledge OS that replaces Chrome's New Tab. Treat **MyMemos** / `mymemos` as canonical.
+> **Product:** **MyMemos** - local-first personal knowledge OS that replaces your browser's New Tab. Treat **MyMemos** / `mymemos` as canonical.
 
 This document is the **source of truth** for how an AI agent should reason about, modify, and verify this codebase. It complements human docs (`README.md`, `CONTRIBUTING.md`) with machine-oriented invariants, decision trees, and verification contracts.
 
@@ -22,11 +22,11 @@ This document is the **source of truth** for how an AI agent should reason about
 │ SURFACE B - Web demo (`extension/` → `public/demo/`, React 19)           │
 │   Entry: `extension/index.html`, build: `vite.web.config.ts`             │
 │   Settings: `localStorage` · Pages: IndexedDB · Attachments: OPFS        │
-│   (separate origin from extension — data does not sync)                │
+│   (separate origin from extension - data does not sync)                │
 └───────────────────────────────┬──────────────────────────────────────────┘
                                 │ same `extension/src/` source
 ┌───────────────────────────────▼──────────────────────────────────────────┐
-│ SURFACE C - Chrome extension (`extension/` → `dist/`, MV3 + CRXJS)      │
+│ SURFACE C - Browser extension (`extension/` → `dist/`, MV3 + CRXJS)     │
 │   Entry: `extension/newtab.html`, overrides New Tab                    │
 │   Settings: `chrome.storage.local` · Pages: IndexedDB · Attachments: OPFS│
 └──────────────────────────────────────────────────────────────────────────┘
@@ -152,13 +152,14 @@ Do **not** claim these as product features in README, FAQ, SEO, or agent summari
 │   pages  → LZ-compressed BlockDoc (`doc_c` field)           │
 │   images → legacy blob store (no longer written; OPFS for attachments) │
 ├─────────────────────────────────────────────────────────────┤
-│ OPFS (`mymemos-attachments/`) — per-origin, hidden          │
+│ OPFS (`mymemos-attachments/`) - per-origin, hidden          │
 │   images/  → img_*.png                                      │
 │   audio/   → voice_*.webm                                   │
 │   (paths referenced from block attrs only)                  │
 ├─────────────────────────────────────────────────────────────┤
 │ Settings tier (chrome.storage.local OR localStorage)        │
-│   theme, lastView, customThemes, collapsedDirs              │
+│   theme, lastView, customThemes, collapsedDirs,             │
+│   productTour, demoWorkspaceSeeded                          │
 ├─────────────────────────────────────────────────────────────┤
 │ Ephemeral (never persisted)                                 │
 │   FlexSearch index, UI-only state, drag refs                │
@@ -194,16 +195,23 @@ Single Zustand facade: `extension/src/store/useStore.ts` (composes slices under 
 | Theme                                                  | `slices/themeUi.ts` + `data-theme` on `<html>` |
 | Dialogs (serializable payloads)                        | `slices/dialogs.ts`                            |
 | TipTap bridge (`pageEditor`, links, attachment delete) | `slices/editorBridge.ts`                       |
+| Product tour coachmarks                                | `slices/onboarding.ts` + `onboarding/`         |
 | Editor debounced saves                                 | `PageView` + `EDITOR_SAVE_DEBOUNCE_MS`         |
 
 Prefer **selectors** (`selectSearchablePages`, etc.) for derived data. Do not duplicate tree logic in components. Do not store `onConfirm` closures in dialog state.
 
 ### 3.3.1 Attachments vs editor layering
 
-- **`lib/attachments/`** — OPFS I/O, sanitize, recorder, waveform (no TipTap imports).
-- **`editor/commands/`** — TipTap insert helpers (`insertImage`, `insertAudioFromFile`, `insertVoiceRecording`, `insertSelection`).
-- **`editor/hooks/`** — fat node-view logic (voice record/playback, image chrome).
-- **`lib/workspaceDrag.ts`** — sidebar workspace DnD session helpers.
+- **`lib/attachments/`** - OPFS I/O, sanitize, recorder, waveform (no TipTap imports).
+- **`editor/commands/`** - TipTap insert helpers (`insertImage`, `insertAudioFromFile`, `insertVoiceRecording`, `insertSelection`).
+- **`editor/hooks/`** - fat node-view logic (voice record/playback, image chrome).
+- **`lib/workspaceDrag.ts`** - sidebar workspace DnD session helpers.
+
+### 3.3.2 Product tour + web-demo seed
+
+- Coachmark tour (`extension/src/onboarding/`) auto-starts once when `SETTINGS_KEYS.productTour` is unset; Skip/Done persist `PRODUCT_TOUR_STATUS_DONE`. Replay via header **Tour** next to the theme control.
+- Web demo only: empty workspace seeds one sample page (`maybeSeedDemoWorkspace`) and sets `SETTINGS_KEYS.demoWorkspaceSeeded` so later empties do not reseed. Browser extension installs stay empty.
+- Spotlight anchors use `data-tour-target` (`PRODUCT_TOUR_TARGETS`). Steps that need the editor navigate to a page first; create-page prefers the dashboard.
 
 ### 3.4 Workspace model
 
@@ -212,7 +220,7 @@ Prefer **selectors** (`selectSearchablePages`, etc.) for derived data. Do not du
 - `parent_id`: `""` (root) - check with `len(parent_id) === 0`
 - Drag-and-drop uses `WORKSPACE_DRAG_MIME`; validate moves via `workspaceTree.ts` helpers
 - Favorites / Recent are sidebar **views**, not stored sections. The `favorite` flag is persisted on `Page`; Recent is derived from timestamps.
-- `tags` and `archived` exist on the schema for forward-compat / filtering — no product UI today (see §2.5).
+- `tags` and `archived` exist on the schema for forward-compat / filtering - no product UI today (see §2.5).
 
 ### 3.5 Editor pipeline
 
@@ -245,7 +253,7 @@ Markdown paste: `extension/src/editor/markdownPaste.ts` + tests in `tests/extens
 **Rules:**
 
 - Set `VITE_SITE_URL` at deploy time (no trailing slash; prefer `https://www…`). Drives canonical URLs, JSON-LD, FAQ demo links, and generated static SEO files.
-- Apex / HTTP hosts must **301/308** to that origin (`vercel.json` or host-equivalent). GSC "Page with redirect" on apex is expected — only the canonical host should be indexed.
+- Apex / HTTP hosts must **301/308** to that origin (`vercel.json` or host-equivalent). GSC "Page with redirect" on apex is expected - only the canonical host should be indexed.
 - FAQ link segments in `ai-content.json` use `"path": "/demo/"` - never hardcode production domains in JSON.
 - Keep `scripts/generate-sitemap.mjs` and `buildLlmsTxt()` in `seo.ts` structurally aligned.
 - `/demo/` stays `Disallow` in `robots.txt` (`SEO_ROBOTS_DISALLOW_PATHS`).
@@ -303,7 +311,7 @@ Is it a product constant (copy, label, error, path, MIME, debounce, theme label,
 Is it build-time only (Vite, manifest)?
   YES → colocate in config with a short comment
  NO ↓
-STOP — do not hardcode in a component.
+STOP - do not hardcode in a component.
 ```
 
 ### 4.2 "Which dev server do I run?"
@@ -407,7 +415,7 @@ Both landing and extension use **React 19**, but they remain separate apps:
 | Extension + demo | 19    | Tailwind 3, Vite 5 + CRXJS / web Vite |
 | Landing          | 19    | Tailwind 4, TanStack Start / Vite 7   |
 
-Do not share React components across packages without an explicit build boundary — different CSS systems and entrypoints, not React major mismatch.
+Do not share React components across packages without an explicit build boundary - different CSS systems and entrypoints, not React major mismatch.
 
 ### 6.4 Security & privacy posture
 
@@ -466,7 +474,7 @@ Do not share React components across packages without an explicit build boundary
 # Fast gate (also pre-push)
 npm run check
 
-# Full local CI (run before PR) — check + builds
+# Full local CI (run before PR) - check + builds
 npm run ci
 
 # Extension development

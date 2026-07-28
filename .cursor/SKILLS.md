@@ -87,7 +87,7 @@ npm run test         # if store/tree logic touched
 
 **Invariants:**
 
-- Block JSON stores paths/metadata only — never binary blobs in `doc_c`
+- Block JSON stores paths/metadata only - never binary blobs in `doc_c`
 - `status: "recording"` is ephemeral; stripped before persist
 - Fresh inserts set `autoStart: true`; reloaded survivors must not request mic
 - Page delete GC uses ref counting across all pages before deleting OPFS files
@@ -187,7 +187,7 @@ npm run test -- tests/extension/lib/workspaceTree.test.ts tests/extension/store/
 - `.cursor/rules/landing-site.mdc`
 - `shared/constants.ts` (landing marketing + scroll tunables)
 - `src/routes/README.md`
-- `AGENTS.md` §2.5 (shipped capabilities — do not overclaim)
+- `AGENTS.md` §2.5 (shipped capabilities - do not overclaim)
 
 **Patterns:**
 
@@ -258,7 +258,7 @@ VITE_SITE_URL=https://www.mymemos.in npm run generate:seo
 
 **Patterns:**
 
-- `isWebAppContext()` gates Chrome-only UI
+- `isWebAppContext()` gates extension-only UI
 - Web build output → `public/demo/` (generated)
 - HMR path must not double-prefix `/demo`
 

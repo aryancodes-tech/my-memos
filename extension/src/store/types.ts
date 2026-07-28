@@ -16,7 +16,7 @@ export interface PendingLink {
 
 /**
  * Pending attachment delete confirmation.
- * Serializable payload only — confirm deletes OPFS file + matching editor node via pageEditor.
+ * Serializable payload only - confirm deletes OPFS file + matching editor node via pageEditor.
  */
 export interface PendingAttachmentDelete {
   attachmentPath: string;
@@ -81,4 +81,24 @@ export interface EditorBridgeSlice {
   confirmAttachmentDelete: () => Promise<void>;
 }
 
-export type StoreState = PagesWorkspaceSlice & ThemeUiSlice & DialogsSlice & EditorBridgeSlice;
+/** First-run product tour coachmarks. */
+export interface OnboardingSlice {
+  /** True after settings for the tour have been read. */
+  tourHydrated: boolean;
+  tourActive: boolean;
+  tourStepIndex: number;
+  tourCompleted: boolean;
+
+  hydrateTour: () => Promise<void>;
+  startTour: () => void;
+  completeTour: () => Promise<void>;
+  skipTour: () => Promise<void>;
+  nextTourStep: () => void;
+  prevTourStep: () => void;
+}
+
+export type StoreState = PagesWorkspaceSlice &
+  ThemeUiSlice &
+  DialogsSlice &
+  EditorBridgeSlice &
+  OnboardingSlice;

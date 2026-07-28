@@ -6,7 +6,7 @@ Thank you for your interest in contributing. This guide covers setup, workflow, 
 
 - **Node.js** - use the version in [`.nvmrc`](.nvmrc) (`nvm use` recommended)
 - **npm** - canonical package manager for this repo
-- **Google Chrome** - for loading the unpacked extension during development
+- **Chromium-based browser** - for loading the unpacked extension during development (Edge, Brave, Arc, Chromium, etc.)
 
 ## Getting started
 
@@ -20,9 +20,9 @@ npm install --prefix extension
 npm run dev          # extension dev server (from repo root)
 ```
 
-Load the extension in Chrome:
+Load the extension in your browser:
 
-1. Open `chrome://extensions`
+1. Open your browser's extensions page
 2. Enable **Developer mode**
 3. **Load unpacked** → select `extension/dist/`
 4. Confirm the name is **MyMemos (Dev)**
@@ -34,7 +34,7 @@ Keep `npm run dev` running. Do **not** run `npm run build:extension` during acti
 npm run dev:check --prefix extension   # verify dev setup
 ```
 
-### Web app (same UI, no Chrome install)
+### Web app (same UI, no extension install)
 
 The extension React app also builds as a standalone browser app at `/demo/`.
 
@@ -42,7 +42,7 @@ The extension React app also builds as a standalone browser app at `/demo/`.
 npm run dev:web    # landing site + web app at http://localhost:8080/demo/
 ```
 
-Settings use `localStorage` instead of `chrome.storage`; pages still use IndexedDB. Data is **not shared** with the Chrome extension (different origins).
+Settings use `localStorage` instead of `chrome.storage`; pages still use IndexedDB. Data is **not shared** with the browser extension (different origins).
 
 After changing extension UI code, `npm run dev:web` picks up changes via HMR at `/demo/`.
 
@@ -50,7 +50,7 @@ After changing extension UI code, `npm run dev:web` picks up changes via HMR at 
 
 | Path                     | Purpose                                               |
 | ------------------------ | ----------------------------------------------------- |
-| `extension/`             | Core product - Chrome MV3 + web demo                  |
+| `extension/`             | Core product - MV3 browser extension + web demo       |
 | `shared/`                | Shared product constants (`constants.ts`)             |
 | `src/`                   | Landing / download site (TanStack Start)              |
 | `extension/src/storage/` | IndexedDB layer and document codec                    |
@@ -140,7 +140,7 @@ Set `VITE_SITE_URL` on your hosting provider (e.g. `https://www.mymemos.in`) so 
 
 ## Reporting issues
 
-- **Bugs** - use the bug report template; include Chrome version and reproduction steps
+- **Bugs** - use the bug report template; include browser version and reproduction steps
 - **Features** - describe the problem you're solving, not just the solution
 - **Security** - see [SECURITY.md](SECURITY.md); do not open public issues for vulnerabilities
 

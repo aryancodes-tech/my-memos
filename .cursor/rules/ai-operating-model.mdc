@@ -45,7 +45,7 @@ if (!page.parent_id) { ... }
 ```
 
 ```typescript
-// ✅ New tunable / copy — define in constants.ts, then import
+// ✅ New tunable / copy - define in constants.ts, then import
 /** Debounce for editor saves, in milliseconds. */
 export const EDITOR_SAVE_DEBOUNCE_MS = 250;
 // in component:

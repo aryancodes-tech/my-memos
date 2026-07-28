@@ -58,7 +58,7 @@ Headings, GFM task lists, tables, links, images, highlights, code fences.
 ## Toolbar
 
 - `EditorToolbar.tsx` - inline formatting + attachment insert controls
-- Color presets from `@/lib/constants` → `shared/constants.ts` (`EDITOR_TEXT_COLORS`, etc.) — never hardcode hex/labels in toolbar components
+- Color presets from `@/lib/constants` → `shared/constants.ts` (`EDITOR_TEXT_COLORS`, etc.) - never hardcode hex/labels in toolbar components
 
 ## Adding editor features
 

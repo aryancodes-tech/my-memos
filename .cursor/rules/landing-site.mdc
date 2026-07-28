@@ -32,7 +32,7 @@ alwaysApply: false
 | Paths | `DEMO_PATH`, `EXTENSION_ZIP_FILENAME` |
 | Favicon | `SITE_FAVICON_PATH`, `SITE_FAVICON_TYPE` |
 
-Do not hardcode strings in components — import via `@/lib/constants`. FAQ/llms body → `ai-content.json`; SEO builders → `seo.ts`. Per-feature bento clips are off when `LANDING_FEATURE_CLIPS_ENABLED` is `false`.
+Do not hardcode strings in components - import via `@/lib/constants`. FAQ/llms body → `ai-content.json`; SEO builders → `seo.ts`. Per-feature bento clips are off when `LANDING_FEATURE_CLIPS_ENABLED` is `false`.
 
 ## Key components
 

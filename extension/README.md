@@ -1,6 +1,6 @@
 # MyMemos - Extension & shared app
 
-The core product lives in this package: React UI, editor, storage, and Chrome MV3 packaging. The same `src/` tree also builds the **live demo** served at `/demo/` on the landing site.
+The core product lives in this package: React UI, editor, storage, and MV3 browser packaging. The same `src/` tree also builds the **live demo** served at `/demo/` on the landing site.
 
 Repo-wide setup, commands, and hosting deploy are documented in the [root README](../README.md).
 
@@ -20,7 +20,7 @@ Agent-facing capability inventory (shipped vs schema-only): [`AGENTS.md`](../AGE
 | Voice / audio      | Inline mic recording, attach audio file, waveform playback and speed, rename, download, delete        |
 | Search             | ⌘K over title and body text (FlexSearch, ephemeral)                                                   |
 | Themes             | 7 built-in plus custom themes                                                                         |
-| Platforms          | Chrome New Tab extension **or** `/demo/` web SPA (separate origins; data does not sync)               |
+| Platforms          | Browser New Tab extension **or** `/demo/` web SPA (separate origins; data does not sync)              |
 
 **Not exposed in UI:** tag editing, archive, workspace export/import (`storage/db.ts` retains helpers only).
 
@@ -30,10 +30,10 @@ Agent-facing capability inventory (shipped vs schema-only): [`AGENTS.md`](../AGE
 
 ### Two delivery modes
 
-| Mode                 | Entry                                | Build                                 | Storage                            |
-| -------------------- | ------------------------------------ | ------------------------------------- | ---------------------------------- |
-| **Chrome extension** | `newtab.html` + `manifest.config.ts` | `vite.config.ts` (CRXJS) → `dist/`    | IndexedDB + `chrome.storage.local` |
-| **Web demo**         | `index.html`                         | `vite.web.config.ts` → `public/demo/` | IndexedDB + `localStorage`         |
+| Mode                  | Entry                                | Build                                 | Storage                            |
+| --------------------- | ------------------------------------ | ------------------------------------- | ---------------------------------- |
+| **Browser extension** | `newtab.html` + `manifest.config.ts` | `vite.config.ts` (CRXJS) → `dist/`    | IndexedDB + `chrome.storage.local` |
+| **Web demo**          | `index.html`                         | `vite.web.config.ts` → `public/demo/` | IndexedDB + `localStorage`         |
 
 The two modes use different browser origins; data does not sync between them.
 
@@ -41,7 +41,7 @@ The two modes use different browser origins; data does not sync between them.
 
 ```mermaid
 flowchart TB
-  subgraph Chrome["Chrome Browser"]
+  subgraph Browser["Browser"]
     NT["New Tab Page"]
     SW["Service Worker\nbackground.js"]
     CS["chrome.storage.local\nsettings & themes"]
@@ -75,10 +75,11 @@ flowchart TB
 
 ### Storage design principles
 
-1. **Block JSON only** — each page is a Tiptap/ProseMirror `doc`. Rendered HTML and parallel markdown copies are not persisted.
-2. **Search index is ephemeral** — FlexSearch is rebuilt in memory on demand and is never written to disk.
-3. **Two-tier storage** — page documents live in IndexedDB; light settings (theme, last view, custom themes, collapsed folders) live in `chrome.storage.local` or `localStorage` on web.
-4. **Attachments in OPFS** — image and voice binaries live in the Origin Private File System (hidden, per-origin). Block JSON stores relative paths and metadata only (`attachmentPath`, `duration`, `size`, `title`). In-progress voice recordings are never persisted.
+1. **Block JSON only** - each page is a Tiptap/ProseMirror `doc`. Rendered HTML and parallel markdown copies are not persisted.
+2. **Search index is ephemeral** - FlexSearch is rebuilt in memory on demand and is never written to disk.
+3. **Two-tier storage** - page documents live in IndexedDB; light settings (theme, last view, custom themes, collapsed folders, product tour, demo seed flag) live in `chrome.storage.local` or `localStorage` on web.
+4. **Attachments in OPFS** - image and voice binaries live in the Origin Private File System (hidden, per-origin). Block JSON stores relative paths and metadata only (`attachmentPath`, `duration`, `size`, `title`). In-progress voice recordings are never persisted.
+5. **Onboarding** - coachmark product tour (header **Tour** to replay). Web demo seeds one sample page when the workspace is empty (extension installs do not).
 
 ### Attachments & voice notes
 
@@ -103,7 +104,7 @@ IndexedDB (pages)          OPFS (mymemos-attachments/)
 - Toolbar / slash file picker (multi-select)
 - Drag-drop onto the editor (including Mac screenshot thumbnails)
 - Paste of image files or screenshots (`Cmd/Ctrl+V`)
-- Paste of webpage HTML — remote/data `<img>` sources are fetched into OPFS when possible
+- Paste of webpage HTML - remote/data `<img>` sources are fetched into OPFS when possible
 
 **Image UI:** Hover or selection shows a top-right toolbar (align left/center/right, download, delete, more). Opening the image expands a lightbox. A caption field sits under the image. The more menu includes Replace, Copy image, Alt text, and Expand. Backspace removes the block without a confirm dialog; the Delete control confirms and removes the OPFS file.
 
@@ -113,7 +114,7 @@ IndexedDB (pages)          OPFS (mymemos-attachments/)
 
 - `sanitizeBlockDocForPersistence()` strips `status: "recording"` blocks before save (`Editor.tsx`).
 - Page delete removes orphaned OPFS files when no other page references the path (`sanitizeBlockDoc.ts` + `useStore.deletePage`).
-- Copied blocks that share a path share one file — deleting one block removes the file for all copies (known limitation).
+- Copied blocks that share a path share one file - deleting one block removes the file for all copies (known limitation).
 
 **Verification:**
 
@@ -124,9 +125,9 @@ npm run dev   # manual: record, play, rename, delete, reload
 
 ---
 
-- **Manifest V3** — service worker (`background.js`), `chrome_url_overrides.newtab` → `newtab.html`.
-- **LZString compression** — documents are compacted before IndexedDB write; schema versioned via `DB_VERSION` for non-destructive upgrades.
-- **Themes** — 7 built-in plus custom; applied via `data-theme` on `<html>` and CSS variables.
+- **Manifest V3** - service worker (`background.js`), `chrome_url_overrides.newtab` → `newtab.html`.
+- **LZString compression** - documents are compacted before IndexedDB write; schema versioned via `DB_VERSION` for non-destructive upgrades.
+- **Themes** - 7 built-in plus custom; applied via `data-theme` on `<html>` and CSS variables.
 
 ### Tech stack (this package)
 
@@ -153,7 +154,7 @@ extension/
 │   ├── background.js     ← service worker
 │   └── icons/            ← 16 / 48 / 128 px PNGs
 ├── manifest.config.ts    ← MV3 manifest (CRXJS source of truth)
-├── newtab.html           ← Chrome extension entry
+├── newtab.html           ← Browser extension entry
 ├── index.html            ← Web demo entry
 ├── src/
 │   ├── App.tsx           ← root, shortcuts, view router
@@ -162,6 +163,7 @@ extension/
 │   │   ├── commands/     ← TipTap insert adapters (call attachments)
 │   │   └── hooks/        ← voice/image node-view logic
 │   ├── views/            ← Dashboard, PageView
+│   ├── onboarding/       ← Product tour coachmarks + web-demo seed
 │   ├── store/            ← Zustand facade + slices/
 │   ├── storage/          ← IndexedDB, codec, types
 │   └── lib/
@@ -169,7 +171,7 @@ extension/
 │       ├── attachments/  ← OPFS I/O, sanitize, recorder (no TipTap)
 │       ├── workspaceTree.ts
 │       └── workspaceDrag.ts ← sidebar DnD helpers
-├── vite.config.ts        ← Chrome extension build
+├── vite.config.ts        ← Browser extension build
 ├── vite.web.config.ts    ← Web demo → ../public/demo/
 └── package.json
 
@@ -180,7 +182,7 @@ extension/
 
 ---
 
-## Develop (Chrome, hot reload)
+## Develop (browser extension, hot reload)
 
 ```bash
 cd extension
@@ -188,9 +190,9 @@ npm install
 npm run dev          # :5173, HMR
 ```
 
-Chrome load (one-time):
+Browser load (one-time):
 
-1. Open `chrome://extensions` and enable **Developer mode**
+1. Open your browser's extensions page and enable **Developer mode**
 2. **Load unpacked** and select `extension/dist/`
 3. The loaded extension name is **MyMemos (Dev)**; the UI appears on a **new tab**
 
@@ -201,7 +203,7 @@ Chrome load (one-time):
 
 `npm run build` replaces the HMR-oriented `dist/` bundle and should not run during an active `npm run dev` session. The `predev` script clears `dist/` and `.vite/` before each dev start.
 
-If HMR stalls, `npm run dev:reset`, reload the extension in Chrome, and open a new tab. `npm run dev:check` validates the setup. A fallback is `npm run dev:watch` plus a manual reload in `chrome://extensions`.
+If HMR stalls, `npm run dev:reset`, reload the extension in your browser, and open a new tab. `npm run dev:check` validates the setup. A fallback is `npm run dev:watch` plus a manual reload on the extensions page.
 
 ---
 
@@ -229,7 +231,7 @@ npm run package      # zip → mymemos-extension.zip
 
 From the repo root, `npm run build:extension` and `npm run package:extension` also copy the ZIP to `public/` for the landing download button.
 
-A running `npm run dev` session should be stopped before a production build. After `build`, reload the unpacked extension in Chrome.
+A running `npm run dev` session should be stopped before a production build. After `build`, reload the unpacked extension in your browser.
 
 ---
 

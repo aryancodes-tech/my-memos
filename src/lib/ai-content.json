@@ -1,10 +1,10 @@
 {
-  "llmsSummary": "MyMemos is a free, local-first Chrome extension that replaces your New Tab page with a private notes workspace. Notes stay on your device in IndexedDB and attachments in OPFS-no account, no cloud sync, no server for your content. Includes a Notion-style block editor with slash commands, markdown paste, images and voice notes, fuzzy search (⌘K), seven built-in themes plus custom themes, and a live browser demo.",
-  "alternateNames": ["My Memos", "MyMemos Chrome extension", "new tab notes app"],
+  "llmsSummary": "MyMemos is a free, local-first browser extension that replaces your New Tab page with a private notes workspace. Notes stay on your device in IndexedDB and attachments in OPFS-no account, no cloud sync, no server for your content. Includes a Notion-style block editor with slash commands, markdown paste, images and voice notes, fuzzy search (⌘K), seven built-in themes plus custom themes, and a live browser demo.",
+  "alternateNames": ["My Memos", "MyMemos browser extension", "new tab notes app"],
   "faq": [
     {
       "question": "What is MyMemos?",
-      "answer": "MyMemos is a free Chrome extension that replaces your browser's New Tab with a local-first notes workspace. Every time you open a new tab, your notes are ready-no separate app to launch."
+      "answer": "MyMemos is a free browser extension that replaces your browser's New Tab with a local-first notes workspace. Every time you open a new tab, your notes are ready-no separate app to launch."
     },
     {
       "question": "Is MyMemos free?",
@@ -16,11 +16,11 @@
     },
     {
       "question": "Where is my data stored in MyMemos?",
-      "answer": "All notes and attachments stay on your device. Page content lives in IndexedDB; images and voice notes use the browser's Origin Private File System (OPFS); preferences use chrome.storage.local in the extension (or localStorage in the web demo).",
+      "answer": "All notes and attachments stay on your device. Page content lives in IndexedDB; images and voice notes use the browser's Origin Private File System (OPFS); preferences use the extension settings store (or localStorage in the web demo).",
       "answerSegments": [
         {
           "type": "text",
-          "text": "All notes and attachments stay on your device. Page content lives in IndexedDB; images and voice notes use the browser's Origin Private File System (OPFS); preferences use chrome.storage.local in the extension (or localStorage in the web demo)."
+          "text": "All notes and attachments stay on your device. Page content lives in IndexedDB; images and voice notes use the browser's Origin Private File System (OPFS); preferences use the extension settings store (or localStorage in the web demo)."
         }
       ]
     },
@@ -29,14 +29,14 @@
       "answer": "MyMemos lives on your New Tab, not a separate website or app. It is local-first and private by default: no login, no sync servers, and no cloud dependency for your notes. Best for quick capture when you hit ⌘T."
     },
     {
-      "question": "Can I try MyMemos before installing the Chrome extension?",
-      "answer": "Yes. A live browser demo is available here. Same UI as the extension: pages in IndexedDB, settings in localStorage (instead of chrome.storage). Demo data does not sync with the installed extension.",
+      "question": "Can I try MyMemos before installing the browser extension?",
+      "answer": "Yes. A live browser demo is available here. Same UI as the extension: pages in IndexedDB, settings in localStorage (instead of the extension settings store). Demo data does not sync with the installed extension.",
       "answerSegments": [
         { "type": "text", "text": "Yes. A live browser demo is available " },
         { "type": "link", "path": "/demo/", "label": "here" },
         {
           "type": "text",
-          "text": ". Same UI as the extension: pages in IndexedDB, settings in localStorage (instead of chrome.storage). Demo data does not sync with the installed extension."
+          "text": ". Same UI as the extension: pages in IndexedDB, settings in localStorage (instead of the extension settings store). Demo data does not sync with the installed extension."
         }
       ]
     }

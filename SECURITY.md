@@ -29,7 +29,7 @@ timeline when possible.
 
 In scope:
 
-- The MyMemos Chrome extension (`extension/`)
+- The MyMemos browser extension (`extension/`)
 - The landing site (`src/`)
 - Data handling in IndexedDB and `chrome.storage.local`
 

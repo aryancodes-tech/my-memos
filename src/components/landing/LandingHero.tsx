@@ -1,6 +1,8 @@
 import {
   DEMO_PATH,
+  LANDING_DEMO_TOUR_TARGET,
   LANDING_HERO_BADGE,
+  LANDING_HERO_DEMO_CTA,
   LANDING_HERO_PILLS,
   LANDING_HERO_SUBTITLE,
   LANDING_HERO_TITLE_LINE_ONE,
@@ -48,8 +50,12 @@ export function LandingHero({ onDownload, isDownloading, downloadError }: Landin
           <DownloadIcon />
           {isDownloading ? "Downloading…" : "Replace your New Tab"}
         </button>
-        <a href={DEMO_PATH} className="landing-btn landing-btn-ghost landing-btn-lg">
-          Try live demo
+        <a
+          href={DEMO_PATH}
+          className="landing-btn landing-btn-ghost landing-btn-lg"
+          data-tour-target={LANDING_DEMO_TOUR_TARGET}
+        >
+          {LANDING_HERO_DEMO_CTA}
           <ArrowIcon />
         </a>
       </div>

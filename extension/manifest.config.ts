@@ -23,7 +23,7 @@ function devServerConfig(env: ConfigEnv) {
   };
 }
 
-/** Chrome extension manifest - source of truth for CRXJS dev + production builds. */
+/** Browser extension manifest - source of truth for CRXJS dev + production builds. */
 export default defineManifest((env) => ({
   manifest_version: 3,
   name: env.command === "serve" ? `${PRODUCT_NAME} (Dev)` : PRODUCT_NAME,

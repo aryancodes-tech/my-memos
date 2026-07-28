@@ -1,7 +1,7 @@
 {
   "name": "mymemos",
   "version": "0.1.0",
-  "description": "Local-first personal knowledge management Chrome extension with an optional landing site",
+  "description": "Local-first personal knowledge management browser extension with an optional landing site",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -15,13 +15,13 @@
     "node": ">=20.19.0"
   },
   "keywords": [
-    "chrome-extension",
+    "browser-extension",
     "memos",
     "notion",
     "tiptap",
     "local-first",
     "new-tab",
-    "chrome-extension"
+    "browser-extension"
   ],
   "sideEffects": false,
   "type": "module",

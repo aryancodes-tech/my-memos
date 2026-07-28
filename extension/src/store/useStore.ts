@@ -4,6 +4,7 @@ import { len } from "@/lib/text";
 import type { Page } from "@/storage/types";
 import { createDialogsSlice } from "@/store/slices/dialogs";
 import { createEditorBridgeSlice } from "@/store/slices/editorBridge";
+import { createOnboardingSlice } from "@/store/slices/onboarding";
 import { createPagesWorkspaceSlice } from "@/store/slices/pagesWorkspace";
 import { createThemeUiSlice } from "@/store/slices/themeUi";
 import type { StoreState } from "@/store/types";
@@ -18,13 +19,14 @@ export type {
 
 /**
  * Application store composed from concern slices:
- * pages/workspace, theme UI, dialogs, and TipTap editor bridge.
+ * pages/workspace, theme UI, dialogs, TipTap editor bridge, and onboarding.
  */
 export const useStore = create<StoreState>()((...args) => ({
   ...createPagesWorkspaceSlice(...args),
   ...createThemeUiSlice(...args),
   ...createDialogsSlice(...args),
   ...createEditorBridgeSlice(...args),
+  ...createOnboardingSlice(...args),
 }));
 
 /** Returns true when a page lives at the workspace root (not inside a folder). */

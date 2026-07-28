@@ -7,7 +7,7 @@
  * - Landing: `@/lib/constants` → re-exports this module
  * - Extension: `@/lib/constants` → re-exports this module
  *
- * Do not hardcode user-facing strings or tunables in components — add them here.
+ * Do not hardcode user-facing strings or tunables in components - add them here.
  */
 
 import type { BuiltInThemeName, CustomThemeColors } from "./themeTypes";
@@ -30,7 +30,7 @@ export const DB_NAME = "mymemos";
 export const LANDING_NAV_TAGLINE = "Replaces your New Tab for quick notes";
 
 /** Badge above the landing hero headline. */
-export const LANDING_HERO_BADGE = "Chrome extension · Replaces your New Tab";
+export const LANDING_HERO_BADGE = "Browser extension · Replaces your New Tab";
 
 /** Landing hero headline line one. */
 export const LANDING_HERO_TITLE_LINE_ONE = "Your notes,";
@@ -59,7 +59,7 @@ export const LANDING_FEATURES_TITLE = "Not another notes app - your browser's ne
 
 /** Description for the landing features section. */
 export const LANDING_FEATURES_DESC =
-  "Most note apps sit in a separate tab you forget to open. MyMemos is where Chrome already takes you - ready to capture the moment you hit ⌘ T.";
+  "Most note apps sit in a separate tab you forget to open. MyMemos is where your browser already takes you - ready to capture the moment you hit ⌘ T.";
 
 /** Caption shown below the launch video at peak scroll. */
 export const LANDING_LAUNCH_VIDEO_CAPTION = "Your new tab, in action";
@@ -110,6 +110,52 @@ export const LANDING_FAQ_DESC =
 /** Intro copy for the landing get-started section. */
 export const LANDING_GET_STARTED_DESC =
   "Install once. Every new tab becomes your workspace - no account, no server, no config.";
+
+/** Hero secondary CTA label linking to `/demo/`. */
+export const LANDING_HERO_DEMO_CTA = "Try before you install";
+
+/** Get-started secondary CTA label linking to `/demo/`. */
+export const LANDING_GET_STARTED_DEMO_CTA = "Try before you install";
+
+/** `data-tour-target` for the landing hero demo CTA coachmark. */
+export const LANDING_DEMO_TOUR_TARGET = "landing-demo-cta";
+
+/** localStorage key - set when the landing demo coachmark is dismissed. */
+export const LANDING_DEMO_TOUR_STORAGE_KEY = "mymemos-landing-demo-tour";
+
+/** Landing one-step demo coachmark title. */
+export const LANDING_DEMO_TOUR_TITLE = "Try the live demo";
+
+/** Landing one-step demo coachmark body. */
+export const LANDING_DEMO_TOUR_BODY =
+  "Click Try before you install to open the same MyMemos UI in your browser - no installation required.";
+
+/** Skip / dismiss label for the landing demo coachmark. */
+export const LANDING_DEMO_TOUR_SKIP_LABEL = "Skip";
+
+/** Confirm label for the landing demo coachmark. */
+export const LANDING_DEMO_TOUR_DONE_LABEL = "Got it";
+
+/** Padding around the landing demo CTA spotlight, in pixels. */
+export const LANDING_DEMO_TOUR_SPOTLIGHT_PADDING_PX = 8;
+
+/** Z-index for the landing demo coachmark overlay. */
+export const LANDING_DEMO_TOUR_Z_INDEX = 80;
+
+/**
+ * Scroll distance (px) after which the landing demo coachmark dismisses.
+ * Ignores tiny jitter so the tip does not vanish immediately.
+ */
+export const LANDING_DEMO_TOUR_SCROLL_DISMISS_PX = 48;
+
+/**
+ * Min viewport width (px) for the landing demo leave-intent coachmark.
+ * Phone layouts skip the back-button nudge; tablet/desktop use it.
+ */
+export const LANDING_DEMO_TOUR_EXIT_MIN_WIDTH_PX = 768;
+
+/** History state flag used to intercept browser back on the landing page. */
+export const LANDING_DEMO_TOUR_HISTORY_GUARD_KEY = "mymemosLandingTourGuard";
 
 /** DOM id for the landing get-started install section. */
 export const LANDING_GET_STARTED_SECTION_ID = "get-started";
@@ -287,7 +333,23 @@ export const EDITOR_SAVE_DEBOUNCE_MS = 250;
 export const SETTINGS_KEYS = {
   theme: "theme",
   lastView: "lastView",
+  /** `"done"` after tour skip/complete; unset means auto-start on next ready. */
+  productTour: "productTour",
+  /** Web demo: set after seeding the sample workspace page. */
+  demoWorkspaceSeeded: "demoWorkspaceSeeded",
 } as const;
+
+/** Persisted value when the product tour is skipped or finished. */
+export const PRODUCT_TOUR_STATUS_DONE = "done";
+
+/** Header control label to replay the product tour. */
+export const PRODUCT_TOUR_REPLAY_LABEL = "Tour";
+
+/** Aria label for the header tour replay button. */
+export const PRODUCT_TOUR_REPLAY_ARIA_LABEL = "Take the product tour";
+
+/** Title of the sample page seeded into an empty web-demo workspace. */
+export const DEMO_SEED_PAGE_TITLE = "Welcome to MyMemos";
 
 /** Horizontal padding for page content in pixels. */
 export const PAGE_CONTENT_PADDING_X_PX = 96;
@@ -484,6 +546,82 @@ export const MARKDOWN_DETECTION_PATTERNS: RegExp[] = [
 /** localStorage key for dismissing the standalone web app install banner. */
 export const WEB_INSTALL_BANNER_DISMISS_KEY = "koWebInstallBannerDismissed";
 
+// ---------------------------------------------------------------------------
+// Product tour (coachmarks)
+// ---------------------------------------------------------------------------
+
+/** `data-tour-target` values used by coachmark spotlights. */
+export const PRODUCT_TOUR_TARGETS = {
+  createPage: "create-page",
+  slashMenu: "slash-menu",
+  addImage: "add-image",
+  addVoice: "add-voice",
+} as const;
+
+/** Product tour step copy (welcome → success). */
+export const PRODUCT_TOUR_STEPS = [
+  {
+    id: "welcome",
+    title: `Welcome to ${PRODUCT_NAME}`,
+    body: "Your notes live on every New Tab - local-first, no account. A quick tour of the essentials.",
+    target: null,
+  },
+  {
+    id: "create-page",
+    title: "Create a page",
+    body: "Add a new page from the sidebar (+), or use New page on the dashboard.",
+    target: PRODUCT_TOUR_TARGETS.createPage,
+  },
+  {
+    id: "slash-menu",
+    title: "Slash commands",
+    body: "In the editor, type / to insert headings, lists, code, and more without leaving the keyboard.",
+    target: PRODUCT_TOUR_TARGETS.slashMenu,
+  },
+  {
+    id: "add-image",
+    title: "Add an image",
+    body: "Use the Image button in the toolbar to attach a picture. Files stay on this device.",
+    target: PRODUCT_TOUR_TARGETS.addImage,
+  },
+  {
+    id: "add-voice",
+    title: "Add a voice note",
+    body: "Tap Voice to record a quick note. Audio is stored locally with your page.",
+    target: PRODUCT_TOUR_TARGETS.addVoice,
+  },
+  {
+    id: "success",
+    title: "You're ready",
+    body: "Explore freely - replay this tour anytime from Tour next to the theme control.",
+    target: null,
+  },
+] as const;
+
+/** Primary button on the welcome step. */
+export const PRODUCT_TOUR_START_LABEL = "Start tour";
+
+/** Advance to the next coachmark. */
+export const PRODUCT_TOUR_NEXT_LABEL = "Next";
+
+/** Go back to the previous coachmark. */
+export const PRODUCT_TOUR_PREV_LABEL = "Back";
+
+/** Finish the tour on the last step. */
+export const PRODUCT_TOUR_DONE_LABEL = "Done";
+
+/** Dismiss the tour without finishing every step. */
+export const PRODUCT_TOUR_SKIP_LABEL = "Skip";
+
+/** Padding around spotlighted tour targets, in pixels. */
+export const PRODUCT_TOUR_SPOTLIGHT_PADDING_PX = 8;
+
+/** Duration for coachmark spotlight/card motion, in milliseconds. */
+export const PRODUCT_TOUR_TRANSITION_MS = 280;
+
+/** Z-index for the product tour overlay above dialogs. */
+export const PRODUCT_TOUR_Z_INDEX = 1200;
+
 /** Viewport width below which the live demo shows a mobile experience notice. */
 export const MOBILE_EXPERIENCE_MAX_WIDTH_PX = 768;
 
@@ -578,7 +716,7 @@ export const VOICE_NOTE_PLAYBACK_SPEEDS = [1, 1.5, 2] as const;
 
 /** Error when attachment storage is unavailable in this browser. */
 export const ATTACHMENT_FS_UNSUPPORTED_MESSAGE =
-  "Attachments require a browser with private file storage (Chrome or Edge).";
+  "Attachments require a modern browser with private file storage (OPFS).";
 
 /** Error when OPFS attachment root cannot be used. */
 export const ATTACHMENT_STORAGE_UNAVAILABLE_MESSAGE = "Attachment storage is unavailable.";

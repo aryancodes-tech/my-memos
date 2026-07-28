@@ -29,7 +29,7 @@ function ensureExtensionTestsNodeModulesLink(): void {
       return;
     }
   } catch {
-    // missing — create below
+    // missing - create below
   }
   fs.symlinkSync(target, extensionTestsNodeModules);
 }

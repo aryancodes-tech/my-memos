@@ -9,7 +9,7 @@ Vitest unit tests live here (not co-located under `src/`). Paths **mirror** the 
 | `extension/src/<path>/<file>.ts` | `tests/extension/<path>/<file>.test.ts` |
 | `src/<path>/<file>.ts` (landing) | `tests/landing/<path>/<file>.test.ts`   |
 
-Same basename. If a test is missing, add it at the mirrored path. Import production code via `@/` (and `@shared/` when needed) — never relative paths back into `src/`.
+Same basename. If a test is missing, add it at the mirrored path. Import production code via `@/` (and `@shared/` when needed) - never relative paths back into `src/`.
 
 ```
 extension/src/lib/text.ts          →  tests/extension/lib/text.test.ts
