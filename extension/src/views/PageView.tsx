@@ -107,7 +107,12 @@ export default function PageView({ id }: { id: string }) {
         <p className="ko-page-meta">Last edited {formatPageEditedAt(page.updated_at)}</p>
       </header>
 
-      <Editor docKey={page.id} initial={page.doc} onChange={(doc) => updatePage(id, { doc })} />
+      <Editor
+        key={page.id}
+        docKey={page.id}
+        initial={page.doc}
+        onChange={(doc) => updatePage(id, { doc })}
+      />
     </article>
   );
 }

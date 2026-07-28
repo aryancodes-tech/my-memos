@@ -1,7 +1,7 @@
 {
   "name": "mymemos-extension",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "predev": "node scripts/clean-dev-artifacts.mjs",
