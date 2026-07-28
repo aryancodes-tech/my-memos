@@ -1,6 +1,6 @@
 {
   "name": "mymemos",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Local-first personal knowledge management browser extension with an optional landing site",
   "license": "MIT",
   "repository": {
