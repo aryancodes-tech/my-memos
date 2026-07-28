@@ -70,7 +70,8 @@ describe("buildDemoSeedBlockDoc", () => {
     const types = doc.content.map((node) => node.type);
     const voiceIndex = types.indexOf("voiceNote");
     const tryTheseIndex = doc.content.findIndex(
-      (node) => node.type === "heading" && node.content?.[0]?.text === "Why this workspace converts",
+      (node) =>
+        node.type === "heading" && node.content?.[0]?.text === "Why this workspace converts",
     );
 
     expect(voiceIndex).toBeGreaterThan(0);

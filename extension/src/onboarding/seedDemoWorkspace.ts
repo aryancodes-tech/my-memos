@@ -1,7 +1,10 @@
 import { nanoid } from "nanoid";
 import * as db from "@/storage/db";
 import type { AttachmentRef, BlockDoc, BlockNode, Page } from "@/storage/types";
-import { saveImageAttachment, saveUploadedAudioAttachment } from "@/lib/attachments/attachmentManager";
+import {
+  saveImageAttachment,
+  saveUploadedAudioAttachment,
+} from "@/lib/attachments/attachmentManager";
 import { isAttachmentStorageSupported } from "@/lib/attachments/fileSystemManager";
 import {
   DEMO_SEED_IMAGE_ALT,
@@ -65,36 +68,51 @@ export function buildDemoSeedBlockDoc(
         {
           type: "taskItem",
           attrs: { checked: true },
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Capture an idea before it disappears" }] }],
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "Capture an idea before it disappears" }],
+            },
+          ],
         },
         {
           type: "taskItem",
           attrs: { checked: true },
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Group pages by project or area" }] }],
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "Group pages by project or area" }],
+            },
+          ],
         },
         {
           type: "taskItem",
           attrs: { checked: false },
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Open the sidebar and explore the seeded workspace" }] }],
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                { type: "text", text: "Open the sidebar and explore the seeded workspace" },
+              ],
+            },
+          ],
         },
       ],
     },
   ];
 
   if (image && len(image.attachmentPath) > 0) {
-    content.push(
-      {
-        type: "image",
-        attrs: {
-          attachmentPath: image.attachmentPath,
-          attachmentSize: image.size,
-          alt: image.alt,
-          caption: image.caption,
-          src: null,
-          align: "center",
-        },
+    content.push({
+      type: "image",
+      attrs: {
+        attachmentPath: image.attachmentPath,
+        attachmentSize: image.size,
+        alt: image.alt,
+        caption: image.caption,
+        src: null,
+        align: "center",
       },
-    );
+    });
   }
 
   if (voice && len(voice.attachmentPath) > 0) {
@@ -168,7 +186,9 @@ export function buildDemoSeedBlockDoc(
           content: [
             {
               type: "paragraph",
-              content: [{ type: "text", text: "Press ⌘K to search titles and note content instantly" }],
+              content: [
+                { type: "text", text: "Press ⌘K to search titles and note content instantly" },
+              ],
             },
           ],
         },
@@ -351,13 +371,27 @@ function buildLaunchPlanDoc(
 ): BlockDoc {
   const content: BlockNode[] = [
     heading(1, "Launch plan"),
-    paragraph("Everything for a launch lives in one place: priorities, assets, talking points, and quick voice reminders."),
+    paragraph(
+      "Everything for a launch lives in one place: priorities, assets, talking points, and quick voice reminders.",
+    ),
     {
       type: "taskList",
       content: [
-        { type: "taskItem", attrs: { checked: true }, content: [paragraph("Tighten landing headline and first screenshot")] },
-        { type: "taskItem", attrs: { checked: true }, content: [paragraph("Prepare demo workspace that feels real, not staged")] },
-        { type: "taskItem", attrs: { checked: false }, content: [paragraph("Share launch page with 5 early users for feedback")] },
+        {
+          type: "taskItem",
+          attrs: { checked: true },
+          content: [paragraph("Tighten landing headline and first screenshot")],
+        },
+        {
+          type: "taskItem",
+          attrs: { checked: true },
+          content: [paragraph("Prepare demo workspace that feels real, not staged")],
+        },
+        {
+          type: "taskItem",
+          attrs: { checked: false },
+          content: [paragraph("Share launch page with 5 early users for feedback")],
+        },
       ],
     },
   ];
@@ -377,25 +411,24 @@ function buildLaunchPlanDoc(
   }
 
   if (voice && len(voice.attachmentPath) > 0) {
-    content.push(
-      heading(2, "Voice memo"),
-      {
-        type: "voiceNote",
-        attrs: {
-          status: "saved",
-          attachmentPath: voice.attachmentPath,
-          duration: voice.duration,
-          size: voice.size,
-          title: voice.title,
-          createdAt: voice.createdAt,
-        },
+    content.push(heading(2, "Voice memo"), {
+      type: "voiceNote",
+      attrs: {
+        status: "saved",
+        attachmentPath: voice.attachmentPath,
+        duration: voice.duration,
+        size: voice.size,
+        title: voice.title,
+        createdAt: voice.createdAt,
       },
-    );
+    });
   }
 
   content.push(
     heading(2, "Core message"),
-    paragraph("The value is speed: open a new tab, capture the thought, and keep moving without context-switching into another app."),
+    paragraph(
+      "The value is speed: open a new tab, capture the thought, and keep moving without context-switching into another app.",
+    ),
   );
 
   return { type: "doc", content };
@@ -410,9 +443,21 @@ function buildNetworkingDoc(): BlockDoc {
       {
         type: "taskList",
         content: [
-          { type: "taskItem", attrs: { checked: false }, content: [paragraph("Send TLS handshake article to Priya")] },
-          { type: "taskItem", attrs: { checked: false }, content: [paragraph("Book 15-min intro with Arjun next week")] },
-          { type: "taskItem", attrs: { checked: true }, content: [paragraph("Summarize customer call learnings")] },
+          {
+            type: "taskItem",
+            attrs: { checked: false },
+            content: [paragraph("Send TLS handshake article to Priya")],
+          },
+          {
+            type: "taskItem",
+            attrs: { checked: false },
+            content: [paragraph("Book 15-min intro with Arjun next week")],
+          },
+          {
+            type: "taskItem",
+            attrs: { checked: true },
+            content: [paragraph("Summarize customer call learnings")],
+          },
         ],
       },
     ],
@@ -428,16 +473,28 @@ function buildReadingListDoc(): BlockDoc {
       {
         type: "bulletList",
         content: [
-          { type: "listItem", content: [paragraph("How products reduce friction in the first 30 seconds")] },
-          { type: "listItem", content: [paragraph("Why local-first tools feel faster and more trustworthy")] },
-          { type: "listItem", content: [paragraph("Examples of landing pages with strong visual storytelling")] },
+          {
+            type: "listItem",
+            content: [paragraph("How products reduce friction in the first 30 seconds")],
+          },
+          {
+            type: "listItem",
+            content: [paragraph("Why local-first tools feel faster and more trustworthy")],
+          },
+          {
+            type: "listItem",
+            content: [paragraph("Examples of landing pages with strong visual storytelling")],
+          },
         ],
       },
     ],
   };
 }
 
-function makePage(overrides: Partial<Page> & Pick<Page, "title" | "kind" | "parent_id" | "doc">, timestamp: number): Page {
+function makePage(
+  overrides: Partial<Page> & Pick<Page, "title" | "kind" | "parent_id" | "doc">,
+  timestamp: number,
+): Page {
   return {
     id: overrides.id ?? nanoid(),
     title: overrides.title,
@@ -460,11 +517,21 @@ function buildDemoSeedPages(
   existingWelcomeId?: string,
 ): { pages: Page[]; primaryPageId: string } {
   const workDir = makePage(
-    { title: "Work", kind: "directory", parent_id: null, doc: { type: "doc", content: [paragraph("Work directory")] } },
+    {
+      title: "Work",
+      kind: "directory",
+      parent_id: null,
+      doc: { type: "doc", content: [paragraph("Work directory")] },
+    },
     now - 1_000,
   );
   const personalDir = makePage(
-    { title: "Personal", kind: "directory", parent_id: null, doc: { type: "doc", content: [paragraph("Personal directory")] } },
+    {
+      title: "Personal",
+      kind: "directory",
+      parent_id: null,
+      doc: { type: "doc", content: [paragraph("Personal directory")] },
+    },
     now - 2_000,
   );
   const launchPlan = makePage(

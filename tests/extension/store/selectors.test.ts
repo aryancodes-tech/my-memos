@@ -124,9 +124,7 @@ describe("workspace selectors edge cases", () => {
     ];
     expect(selectWorkspaceChildren(before, "folder").map((p) => p.id)).toEqual(["a", "b", "c"]);
 
-    const afterEdit = before.map((p) =>
-      p.id === "c" ? { ...p, updated_at: 999 } : p,
-    );
+    const afterEdit = before.map((p) => (p.id === "c" ? { ...p, updated_at: 999 } : p));
     expect(selectWorkspaceChildren(afterEdit, "folder").map((p) => p.id)).toEqual(["a", "b", "c"]);
   });
 });

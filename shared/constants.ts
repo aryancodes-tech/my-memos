@@ -412,7 +412,8 @@ export const DEMO_SEED_IMAGE_PUBLIC_PATH = `/${DEMO_SEED_IMAGE_FILE_NAME}`;
 export const DEMO_SEED_IMAGE_ALT = "MyMemos landing page preview";
 
 /** Caption for the seeded demo image block. */
-export const DEMO_SEED_IMAGE_CAPTION = "A polished capture can include screenshots, visual references, and voice notes in one place.";
+export const DEMO_SEED_IMAGE_CAPTION =
+  "A polished capture can include screenshots, visual references, and voice notes in one place.";
 
 /** Bump when the empty-demo seed content changes (forces reseed on empty workspaces). */
 export const DEMO_WORKSPACE_SEED_VERSION = 5;
