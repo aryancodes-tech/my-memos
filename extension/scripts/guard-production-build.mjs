@@ -2,6 +2,8 @@ import fs from "node:fs";
 import net from "node:net";
 import path from "node:path";
 
+import { c, command, errorBlock, numbered } from "../../scripts/cli-style.mjs";
+
 const root = process.cwd();
 const devSessionPath = path.join(root, ".dev-session");
 const devPort = 5173;
@@ -25,19 +27,19 @@ const devPortBusy = await isDevPortInUse();
 const hasDevSession = fs.existsSync(devSessionPath);
 
 if (!forceBuild && (devPortBusy || hasDevSession)) {
-  console.error("\n[MyMemos] Blocked production build while dev mode is active.");
-  console.error(
-    "npm run build replaces extension/dist with a static bundle - live reload stops working.",
-  );
-  console.error("\nFor live changes, use:");
-  console.error("  cd extension");
-  console.error("  npm run dev");
-  console.error("  npm run dev:check");
-  console.error(
-    '\nThen reload the extension on your browser\'s extensions page (name must be "MyMemos (Dev)").',
-  );
-  console.error("\nTo build for production anyway:");
-  console.error("  1. Stop npm run dev (Ctrl+C)");
-  console.error("  2. FORCE_BUILD=1 npm run build\n");
+  errorBlock("Blocked production build while dev mode is active", [
+    `${c.bold("npm run build")} replaces extension/dist with a static bundle — live reload stops.`,
+    "",
+    c.bold("For live changes, use"),
+  ]);
+  command("cd extension");
+  command("npm run dev");
+  command("npm run dev:check");
+  console.error("");
+  console.error(`  ${c.dim('Then reload the extension (name must be "MyMemos (Dev)").')}`);
+  console.error("");
+  console.error(`  ${c.bold("To build for production anyway")}`);
+  numbered(["Stop npm run dev (Ctrl+C)", "FORCE_BUILD=1 npm run build"]);
+  console.error("");
   process.exit(1);
 }

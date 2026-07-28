@@ -1,13 +1,26 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import {
+  banner,
+  bullet,
+  c,
+  command,
+  errorBlock,
+  ok,
+  path as stylePath,
+} from "../../scripts/cli-style.mjs";
+
 const root = process.cwd();
 const manifestPath = path.join(root, "dist", "manifest.json");
 
 if (!fs.existsSync(manifestPath)) {
-  console.error("\n[MyMemos] dist/manifest.json is missing.");
-  console.error("Run: npm run dev");
-  console.error("Then load extension/dist from your browser's extensions page\n");
+  errorBlock("dist/manifest.json is missing", [
+    "Start the extension dev server, then load the unpacked build:",
+  ]);
+  command("npm run dev");
+  console.error(`  ${c.dim("Then load extension/dist from your browser's extensions page")}`);
+  console.error("");
   process.exit(1);
 }
 
@@ -18,20 +31,27 @@ const isDev =
     manifest.host_permissions.some((entry) => String(entry).includes("localhost:5173")));
 
 if (!isDev) {
-  console.error("\n[MyMemos] dist/ contains a PRODUCTION build.");
-  console.error(
-    "The browser is loading static bundled files, so edits will NOT appear until you rebuild.",
-  );
-  console.error("This usually happens after running npm run build while developing.");
-  console.error("\nFix (one-time):");
-  console.error("  1. Stop npm run dev if running (Ctrl+C)");
-  console.error("  2. npm run dev:reset");
-  console.error('  3. On the extensions page → Reload (name must be "MyMemos (Dev)")');
-  console.error("  4. Open a NEW tab");
-  console.error("\nDaily workflow:");
-  console.error("  - Keep `npm run dev` running in extension/");
-  console.error("  - Edit files → changes hot-reload in open tabs");
-  console.error("  - Do NOT run npm run build during development\n");
+  errorBlock("dist/ contains a PRODUCTION build", [
+    "The browser is loading static bundled files — edits will NOT hot-reload.",
+    "This usually happens after running npm run build while developing.",
+    "",
+    c.bold("Fix (one-time)"),
+  ]);
+  const steps = [
+    "Stop npm run dev if running (Ctrl+C)",
+    "npm run dev:reset",
+    'On the extensions page → Reload (name must be "MyMemos (Dev)")',
+    "Open a NEW tab",
+  ];
+  for (let i = 0; i < steps.length; i += 1) {
+    console.error(`  ${c.cyan(`${i + 1}.`)} ${steps[i]}`);
+  }
+  console.error("");
+  console.error(`  ${c.bold("Daily workflow")}`);
+  console.error(`  ${c.dim("•")} Keep ${c.bold("npm run dev")} running in extension/`);
+  console.error(`  ${c.dim("•")} Edit files → changes hot-reload in open tabs`);
+  console.error(`  ${c.dim("•")} Do NOT run npm run build during development`);
+  console.error("");
   process.exit(1);
 }
 
@@ -46,13 +66,18 @@ try {
 }
 
 if (!devServerUp) {
-  console.error("\n[MyMemos] Dev manifest is correct, but the Vite dev server is not reachable.");
-  console.error(`Start it with: npm run dev`);
-  console.error("Then reload the extension on your browser's extensions page.\n");
+  errorBlock("Dev manifest OK, but Vite is not reachable", [
+    `Expected the dev server on ${stylePath(`http://localhost:${devPort}`)}`,
+  ]);
+  command("npm run dev");
+  console.error(`  ${c.dim("Then reload the extension on your browser's extensions page")}`);
+  console.error("");
   process.exit(1);
 }
 
-console.log("[MyMemos] Dev setup looks correct.");
-console.log("  - dist/ is a dev build");
-console.log(`  - Vite is running on http://localhost:${devPort}`);
-console.log('  - Extension name in the browser should be "MyMemos (Dev)"');
+banner("dev:check", "extension setup");
+ok("Dev setup looks correct");
+bullet(`dist/ is a ${c.bold("dev")} build`);
+bullet(`Vite is running on ${stylePath(`http://localhost:${devPort}`)}`);
+bullet(`Extension name should be ${c.bold('"MyMemos (Dev)"')}`);
+console.log("");

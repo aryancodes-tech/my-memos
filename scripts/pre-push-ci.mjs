@@ -10,17 +10,19 @@ import { execFileSync, spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { banner, brand, c, command, errorBlock, fail, hint, ok, step, warn } from "./cli-style.mjs";
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-function run(command, args) {
-  const result = spawnSync(command, args, {
+function run(commandName, args) {
+  const result = spawnSync(commandName, args, {
     cwd: root,
     stdio: "inherit",
     shell: process.platform === "win32",
     env: process.env,
   });
   if (result.error) {
-    console.error(`[MyMemos pre-push] Failed to start ${command}:`, result.error.message);
+    fail(`Failed to start ${c.bold(commandName)}: ${result.error.message}`);
     process.exit(1);
   }
   if (result.status !== 0) {
@@ -37,31 +39,32 @@ function gitPorcelain() {
 }
 
 if (process.env.SKIP_PRE_PUSH_CI === "1") {
-  console.log("[MyMemos pre-push] Skipping checks (SKIP_PRE_PUSH_CI=1).");
+  warn(`Skipping pre-push checks ${c.dim("(SKIP_PRE_PUSH_CI=1)")}`);
   process.exit(0);
 }
 
+banner("pre-push", "format → lint → check");
+
 const before = gitPorcelain();
 
-console.log("[MyMemos pre-push] Auto-fixing format/lint…");
+step("Auto-fixing format / lint…");
 run("npm", ["run", "format"]);
 run("npx", ["eslint", ".", "--fix"]);
 
 const after = gitPorcelain();
 
 if (after !== before) {
-  console.error(
-    [
-      "",
-      "[MyMemos pre-push] Auto-fixed formatting/lint issues in the working tree.",
-      "Commit those changes, then push again:",
-      "",
-      '  git add -u && git commit -m "chore: format" && git push',
-      "",
-    ].join("\n"),
-  );
+  errorBlock("Working tree changed by auto-fix", [
+    "Commit the formatting/lint fixes, then push again:",
+  ]);
+  command('git add -u && git commit -m "chore: format" && git push');
+  console.error("");
   process.exit(1);
 }
 
-console.log("[MyMemos pre-push] Running npm run check…");
+step(`Running ${c.bold("npm run check")}…`);
 run("npm", ["run", "check"]);
+
+ok(`${brand()} pre-push checks passed`);
+hint("Full builds still run in CI via npm run ci");
+console.log("");

@@ -1,5 +1,7 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+
+import { banner, bullet, kv, ok, path as stylePath, rule } from "./cli-style.mjs";
 
 /** Paths excluded from search indexing via robots.txt. */
 const SEO_ROBOTS_DISALLOW_PATHS = ["/demo/"];
@@ -58,13 +60,13 @@ const aiContent = JSON.parse(
 );
 
 /** @see src/lib/landingFaqContent.ts flattenFaqAnswerForSchema - keep logic aligned. */
-function flattenFaqAnswer(item, origin) {
+function flattenFaqAnswer(item, siteOrigin) {
   if (!item.answerSegments?.length) {
     return item.answer;
   }
 
   return item.answerSegments
-    .map((segment) => (segment.type === "link" ? `${origin}${segment.path}` : segment.text))
+    .map((segment) => (segment.type === "link" ? `${siteOrigin}${segment.path}` : segment.text))
     .join("");
 }
 
@@ -97,10 +99,15 @@ ${faqLines}
 `;
 }
 
+banner("SEO files", "robots.txt · sitemap.xml · llms.txt");
+
 writeFileSync(resolve(publicDir, "robots.txt"), buildRobotsTxt(origin), "utf8");
 writeFileSync(resolve(publicDir, "sitemap.xml"), buildSitemapXml(origin), "utf8");
 writeFileSync(resolve(publicDir, "llms.txt"), buildLlmsTxt(origin), "utf8");
 
-console.log(
-  `[MyMemos] Wrote SEO files for ${origin} → public/robots.txt, public/sitemap.xml, public/llms.txt`,
-);
+ok(`Generated for ${stylePath(origin)}`);
+bullet(kv("robots", "public/robots.txt"));
+bullet(kv("sitemap", "public/sitemap.xml"));
+bullet(kv("llms", "public/llms.txt"));
+console.log(rule());
+console.log("");
