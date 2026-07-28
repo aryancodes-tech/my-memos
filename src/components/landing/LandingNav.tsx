@@ -31,7 +31,7 @@ export function LandingNav({ hidden = false }: LandingNavProps) {
         </a>
 
         <div className="landing-nav-actions">
-          <a href={`#${LANDING_GET_STARTED_SECTION_ID}`} className="landing-nav-link">
+          <a href={`/#${LANDING_GET_STARTED_SECTION_ID}`} className="landing-nav-link">
             {LANDING_NAV_INSTALL_LINK_LABEL}
           </a>
 

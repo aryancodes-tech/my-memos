@@ -175,6 +175,25 @@ export const GITHUB_REPO_URL = "https://github.com/aryancodes-tech/my-memos";
 /** URL path for the live browser demo of the MyMemos UI. */
 export const DEMO_PATH = "/demo/";
 
+/** URL path for the privacy policy page. */
+export const PRIVACY_POLICY_PATH = "/privacy";
+
+/** Footer link label for the privacy policy. */
+export const LANDING_FOOTER_PRIVACY_LABEL = "Privacy Policy";
+
+/** Visible H1 on the privacy policy page. */
+export const PRIVACY_PAGE_HEADING = "Privacy Policy";
+
+/** `<title>` for the privacy policy page. */
+export const PRIVACY_PAGE_TITLE = `${PRIVACY_PAGE_HEADING} - ${PRODUCT_NAME}`;
+
+/** Meta description for the privacy policy page. */
+export const PRIVACY_META_DESCRIPTION =
+  "How MyMemos handles data: notes and attachments stay on your device. No account required. Details for the browser extension and marketing site.";
+
+/** Display date for the privacy policy “Last updated” line. */
+export const PRIVACY_POLICY_LAST_UPDATED = "July 28, 2026";
+
 /** Filename served by the landing page download button. */
 export const EXTENSION_ZIP_FILENAME = "mymemos-extension.zip";
 

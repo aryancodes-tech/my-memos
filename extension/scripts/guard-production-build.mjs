@@ -28,7 +28,7 @@ const hasDevSession = fs.existsSync(devSessionPath);
 
 if (!forceBuild && (devPortBusy || hasDevSession)) {
   errorBlock("Blocked production build while dev mode is active", [
-    `${c.bold("npm run build")} replaces extension/dist with a static bundle — live reload stops.`,
+    `${c.bold("npm run build")} replaces extension/dist with a static bundle - live reload stops.`,
     "",
     c.bold("For live changes, use"),
   ]);

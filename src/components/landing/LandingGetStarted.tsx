@@ -3,10 +3,10 @@ import {
   LANDING_GET_STARTED_DESC,
   LANDING_GET_STARTED_DEMO_CTA,
   LANDING_GET_STARTED_SECTION_ID,
-  LANDING_FOOTER_TAGLINE,
   PRODUCT_NAME,
 } from "@/lib/constants";
 import { LandingFaq } from "@/components/landing/LandingFaq";
+import { LandingPageFooter } from "@/components/landing/LandingPageFooter";
 
 const INSTALL_STEPS: Array<{
   title: string;
@@ -99,13 +99,7 @@ export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStart
 
       <LandingFaq />
 
-      <footer className="landing-page-footer">
-        <span className="landing-page-footer-brand">{PRODUCT_NAME}</span>
-        <span className="landing-page-footer-sep" aria-hidden>
-          ·
-        </span>
-        <span className="landing-page-footer-copy">{LANDING_FOOTER_TAGLINE}</span>
-      </footer>
+      <LandingPageFooter />
     </section>
   );
 }

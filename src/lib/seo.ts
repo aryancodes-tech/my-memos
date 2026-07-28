@@ -4,6 +4,9 @@ import {
   GITHUB_REPO_URL,
   LANDING_META_DESCRIPTION,
   LANDING_PAGE_TITLE,
+  PRIVACY_META_DESCRIPTION,
+  PRIVACY_PAGE_TITLE,
+  PRIVACY_POLICY_PATH,
   PRODUCT_NAME,
   SEO_ROBOTS_DISALLOW_PATHS,
   SITE_OG_IMAGE_PATH,
@@ -78,6 +81,39 @@ export function buildLandingLinkTags(origin: string): SeoLinkTag[] {
     {
       rel: "canonical",
       href: buildAbsoluteUrl(origin, "/"),
+    },
+  ];
+}
+
+/** Privacy policy `<head>` meta tags for search and social previews. */
+export function buildPrivacyMetaTags(origin: string): SeoMetaTag[] {
+  const canonicalUrl = buildAbsoluteUrl(origin, PRIVACY_POLICY_PATH);
+  const ogImageUrl = buildAbsoluteUrl(origin, SITE_OG_IMAGE_PATH);
+
+  return [
+    { title: PRIVACY_PAGE_TITLE },
+    { name: "description", content: PRIVACY_META_DESCRIPTION },
+    { name: "robots", content: "index, follow" },
+    { property: "og:title", content: PRIVACY_PAGE_TITLE },
+    { property: "og:description", content: PRIVACY_META_DESCRIPTION },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: canonicalUrl },
+    { property: "og:site_name", content: PRODUCT_NAME },
+    { property: "og:image", content: ogImageUrl },
+    { property: "og:locale", content: "en_US" },
+    { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: PRIVACY_PAGE_TITLE },
+    { name: "twitter:description", content: PRIVACY_META_DESCRIPTION },
+    { name: "twitter:image", content: ogImageUrl },
+  ];
+}
+
+/** Privacy policy `<head>` link tags including canonical URL. */
+export function buildPrivacyLinkTags(origin: string): SeoLinkTag[] {
+  return [
+    {
+      rel: "canonical",
+      href: buildAbsoluteUrl(origin, PRIVACY_POLICY_PATH),
     },
   ];
 }
@@ -171,6 +207,7 @@ export function buildRobotsTxt(origin: string): string {
 /** XML sitemap listing indexable marketing URLs. */
 export function buildSitemapXml(origin: string): string {
   const homepage = buildAbsoluteUrl(origin, "/");
+  const privacyUrl = buildAbsoluteUrl(origin, PRIVACY_POLICY_PATH);
   const lastmod = new Date().toISOString().slice(0, 10);
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -180,6 +217,12 @@ export function buildSitemapXml(origin: string): string {
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${privacyUrl}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
 </urlset>
 `;
@@ -192,6 +235,7 @@ export function buildSitemapXml(origin: string): string {
 export function buildLlmsTxt(origin: string): string {
   const homeUrl = buildAbsoluteUrl(origin, "/");
   const demoUrl = buildAbsoluteUrl(origin, DEMO_PATH);
+  const privacyUrl = buildAbsoluteUrl(origin, PRIVACY_POLICY_PATH);
   const faqUrl = `${homeUrl}#faq`;
 
   const faqLines = resolveLandingFaqItems(origin)
@@ -206,6 +250,7 @@ export function buildLlmsTxt(origin: string): string {
 
 - [Homepage](${homeUrl}): Official site - download the browser extension and read feature overview.
 - [Live demo](${demoUrl}): Try the full MyMemos UI in your browser without installing.
+- [Privacy policy](${privacyUrl}): How notes stay on-device; marketing-site analytics notes.
 - [GitHub repository](${GITHUB_REPO_URL}): Open-source MIT-licensed codebase.
 
 ## FAQ

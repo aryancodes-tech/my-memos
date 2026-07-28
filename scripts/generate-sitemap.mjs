@@ -49,6 +49,12 @@ function buildSitemapXml(origin) {
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>${origin}/privacy</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
 </urlset>
 `;
 }
@@ -74,6 +80,7 @@ function flattenFaqAnswer(item, siteOrigin) {
 function buildLlmsTxt(siteOrigin) {
   const homeUrl = `${siteOrigin}/`;
   const demoUrl = `${siteOrigin}/demo/`;
+  const privacyUrl = `${siteOrigin}/privacy`;
   const faqLines = aiContent.faq
     .map((item) => `- **${item.question}** ${flattenFaqAnswer(item, siteOrigin)}`)
     .join("\n");
@@ -86,6 +93,7 @@ function buildLlmsTxt(siteOrigin) {
 
 - [Homepage](${homeUrl}): Official site - download the browser extension and read feature overview.
 - [Live demo](${demoUrl}): Try the full MyMemos UI in your browser without installing.
+- [Privacy policy](${privacyUrl}): How notes stay on-device; marketing-site analytics notes.
 - [GitHub repository](https://github.com/aryancodes-tech/my-memos): Open-source MIT-licensed codebase.
 
 ## FAQ

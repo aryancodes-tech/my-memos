@@ -32,7 +32,7 @@ const isDev =
 
 if (!isDev) {
   errorBlock("dist/ contains a PRODUCTION build", [
-    "The browser is loading static bundled files — edits will NOT hot-reload.",
+    "The browser is loading static bundled files - edits will NOT hot-reload.",
     "This usually happens after running npm run build while developing.",
     "",
     c.bold("Fix (one-time)"),
