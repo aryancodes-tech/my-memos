@@ -178,6 +178,24 @@ describe("pages workspace actions", () => {
     expect(db.putPage).toHaveBeenCalled();
   });
 
+  it("init seeds a fresh empty workspace on first install", async () => {
+    vi.mocked(db.listPages).mockResolvedValueOnce([]);
+    vi.mocked(db.getSetting).mockImplementation(async (key: string) => {
+      if (key === SETTINGS_KEYS.lastView) return undefined;
+      if (key === SETTINGS_KEYS.theme) return "light";
+      return undefined;
+    });
+
+    await useStore.getState().init();
+
+    expect(useStore.getState().ready).toBe(true);
+    expect(useStore.getState().pages).toHaveLength(1);
+    expect(useStore.getState().pages[0]?.title).toBe("Welcome to MyMemos");
+    expect(useStore.getState().view.kind).toBe("page");
+    expect(db.putPage).toHaveBeenCalled();
+    expect(db.setSetting).toHaveBeenCalledWith(SETTINGS_KEYS.demoWorkspaceSeeded, true);
+  });
+
   it("moveWorkspaceItem no-ops for invalid targets and same parent", async () => {
     useStore.setState({
       pages: [

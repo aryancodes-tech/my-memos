@@ -210,7 +210,7 @@ Prefer **selectors** (`selectSearchablePages`, etc.) for derived data. Do not du
 ### 3.3.2 Product tour + web-demo seed
 
 - Coachmark tour (`extension/src/onboarding/`) auto-starts once when `SETTINGS_KEYS.productTour` is unset; Skip/Done persist `PRODUCT_TOUR_STATUS_DONE`. Replay via header **Tour** next to the theme control.
-- Web demo only: empty workspace seeds one sample page (`maybeSeedDemoWorkspace`) and sets `SETTINGS_KEYS.demoWorkspaceSeeded` so later empties do not reseed. Browser extension installs stay empty.
+- Fresh empty workspaces seed one sample page (`maybeSeedDemoWorkspace`) and set `SETTINGS_KEYS.demoWorkspaceSeeded` so later empties do not reseed. This now applies to both the web demo and a fresh extension install.
 - Spotlight anchors use `data-tour-target` (`PRODUCT_TOUR_TARGETS`). Steps that need the editor navigate to a page first; create-page prefers the dashboard.
 
 ### 3.4 Workspace model
