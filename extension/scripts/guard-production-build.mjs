@@ -36,9 +36,7 @@ if (!forceBuild && (devPortBusy || hasDevSession)) {
   command("npm run dev");
   command("npm run dev:check");
   console.error("");
-  console.error(
-    `  ${c.dim('Then reload the extension (name must be "MyMemos (Dev)").')}`,
-  );
+  console.error(`  ${c.dim('Then reload the extension (name must be "MyMemos (Dev)").')}`);
   console.error("");
   console.error(`  ${c.bold("To build for production anyway")}`);
   numbered(["Stop npm run dev (Ctrl+C)", "FORCE_BUILD=1 npm run build"]);

@@ -11,13 +11,10 @@ const FORCE_COLOR =
   process.env.FORCE_COLOR === "3";
 
 const NO_COLOR =
-  typeof process.env.NO_COLOR === "string" ||
-  process.env.CI === "true" ||
-  process.env.CI === "1";
+  typeof process.env.NO_COLOR === "string" || process.env.CI === "true" || process.env.CI === "1";
 
 /** Whether ANSI colors should be applied. */
-export const colorEnabled =
-  FORCE_COLOR || (!NO_COLOR && Boolean(process.stdout.isTTY));
+export const colorEnabled = FORCE_COLOR || (!NO_COLOR && Boolean(process.stdout.isTTY));
 
 const ESC = "\u001b[";
 

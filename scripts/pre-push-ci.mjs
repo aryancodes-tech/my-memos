@@ -10,18 +10,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import {
-  banner,
-  brand,
-  c,
-  command,
-  errorBlock,
-  fail,
-  hint,
-  ok,
-  step,
-  warn,
-} from "./cli-style.mjs";
+import { banner, brand, c, command, errorBlock, fail, hint, ok, step, warn } from "./cli-style.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
