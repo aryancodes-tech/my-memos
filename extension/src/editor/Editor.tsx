@@ -20,10 +20,12 @@ interface Props {
  */
 export default function Editor({ docKey, initial, onChange }: Props) {
   const debounceRef = useRef<number | null>(null);
-  const onChangeRef = useRef(onChange);
+  /**
+   * Persist callback for this editor's page. Updated in an effect (not during
+   * render) so page-switch cleanups still see the previous page's callback.
+   */
+  const persistForPageRef = useRef(onChange);
   const setPageEditor = useStore((state) => state.setPageEditor);
-
-  onChangeRef.current = onChange;
 
   const editor = useEditor(
     {
@@ -58,8 +60,10 @@ export default function Editor({ docKey, initial, onChange }: Props) {
       },
       onUpdate({ editor: ed }) {
         if (debounceRef.current) window.clearTimeout(debounceRef.current);
+        // Capture at schedule time so a late timer cannot write through a newer page's onChange.
+        const persistForPage = persistForPageRef.current;
         debounceRef.current = window.setTimeout(() => {
-          onChangeRef.current(sanitizeBlockDocForPersistence(ed.getJSON() as BlockDoc));
+          persistForPage(sanitizeBlockDocForPersistence(ed.getJSON() as BlockDoc));
         }, EDITOR_SAVE_DEBOUNCE_MS);
       },
     },
@@ -78,14 +82,18 @@ export default function Editor({ docKey, initial, onChange }: Props) {
 
   /**
    * Flush pending edits when leaving a page (docKey/editor change) or unmounting.
-   * Capture `editor` + `onChange` at effect setup time so cleanup never writes the
-   * previous page's JSON through the next page's update callback (or the next editor).
+   * Capture `editor` + `onChange` from this commit so cleanup never writes the
+   * previous page's JSON through the next page's update callback.
+   *
+   * Important: do not assign `persistForPageRef` during render — that runs before
+   * prior effect cleanups and would point the leaving page at the new `onChange`.
    */
   useEffect(() => {
     if (!editor) return;
 
+    persistForPageRef.current = onChange;
     const editorForPage = editor;
-    const persistForPage = onChangeRef.current;
+    const persistForPage = onChange;
 
     return () => {
       if (debounceRef.current) {
@@ -96,6 +104,9 @@ export default function Editor({ docKey, initial, onChange }: Props) {
         persistForPage(sanitizeBlockDocForPersistence(editorForPage.getJSON() as BlockDoc));
       }
     };
+    // `onChange` is read from the commit that owns this editor/docKey; omit from
+    // deps so parent re-renders do not flush on every store update.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- see above
   }, [editor, docKey]);
 
   return (

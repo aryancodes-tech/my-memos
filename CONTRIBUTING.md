@@ -121,14 +121,27 @@ Add tests for new logic at the mirrored path, especially storage, state manageme
 
 ### Landing SEO
 
-FAQ copy and AI crawler content live in `src/lib/ai-content.json`. SEO helpers are in `src/lib/seo.ts`. Generated crawler files (`public/robots.txt`, `public/sitemap.xml`, `public/llms.txt`) are **gitignored** - regenerate with:
+FAQ / llms copy: `src/lib/ai-content.json`. Builders: `src/lib/seo.ts`. Generated files in `public/` (`robots.txt`, `sitemap.xml`, `llms.txt`) are **gitignored** — regenerate with:
 
 ```bash
 npm run generate:seo
 npm run test -- tests/landing/lib/seo.test.ts
 ```
 
-Set `VITE_SITE_URL` on your hosting provider (e.g. `https://www.mymemos.in`) so canonical URLs are correct in production. See README § SEO & AI discoverability for full details.
+`npm run generate:seo` also runs via `predev:web` / `prebuild:web`. Set `VITE_SITE_URL` (e.g. `https://www.mymemos.in`, no trailing slash) on the host so canonical URLs are correct; without it, generated files fall back to `http://localhost:8080`.
+
+Apex / HTTP hosts should **301/308** to that canonical origin (`vercel.json` is an example). Google Search Console “Page with redirect” on apex is expected — only index the canonical `www` host.
+
+## Deploy the landing site
+
+Landing + `/demo/` deploy as a Node/SSR app (TanStack Start + Nitro). The extension itself does not run on the host — only the download ZIP if you build it.
+
+| Setting | Value                                                            |
+| ------- | ---------------------------------------------------------------- |
+| Install | `npm ci && npm ci --prefix extension`                            |
+| Build   | `npm run package:extension && npm run build:web`                 |
+| Node    | `>= 20.19.0`                                                     |
+| Env     | `VITE_SITE_URL=https://www.example.com` (canonical HTTPS origin) |
 
 ## Pull request checklist
 
