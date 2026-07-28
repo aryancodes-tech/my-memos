@@ -5,6 +5,7 @@ import { selectSearchablePages, useStore } from "@/store/useStore";
 import { extractPlainText } from "@/lib/text";
 import {
   DEFAULT_FOLDER_TITLE,
+  DEFAULT_PAGE_TITLE,
   SEARCH_PALETTE_PLACEHOLDER,
   WORKSPACE_SECTION,
 } from "@/lib/constants";
@@ -102,7 +103,7 @@ export default function SearchPalette() {
             >
               <PageIcon kind="page" size={16} />
               <div className="min-w-0">
-                <div className="truncate text-sm">{p.title || "Untitled"}</div>
+                <div className="truncate text-sm">{p.title || DEFAULT_PAGE_TITLE}</div>
                 <div className="truncate text-xs text-[var(--ko-text-muted)]">
                   {pageLocationLabel(pages, p)}
                 </div>

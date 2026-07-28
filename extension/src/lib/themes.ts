@@ -129,6 +129,20 @@ function isDarkBackground(hex: string): boolean {
   return luminance < 0.5;
 }
 
+/** Dark ink for light backgrounds (pastels stay readable in every theme). */
+export const CONTRAST_INK_DARK = "#1f1f1e";
+
+/** Light ink for dark backgrounds. */
+export const CONTRAST_INK_LIGHT = "#f5f5f5";
+
+/**
+ * Picks dark or light text color so highlighted / filled text stays readable
+ * regardless of the active UI theme (pastel highlights on dark themes).
+ */
+export function contrastInkForBackground(background: string): string {
+  return isDarkBackground(background) ? CONTRAST_INK_LIGHT : CONTRAST_INK_DARK;
+}
+
 /** Normalizes user input to a hex color, falling back when invalid. */
 export function normalizeHexColor(value: string, fallback: string): string {
   const trimmed = value.trim();

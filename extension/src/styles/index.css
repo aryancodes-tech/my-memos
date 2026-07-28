@@ -329,10 +329,16 @@ body {
   cursor: crosshair;
 }
 .ProseMirror mark {
+  /* Default (no multicolor); multicolor sets bg + contrast ink inline. */
   background: #fff3b0;
-  color: inherit;
+  color: #1f1f1e;
   padding: 0 1px;
   border-radius: 2px;
+}
+/* TipTap's stock multicolor used `color: inherit` — override so pastels stay readable in dark themes. */
+.ProseMirror mark[style*="color: inherit"],
+.ProseMirror mark[style*="color:inherit"] {
+  color: #1f1f1e !important;
 }
 .ProseMirror u {
   text-decoration: underline;
@@ -827,10 +833,28 @@ body {
   width: var(--ko-toolbar-color-grid-width);
 }
 .ko-toolbar-color-swatch {
+  position: relative;
   width: var(--ko-toolbar-color-swatch-size);
   height: var(--ko-toolbar-color-swatch-size);
   border-radius: 5px;
   border: 1px solid var(--ko-border);
+}
+.ko-toolbar-color-swatch.is-reset {
+  background: var(--ko-bg);
+  overflow: hidden;
+}
+.ko-toolbar-color-swatch.is-reset::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top right,
+    transparent calc(50% - 0.75px),
+    #e11d48 calc(50% - 0.75px),
+    #e11d48 calc(50% + 0.75px),
+    transparent calc(50% + 0.75px)
+  );
+  pointer-events: none;
 }
 .ko-toolbar-color-swatch.is-active {
   outline: 2px solid var(--ko-text);
@@ -1662,10 +1686,11 @@ body {
 }
 .ko-tour-spotlight {
   position: absolute;
-  border-radius: 10px;
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
-  outline: 2px solid var(--ko-accent);
-  outline-offset: 0;
+  border-radius: 12px;
+  /* Soft halo ring instead of a hard accent outline (reads as a thick black border on light themes). */
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--ko-accent) 45%, transparent),
+    0 0 0 9999px rgba(0, 0, 0, 0.48);
   pointer-events: none;
   z-index: 1;
   opacity: 0;

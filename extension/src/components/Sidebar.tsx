@@ -8,6 +8,7 @@ import {
 import type { Page } from "@/storage/types";
 import {
   DEFAULT_FOLDER_TITLE,
+  DEFAULT_PAGE_TITLE,
   PRODUCT_NAME,
   SEARCH_SHORTCUT_LABEL,
   SIDEBAR_ADD_INSIDE_LABEL,
@@ -614,7 +615,7 @@ function PageRow({
         onClick={() => setView({ kind: "page", id: page.id })}
       >
         <PageIcon kind="page" size={15} />
-        <span className="ko-sidebar-row-label">{page.title || "Untitled"}</span>
+        <span className="ko-sidebar-row-label">{page.title || DEFAULT_PAGE_TITLE}</span>
       </div>
       {hasMenu && (
         <div className="ko-sidebar-row-actions">
