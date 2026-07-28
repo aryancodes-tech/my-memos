@@ -6,6 +6,7 @@ import { isAttachmentStorageSupported } from "@/lib/attachments/fileSystemManage
 import { ATTACHMENT_FS_UNSUPPORTED_MESSAGE, AUDIO_ATTACH_FAILURE_MESSAGE } from "@/lib/constants";
 import type { SlashRange } from "@/editor/slashBlock";
 import { focusVoiceInsertPosition } from "@/editor/commands/insertVoiceRecording";
+import { smoothRevealSelection } from "@/editor/revealSelection";
 
 /**
  * Opens a file picker and inserts a voice note block from an existing audio file.
@@ -42,11 +43,13 @@ export function insertAudioFromPicker(
           status: "saved" as const,
         };
         const chain = editor.chain().focus();
+        let didRun = false;
         if (range) {
-          chain.deleteRange(range).insertVoiceNote(noteAttrs).run();
+          didRun = chain.deleteRange(range).insertVoiceNote(noteAttrs).run();
         } else {
-          appendAfterSelectedNode(chain).insertVoiceNote(noteAttrs).run();
+          didRun = appendAfterSelectedNode(chain).insertVoiceNote(noteAttrs).run();
         }
+        if (didRun) smoothRevealSelection(editor);
       } catch (err) {
         if (err instanceof AttachmentFsUnsupportedError) {
           callbacks?.onError?.(err.message);

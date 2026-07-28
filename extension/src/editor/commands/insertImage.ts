@@ -9,6 +9,7 @@ import {
 } from "@/lib/constants";
 import type { SlashRange } from "@/editor/slashBlock";
 import { appendAfterSelectedNode } from "@/editor/commands/insertSelection";
+import { smoothRevealSelection } from "@/editor/revealSelection";
 import { len } from "@/lib/text";
 
 export interface InsertImageCallbacks {
@@ -66,13 +67,15 @@ export async function insertImagesFromFiles(
 
   if (nodes.length === 0) return 0;
 
+  let didRun = false;
   if (typeof options?.pos === "number") {
-    editor.chain().focus().insertContentAt(options.pos, nodes).run();
+    didRun = editor.chain().focus().insertContentAt(options.pos, nodes).run();
   } else if (range) {
-    editor.chain().focus().deleteRange(range).insertContent(nodes).run();
+    didRun = editor.chain().focus().deleteRange(range).insertContent(nodes).run();
   } else {
-    appendAfterSelectedNode(editor.chain().focus()).insertContent(nodes).run();
+    didRun = appendAfterSelectedNode(editor.chain().focus()).insertContent(nodes).run();
   }
+  if (didRun) smoothRevealSelection(editor);
 
   return nodes.length;
 }

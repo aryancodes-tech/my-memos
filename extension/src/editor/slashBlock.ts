@@ -1,4 +1,5 @@
 import type { Editor } from "@tiptap/react";
+import { smoothRevealSelection } from "@/editor/revealSelection";
 
 /** Document range covering the `/` trigger and any filter text typed after it. */
 export interface SlashRange {
@@ -15,19 +16,30 @@ export function applyListBlock(
   listType: "bulletList" | "orderedList",
 ): void {
   const chain = editor.chain().focus().deleteRange(range).clearNodes();
+  let didRun = false;
   if (listType === "bulletList") {
-    chain.toggleBulletList().run();
+    didRun = chain.toggleBulletList().run();
+    if (didRun) smoothRevealSelection(editor);
     return;
   }
-  chain.toggleOrderedList().run();
+  didRun = chain.toggleOrderedList().run();
+  if (didRun) smoothRevealSelection(editor);
 }
 
 /** Converts the current block into a task list item. */
 export function applyTaskListBlock(editor: Editor, range: SlashRange): void {
-  editor.chain().focus().deleteRange(range).clearNodes().toggleTaskList().run();
+  const didRun = editor.chain().focus().deleteRange(range).clearNodes().toggleTaskList().run();
+  if (didRun) smoothRevealSelection(editor);
 }
 
 /** Inserts a syntax-highlighted code block with a default language. */
 export function applyCodeBlock(editor: Editor, range: SlashRange, language: string): void {
-  editor.chain().focus().deleteRange(range).clearNodes().setCodeBlock({ language }).run();
+  const didRun = editor
+    .chain()
+    .focus()
+    .deleteRange(range)
+    .clearNodes()
+    .setCodeBlock({ language })
+    .run();
+  if (didRun) smoothRevealSelection(editor);
 }

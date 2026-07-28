@@ -23,6 +23,7 @@ import {
   EDITOR_ALIGN_RIGHT_LABEL,
   IMAGE_ALIGN_DEFAULT,
   IMAGE_ALIGNMENTS,
+  IMAGE_CAPTION_OVERFLOW_HINT,
   IMAGE_CAPTION_PLACEHOLDER,
   IMAGE_ALIGN_GROUP_ARIA,
   IMAGE_COPY_LABEL,
@@ -66,9 +67,12 @@ export default function AttachmentImageNodeView({
     useAttachmentImageChrome();
 
   const [captionDraft, setCaptionDraft] = useState(caption);
+  const [captionFocused, setCaptionFocused] = useState(false);
+  const [captionOverflowing, setCaptionOverflowing] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const moreBtnRef = useRef<HTMLButtonElement>(null);
+  const captionInputRef = useRef<HTMLInputElement>(null);
   const compactToolbar = useAttachmentImageCompactToolbar(
     frameRef,
     !loading && !error && len(src ?? "") > 0,
@@ -86,6 +90,26 @@ export default function AttachmentImageNodeView({
   useEffect(() => {
     setMenuOpen(false);
   }, [compactToolbar, setMenuOpen]);
+
+  useEffect(() => {
+    const input = captionInputRef.current;
+    if (!input) return;
+
+    const updateCaptionOverflow = () => {
+      setCaptionOverflowing(input.scrollWidth - input.clientWidth > 1);
+    };
+
+    updateCaptionOverflow();
+
+    if (typeof ResizeObserver !== "function") {
+      window.addEventListener("resize", updateCaptionOverflow);
+      return () => window.removeEventListener("resize", updateCaptionOverflow);
+    }
+
+    const observer = new ResizeObserver(updateCaptionOverflow);
+    observer.observe(input);
+    return () => observer.disconnect();
+  }, [captionDraft]);
 
   const commitCaption = useCallback(() => {
     const next = captionDraft.trim();
@@ -388,23 +412,36 @@ export default function AttachmentImageNodeView({
             </div>
           </div>
 
-          <input
-            type="text"
-            className="ko-attachment-caption"
-            value={captionDraft}
-            placeholder={IMAGE_CAPTION_PLACEHOLDER}
-            aria-label="Image caption"
-            onClick={stop}
-            onMouseDown={stop}
-            onChange={(event) => setCaptionDraft(event.target.value)}
-            onBlur={commitCaption}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                event.preventDefault();
-                event.currentTarget.blur();
-              }
-            }}
-          />
+          <div
+            className="ko-attachment-caption-wrap"
+            data-overflow={captionOverflowing && !captionFocused ? "true" : "false"}
+          >
+            <input
+              ref={captionInputRef}
+              type="text"
+              className="ko-attachment-caption"
+              value={captionDraft}
+              placeholder={IMAGE_CAPTION_PLACEHOLDER}
+              aria-label="Image caption"
+              onClick={stop}
+              onMouseDown={stop}
+              onChange={(event) => setCaptionDraft(event.target.value)}
+              onFocus={() => setCaptionFocused(true)}
+              onBlur={() => {
+                setCaptionFocused(false);
+                commitCaption();
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  event.currentTarget.blur();
+                }
+              }}
+            />
+            <span className="ko-attachment-caption-overflow" aria-hidden>
+              {IMAGE_CAPTION_OVERFLOW_HINT}
+            </span>
+          </div>
         </div>
       )}
 

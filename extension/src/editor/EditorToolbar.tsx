@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { DEFAULT_CODE_LANGUAGE } from "@/editor/codeLowlight";
+import { smoothRevealSelection } from "@/editor/revealSelection";
 import { preventEditorBlur, ToolbarPopover, ToolbarTip } from "@/editor/ToolbarPopover";
 import {
   ATTACHMENT_FS_UNSUPPORTED_MESSAGE,
@@ -135,12 +136,15 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
   const setBlock = useCallback(
     (kind: BlockKind) => {
       const chain = editor.chain().focus();
+      let didRun = false;
       if (kind === "paragraph") {
-        chain.setParagraph().run();
+        didRun = chain.setParagraph().run();
+        if (didRun) smoothRevealSelection(editor);
         return;
       }
       const level = Number(kind.slice(1)) as 1 | 2 | 3 | 4;
-      chain.setHeading({ level }).run();
+      didRun = chain.setHeading({ level }).run();
+      if (didRun) smoothRevealSelection(editor);
     },
     [editor],
   );
@@ -240,9 +244,14 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           <ToolbarButton
             title={EDITOR_TOOLBAR_CODE_BLOCK_LABEL}
             active={editor.isActive("codeBlock")}
-            onClick={() =>
-              editor.chain().focus().toggleCodeBlock({ language: DEFAULT_CODE_LANGUAGE }).run()
-            }
+            onClick={() => {
+              const didRun = editor
+                .chain()
+                .focus()
+                .toggleCodeBlock({ language: DEFAULT_CODE_LANGUAGE })
+                .run();
+              if (didRun) smoothRevealSelection(editor);
+            }}
           >
             <SquareTerminal size={14} strokeWidth={1.75} />
           </ToolbarButton>
@@ -254,21 +263,30 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           <ToolbarButton
             title="Bullets"
             active={editor.isActive("bulletList")}
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            onClick={() => {
+              const didRun = editor.chain().focus().toggleBulletList().run();
+              if (didRun) smoothRevealSelection(editor);
+            }}
           >
             <List size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton
             title="Numbers"
             active={editor.isActive("orderedList")}
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            onClick={() => {
+              const didRun = editor.chain().focus().toggleOrderedList().run();
+              if (didRun) smoothRevealSelection(editor);
+            }}
           >
             <ListOrdered size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton
             title="To-do"
             active={editor.isActive("taskList")}
-            onClick={() => editor.chain().focus().toggleTaskList().run()}
+            onClick={() => {
+              const didRun = editor.chain().focus().toggleTaskList().run();
+              if (didRun) smoothRevealSelection(editor);
+            }}
           >
             <CheckSquare size={14} strokeWidth={1.75} />
           </ToolbarButton>
@@ -338,13 +356,19 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           <ToolbarButton
             title="Quote"
             active={editor.isActive("blockquote")}
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            onClick={() => {
+              const didRun = editor.chain().focus().toggleBlockquote().run();
+              if (didRun) smoothRevealSelection(editor);
+            }}
           >
             <Quote size={14} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton
             title="Divider"
-            onClick={() => editor.chain().focus().setHorizontalRule().run()}
+            onClick={() => {
+              const didRun = editor.chain().focus().setHorizontalRule().run();
+              if (didRun) smoothRevealSelection(editor);
+            }}
           >
             <Minus size={14} strokeWidth={1.75} />
           </ToolbarButton>

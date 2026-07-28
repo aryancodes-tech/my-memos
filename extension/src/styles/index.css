@@ -2186,6 +2186,12 @@ body {
   background: var(--ko-border);
 }
 
+.ko-attachment-caption-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
 .ko-attachment-caption {
   width: 100%;
   max-width: 100%;
@@ -2199,6 +2205,10 @@ body {
   font-family: inherit;
   text-align: inherit;
   line-height: 1.35;
+}
+
+.ko-attachment-caption-wrap[data-overflow="true"] .ko-attachment-caption {
+  padding-right: 1.4rem;
 }
 
 .ko-attachment-image-wrap[data-align="left"] .ko-attachment-caption {
@@ -2228,6 +2238,22 @@ body {
   border-color: var(--ko-accent);
   color: var(--ko-text);
   background: var(--ko-surface);
+}
+
+.ko-attachment-caption-overflow {
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  display: none;
+  padding-left: 0.25rem;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, transparent, var(--ko-bg) 45%);
+  color: var(--ko-text-muted);
+  pointer-events: none;
+}
+
+.ko-attachment-caption-wrap[data-overflow="true"] .ko-attachment-caption-overflow {
+  display: block;
 }
 
 .ko-attachment-placeholder,
