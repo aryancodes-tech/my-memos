@@ -190,7 +190,9 @@ export function buildDemoSeedBlockDoc(voice?: DemoSeedVoiceAttrs | null): BlockD
  * Candidate URLs for the demo voice sample (landing root, then demo base).
  * @internal Exported for unit tests.
  */
-export function demoSeedVoiceFetchUrls(baseUrl: string = import.meta.env.BASE_URL ?? "/"): string[] {
+export function demoSeedVoiceFetchUrls(
+  baseUrl: string = import.meta.env.BASE_URL ?? "/",
+): string[] {
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
   const underBase = `${normalizedBase}${DEMO_SEED_VOICE_FILE_NAME}`;
   const urls = [DEMO_SEED_VOICE_PUBLIC_PATH, underBase];
