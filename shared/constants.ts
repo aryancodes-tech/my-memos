@@ -510,6 +510,18 @@ export const EDITOR_TOOLBAR_IMAGE_ALIGN_ARIA = "Image alignment";
 /** Toolbar aria: text alignment. */
 export const EDITOR_TOOLBAR_TEXT_ALIGN_ARIA = "Text alignment";
 
+/** Toolbar aria: voice / audio insert menu. */
+export const EDITOR_TOOLBAR_AUDIO_ARIA = "Voice and audio";
+
+/** Toolbar tip label for the combined voice/audio control. */
+export const EDITOR_TOOLBAR_AUDIO_TIP = "Audio";
+
+/** Toolbar menu: start an inline voice recording. */
+export const EDITOR_TOOLBAR_RECORD_VOICE_LABEL = "Record voice note";
+
+/** Toolbar menu: attach an existing audio file. */
+export const EDITOR_TOOLBAR_ATTACH_AUDIO_LABEL = "Attach audio file";
+
 /** Toolbar aria: block type picker. */
 export const EDITOR_TOOLBAR_BLOCK_TYPE_ARIA = "Block type";
 
@@ -604,7 +616,7 @@ export const PRODUCT_TOUR_STEPS = [
   {
     id: "add-voice",
     title: "Add a voice note",
-    body: "Tap Voice to record a quick note. Audio is stored locally with your page.",
+    body: "Open Audio in the toolbar to record a quick note or attach a file. Audio stays local with your page.",
     target: PRODUCT_TOUR_TARGETS.addVoice,
   },
   {
