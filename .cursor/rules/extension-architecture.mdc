@@ -57,6 +57,7 @@ View type: `{ kind: "dashboard" }` | `{ kind: "page"; id: string }`
 - Dialogs - delete confirm, etc.
 
 CSS: `ko-` classes, theme via `data-theme` + `--ko-*` variables from `extension/src/styles/`.
+**Dark / multi-theme:** never hardcode light-only colors (`white`, `#fff`, mixes with literal white). Use `--ko-bg` / `--ko-surface` / `--ko-surface-2` / `--ko-text` / `--ko-text-muted` / `--ko-border` / `--ko-accent`. Verify new UI in both a light and a dark theme (see `AGENTS.md` §3.7).
 
 ## Keyboard shortcuts
 
@@ -109,7 +110,7 @@ Dialogs: `AttachmentDeleteDialog` confirms via store `pendingAttachmentDelete` (
 
 ## Constants
 
-**Canonical source:** `shared/constants.ts` (see `.cursor/rules/constants-policy.mdc` and `AGENTS.md` §3.7).
+**Canonical source:** `shared/constants.ts` (see `.cursor/rules/constants-policy.mdc` and `AGENTS.md` §3.8).
 
 - `extension/src/lib/constants.ts` is a re-export only - edit `shared/constants.ts`
 - UI labels, error messages, attachment/OPFS paths, MIME types, debounce/limits → named exports there

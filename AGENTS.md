@@ -83,7 +83,7 @@ Ask explicitly:
 
 - **Minimize blast radius.** One logical change per PR.
 - **Match conventions** in the nearest sibling file.
-- **Constants first.** Before adding any user-facing string, error message, label, path segment, MIME type, debounce, or other tunable: open `shared/constants.ts`, reuse or add a JSDoc'd export, then import via `@/lib/constants`. Never leave new literals in components. See §3.7 and `.cursor/rules/constants-policy.mdc`.
+- **Constants first.** Before adding any user-facing string, error message, label, path segment, MIME type, debounce, or other tunable: open `shared/constants.ts`, reuse or add a JSDoc'd export, then import via `@/lib/constants`. Never leave new literals in components. See §3.8 and `.cursor/rules/constants-policy.mdc`.
 - **Empty strings:** use `len(value) === 0` in extension code (never `!value` for strings).
 
 ### Phase D - Verify
@@ -210,8 +210,8 @@ Prefer **selectors** (`selectSearchablePages`, etc.) for derived data. Do not du
 ### 3.3.2 Product tour + web-demo seed
 
 - Coachmark tour (`extension/src/onboarding/`) auto-starts once when `SETTINGS_KEYS.productTour` is unset; Skip/Done persist `PRODUCT_TOUR_STATUS_DONE`. Replay via header **Tour** next to the theme control.
-- Fresh empty workspaces seed one sample page (`maybeSeedDemoWorkspace`) and set `SETTINGS_KEYS.demoWorkspaceSeeded` so later empties do not reseed. This now applies to both the web demo and a fresh extension install.
-- Spotlight anchors use `data-tour-target` (`PRODUCT_TOUR_TARGETS`). Steps that need the editor navigate to a page first; create-page prefers the dashboard.
+- Tour covers create page, **workspace drag-and-drop**, slash menu, image, and voice. Steps that need the editor navigate to a page first; create-page and workspace-drag prefer the dashboard. Spotlight anchors use `data-tour-target` (`PRODUCT_TOUR_TARGETS`).
+- Fresh empty workspaces seed sample pages/folders (`maybeSeedDemoWorkspace`) and set `SETTINGS_KEYS.demoWorkspaceSeeded` so later empties do not reseed. This applies to both the web demo and a fresh extension install.
 
 ### 3.4 Workspace model
 
@@ -267,7 +267,19 @@ npm run dev:web
 curl -s http://localhost:8080/llms.txt | head
 ```
 
-### 3.7 Constants contract (shared module)
+### 3.7 Themes & dark mode (extension UI)
+
+The extension / web demo ships **multiple themes** (including dark presets like `dark`, `midnight`, `dracula`, `forest`, `ocean`). Theme is applied via `data-theme` on `<html>` and CSS variables in `extension/src/styles/index.css` (`--ko-bg`, `--ko-surface`, `--ko-surface-2`, `--ko-border`, `--ko-text`, `--ko-text-muted`, `--ko-accent`, …).
+
+**Rules for any new or restyled UI:**
+
+- Prefer **`--ko-*` tokens only** for colors, borders, and backgrounds. Do not hardcode `#fff` / `#000` / `white` / `black` (or light-only mixes like `color-mix(..., white 96%)`) in extension CSS/components — they break dark themes.
+- Soft fills: mix against `var(--ko-bg)`, `var(--ko-surface)`, or `var(--ko-surface-2)`, not literal white.
+- Text: `var(--ko-text)` / `var(--ko-text-muted)` only.
+- When adding a component or CSS block, **verify at least one light theme and one dark theme** (e.g. Light + Dark or Midnight) in `npm run dev` / `npm run dev:web`.
+- Custom themes reuse the same `--ko-*` variables (`slices/themeUi.ts`); token-based styles stay compatible automatically.
+
+### 3.8 Constants contract (shared module)
 
 Agents **must** read `.cursor/rules/constants-policy.mdc` before changing copy, labels, errors, or tunables.
 

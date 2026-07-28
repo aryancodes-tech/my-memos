@@ -1,5 +1,12 @@
 import { Trash2, X } from "lucide-react";
 import { useEffect, useRef } from "react";
+import {
+  ATTACHMENT_DELETE_BODY,
+  ATTACHMENT_DELETE_CONFIRM_LABEL,
+  ATTACHMENT_DELETE_KEEP_LABEL,
+  ATTACHMENT_DELETE_TITLE,
+  DIALOG_CLOSE_ARIA_LABEL,
+} from "@/lib/constants";
 import { useStore } from "@/store/useStore";
 
 /** Confirms deletion of an on-disk attachment referenced by an editor block. */
@@ -34,7 +41,7 @@ export default function AttachmentDeleteDialog() {
         <button
           type="button"
           className="ko-dialog-close"
-          aria-label="Close"
+          aria-label={DIALOG_CLOSE_ARIA_LABEL}
           onClick={cancelAttachmentDelete}
         >
           <X size={16} strokeWidth={1.75} />
@@ -43,13 +50,12 @@ export default function AttachmentDeleteDialog() {
         <div className="flex items-center gap-2 mb-2">
           <Trash2 size={16} strokeWidth={1.75} className="text-[var(--ko-text-muted)]" />
           <h2 id="ko-attachment-delete-title" className="ko-dialog-title">
-            Delete attachment?
+            {ATTACHMENT_DELETE_TITLE}
           </h2>
         </div>
 
         <p id="ko-attachment-delete-desc" className="ko-dialog-body">
-          This will permanently remove the attachment file and delete the block from your note. Your
-          note text will not be affected.
+          {ATTACHMENT_DELETE_BODY}
         </p>
 
         <div className="ko-dialog-actions">
@@ -59,14 +65,14 @@ export default function AttachmentDeleteDialog() {
             className="ko-dialog-btn-keep"
             onClick={cancelAttachmentDelete}
           >
-            Keep attachment
+            {ATTACHMENT_DELETE_KEEP_LABEL}
           </button>
           <button
             type="button"
             className="ko-dialog-btn-delete"
             onClick={() => void confirmAttachmentDelete()}
           >
-            Delete permanently
+            {ATTACHMENT_DELETE_CONFIRM_LABEL}
           </button>
         </div>
       </div>

@@ -315,6 +315,9 @@ export const SIDEBAR_COLLAPSE_LABEL = "Collapse sidebar";
 /** Aria label for the sidebar product name (navigates home). */
 export const SIDEBAR_BRAND_HOME_ARIA_LABEL = `${PRODUCT_NAME} home`;
 
+/** Base-relative asset path for the sidebar brand icon. */
+export const SIDEBAR_BRAND_ICON_PATH = "icons/icon-128.png";
+
 /** Tooltip / title: open the dashboard view. */
 export const SIDEBAR_DASHBOARD_LABEL = "Dashboard";
 
@@ -338,6 +341,12 @@ export const SIDEBAR_ADD_TO_FAVORITES_LABEL = "Add to favorites";
 
 /** Context menu: remove page from favorites. */
 export const SIDEBAR_REMOVE_FROM_FAVORITES_LABEL = "Remove from favorites";
+
+/** Title for the privacy reassurance card at the bottom of the sidebar. */
+export const SIDEBAR_TRUST_TITLE = "All notes are local";
+
+/** Supporting copy for the sidebar privacy reassurance card. */
+export const SIDEBAR_TRUST_BODY = "Stored only in your browser.";
 
 /** Maximum content width for page and dashboard views in pixels. */
 export const CONTENT_MAX_WIDTH_PX = 900;
@@ -390,8 +399,24 @@ export const DEMO_SEED_VOICE_PUBLIC_PATH = `/${DEMO_SEED_VOICE_FILE_NAME}`;
 /** Display title for the seeded demo voice note block. */
 export const DEMO_SEED_VOICE_TITLE = "Sample voice note";
 
+/** Filename of the sample image seeded into the web demo workspace. */
+export const DEMO_SEED_IMAGE_FILE_NAME = "my-memos-demo-landing-page.png";
+
+/**
+ * Site-root path for the demo image sample (landing `public/`).
+ * Also available under the demo base via `extension/public/` symlink.
+ */
+export const DEMO_SEED_IMAGE_PUBLIC_PATH = `/${DEMO_SEED_IMAGE_FILE_NAME}`;
+
+/** Alt text for the seeded demo image block. */
+export const DEMO_SEED_IMAGE_ALT = "MyMemos landing page preview";
+
+/** Caption for the seeded demo image block. */
+export const DEMO_SEED_IMAGE_CAPTION =
+  "A polished capture can include screenshots, visual references, and voice notes in one place.";
+
 /** Bump when the empty-demo seed content changes (forces reseed on empty workspaces). */
-export const DEMO_WORKSPACE_SEED_VERSION = 4;
+export const DEMO_WORKSPACE_SEED_VERSION = 5;
 
 /** Horizontal padding for page content in pixels. */
 export const PAGE_CONTENT_PADDING_X_PX = 96;
@@ -410,6 +435,22 @@ export const DELETE_FOLDER_TITLE = "Delete this folder?";
 
 /** Delete confirm dialog title for a page. */
 export const DELETE_PAGE_TITLE = "Delete this page?";
+
+/** Aria label for closing a confirm dialog. */
+export const DIALOG_CLOSE_ARIA_LABEL = "Close";
+
+/** Attachment delete dialog title. */
+export const ATTACHMENT_DELETE_TITLE = "Delete attachment?";
+
+/** Attachment delete dialog body copy. */
+export const ATTACHMENT_DELETE_BODY =
+  "This will permanently remove the attachment file and delete the block from your note. Your note text will not be affected.";
+
+/** Attachment delete dialog cancel / keep action. */
+export const ATTACHMENT_DELETE_KEEP_LABEL = "Keep attachment";
+
+/** Attachment delete dialog confirm action. */
+export const ATTACHMENT_DELETE_CONFIRM_LABEL = "Delete permanently";
 
 // ---------------------------------------------------------------------------
 // Themes
@@ -607,6 +648,7 @@ export const WEB_INSTALL_BANNER_DISMISS_KEY = "koWebInstallBannerDismissed";
 /** `data-tour-target` values used by coachmark spotlights. */
 export const PRODUCT_TOUR_TARGETS = {
   createPage: "create-page",
+  workspaceTree: "workspace-tree",
   slashMenu: "slash-menu",
   addImage: "add-image",
   addVoice: "add-voice",
@@ -625,6 +667,12 @@ export const PRODUCT_TOUR_STEPS = [
     title: "Create a page",
     body: "Add a new page from the sidebar (+), or use New page on the dashboard.",
     target: PRODUCT_TOUR_TARGETS.createPage,
+  },
+  {
+    id: "workspace-drag",
+    title: "Drag to organize",
+    body: "Drag pages and folders in the sidebar to nest them or move them around. Drop a page onto a folder to put it inside.",
+    target: PRODUCT_TOUR_TARGETS.workspaceTree,
   },
   {
     id: "slash-menu",

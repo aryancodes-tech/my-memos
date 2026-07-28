@@ -3,6 +3,7 @@ import {
   DEFAULT_FOLDER_TITLE,
   DEFAULT_PAGE_TITLE,
   DEFAULT_THEME,
+  DEMO_SEED_PAGE_TITLE,
   SETTINGS_KEYS,
   WORKSPACE_SECTION,
 } from "@/lib/constants";
@@ -188,10 +189,21 @@ describe("pages workspace actions", () => {
 
     await useStore.getState().init();
 
-    expect(useStore.getState().ready).toBe(true);
-    expect(useStore.getState().pages).toHaveLength(1);
-    expect(useStore.getState().pages[0]?.title).toBe("Welcome to MyMemos");
-    expect(useStore.getState().view.kind).toBe("page");
+    const { ready, pages, view } = useStore.getState();
+    expect(ready).toBe(true);
+    expect(pages).toHaveLength(6);
+    expect(pages.map((p) => p.title).sort()).toEqual(
+      [
+        "Launch plan",
+        "Networking",
+        "Personal",
+        "Reading notes",
+        DEMO_SEED_PAGE_TITLE,
+        "Work",
+      ].sort(),
+    );
+    expect(pages.filter((p) => p.kind === "directory")).toHaveLength(2);
+    expect(view).toEqual({ kind: "page", id: pages.find((p) => p.title === "Launch plan")?.id });
     expect(db.putPage).toHaveBeenCalled();
     expect(db.setSetting).toHaveBeenCalledWith(SETTINGS_KEYS.demoWorkspaceSeeded, true);
   });

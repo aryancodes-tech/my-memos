@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { CircleHelp } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import { revokeAllAttachmentObjectUrls } from "@/lib/attachments/attachmentManager";
-import Sidebar from "@/components/Sidebar";
+import Sidebar, { SidebarHeader } from "@/components/Sidebar";
 import SearchPalette from "@/components/SearchPalette";
 import ThemeDropdown from "@/components/ThemeDropdown";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
@@ -84,13 +84,10 @@ export default function App() {
   return (
     <div className={shellClass}>
       <WebInstallBanner />
-      <div className="flex min-h-0 flex-1">
-        <Sidebar />
-        <div className="flex-1 flex flex-col min-w-0">
-          <header
-            className="ko-app-header shrink-0 grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-2 border-b"
-            style={{ borderColor: "var(--ko-border)", background: "var(--ko-bg)" }}
-          >
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex shrink-0 border-b" style={{ borderColor: "var(--ko-border)" }}>
+          <SidebarHeader />
+          <header className="ko-app-header flex-1 grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-2">
             <div aria-hidden />
             <div className="justify-self-center max-w-full overflow-x-auto overflow-y-hidden ko-scroll">
               {view.kind === "page" && pageEditor && <EditorToolbar editor={pageEditor} />}
@@ -110,10 +107,15 @@ export default function App() {
               <ThemeDropdown />
             </div>
           </header>
-          <main className="flex-1 overflow-y-auto ko-scroll">
-            {view.kind === "dashboard" && <Dashboard />}
-            {view.kind === "page" && <PageView id={view.id} />}
-          </main>
+        </div>
+        <div className="flex min-h-0 flex-1">
+          <Sidebar />
+          <div className="flex-1 flex flex-col min-w-0">
+            <main className="flex-1 overflow-y-auto ko-scroll">
+              {view.kind === "dashboard" && <Dashboard />}
+              {view.kind === "page" && <PageView id={view.id} />}
+            </main>
+          </div>
         </div>
         <SearchPalette />
         <DeleteConfirmDialog />

@@ -36,7 +36,7 @@
 **Read:**
 
 - `.cursor/rules/constants-policy.mdc`
-- `AGENTS.md` §3.7 and §4.1
+- `AGENTS.md` §3.8 and §4.1
 - Canonical file: `shared/constants.ts`
 
 **Patterns:**

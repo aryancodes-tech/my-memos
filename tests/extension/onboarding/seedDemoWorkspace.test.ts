@@ -58,7 +58,7 @@ describe("buildDemoSeedBlockDoc", () => {
     expect(types).not.toContain("image");
   });
 
-  it("places the voice note near the top, before Try these", () => {
+  it("places the voice note near the top, before the value bullets", () => {
     const doc = buildDemoSeedBlockDoc({
       attachmentPath: "audio/voice_demo.mp3",
       duration: 12,
@@ -70,7 +70,8 @@ describe("buildDemoSeedBlockDoc", () => {
     const types = doc.content.map((node) => node.type);
     const voiceIndex = types.indexOf("voiceNote");
     const tryTheseIndex = doc.content.findIndex(
-      (node) => node.type === "heading" && node.content?.[0]?.text === "Try these",
+      (node) =>
+        node.type === "heading" && node.content?.[0]?.text === "Why this workspace converts",
     );
 
     expect(voiceIndex).toBeGreaterThan(0);
