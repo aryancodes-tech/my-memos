@@ -337,6 +337,8 @@ export const SETTINGS_KEYS = {
   productTour: "productTour",
   /** Web demo: set after seeding the sample workspace page. */
   demoWorkspaceSeeded: "demoWorkspaceSeeded",
+  /** Web demo: numeric seed content version (see `DEMO_WORKSPACE_SEED_VERSION`). */
+  demoWorkspaceSeedVersion: "demoWorkspaceSeedVersion",
 } as const;
 
 /** Persisted value when the product tour is skipped or finished. */
@@ -350,6 +352,36 @@ export const PRODUCT_TOUR_REPLAY_ARIA_LABEL = "Take the product tour";
 
 /** Title of the sample page seeded into an empty web-demo workspace. */
 export const DEMO_SEED_PAGE_TITLE = "Welcome to MyMemos";
+
+/** Filename of the sample voice note seeded into the web demo workspace. */
+export const DEMO_SEED_VOICE_FILE_NAME = "my-memos-demo-voice.mp3";
+
+/**
+ * Site-root path for the demo voice sample (landing `public/`).
+ * Also available under the demo base via `extension/public/` symlink.
+ */
+export const DEMO_SEED_VOICE_PUBLIC_PATH = `/${DEMO_SEED_VOICE_FILE_NAME}`;
+
+/** Display title for the seeded demo voice note block. */
+export const DEMO_SEED_VOICE_TITLE = "Sample voice note";
+
+/** Filename of the sample image seeded into the web demo workspace. */
+export const DEMO_SEED_IMAGE_FILE_NAME = "my-memos-demo-landing-page.png";
+
+/**
+ * Site-root path for the demo landing screenshot (landing `public/`).
+ * Also available under the demo base via `extension/public/` symlink.
+ */
+export const DEMO_SEED_IMAGE_PUBLIC_PATH = `/${DEMO_SEED_IMAGE_FILE_NAME}`;
+
+/** Alt text for the seeded demo landing screenshot. */
+export const DEMO_SEED_IMAGE_ALT = "MyMemos landing page hero";
+
+/** Caption shown under the seeded demo landing screenshot. */
+export const DEMO_SEED_IMAGE_CAPTION = "The MyMemos marketing page - your notes on every new tab";
+
+/** Bump when the empty-demo seed content changes (forces reseed on empty workspaces). */
+export const DEMO_WORKSPACE_SEED_VERSION = 3;
 
 /** Horizontal padding for page content in pixels. */
 export const PAGE_CONTENT_PADDING_X_PX = 96;
