@@ -4,10 +4,10 @@
 
 **A Notion-style notes app that replaces your browser New Tab.** Local-first, offline, no account.
 
-| Surface               | How to run                         | Where data lives             |
-| --------------------- | ---------------------------------- | ---------------------------- |
+| Surface               | How to run                           | Where data lives             |
+| --------------------- | ------------------------------------ | ---------------------------- |
 | **Browser extension** | Load unpacked from `extension/dist/` | IndexedDB + `chrome.storage` |
-| **Live demo**         | `/demo/` on the landing site       | IndexedDB + `localStorage`   |
+| **Live demo**         | `/demo/` on the landing site         | IndexedDB + `localStorage`   |
 
 Extension and demo data do not sync (different origins).
 
