@@ -20,6 +20,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react
 import { SLASH_MENU_PLACEHOLDER, SLASH_MENU_SECTION } from "@/lib/constants";
 import { len } from "@/lib/text";
 import { DEFAULT_CODE_LANGUAGE } from "@/editor/codeLowlight";
+import { smoothRevealSelection } from "@/editor/revealSelection";
 import {
   applyCodeBlock,
   applyListBlock,
@@ -67,7 +68,8 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewTitle: "Plain paragraph text for notes and body copy.",
     previewKind: "text",
     run: (editor, range) => {
-      editor.chain().focus().deleteRange(range).setParagraph().run();
+      const didRun = editor.chain().focus().deleteRange(range).setParagraph().run();
+      if (didRun) smoothRevealSelection(editor);
     },
   },
   {
@@ -82,7 +84,8 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "heading",
     headingLevel: 1,
     run: (editor, range) => {
-      editor.chain().focus().deleteRange(range).setHeading({ level: 1 }).run();
+      const didRun = editor.chain().focus().deleteRange(range).setHeading({ level: 1 }).run();
+      if (didRun) smoothRevealSelection(editor);
     },
   },
   {
@@ -97,7 +100,8 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "heading",
     headingLevel: 2,
     run: (editor, range) => {
-      editor.chain().focus().deleteRange(range).setHeading({ level: 2 }).run();
+      const didRun = editor.chain().focus().deleteRange(range).setHeading({ level: 2 }).run();
+      if (didRun) smoothRevealSelection(editor);
     },
   },
   {
@@ -112,7 +116,8 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "heading",
     headingLevel: 3,
     run: (editor, range) => {
-      editor.chain().focus().deleteRange(range).setHeading({ level: 3 }).run();
+      const didRun = editor.chain().focus().deleteRange(range).setHeading({ level: 3 }).run();
+      if (didRun) smoothRevealSelection(editor);
     },
   },
   {
@@ -127,7 +132,8 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewKind: "heading",
     headingLevel: 4,
     run: (editor, range) => {
-      editor.chain().focus().deleteRange(range).setHeading({ level: 4 }).run();
+      const didRun = editor.chain().focus().deleteRange(range).setHeading({ level: 4 }).run();
+      if (didRun) smoothRevealSelection(editor);
     },
   },
   {
@@ -183,7 +189,8 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewLines: ["Ownership", "Altruism"],
     previewKind: "quote",
     run: (editor, range) => {
-      editor.chain().focus().deleteRange(range).toggleBlockquote().run();
+      const didRun = editor.chain().focus().deleteRange(range).toggleBlockquote().run();
+      if (didRun) smoothRevealSelection(editor);
     },
   },
   {
@@ -210,7 +217,8 @@ const SLASH_COMMANDS: SlashCommand[] = [
     previewTitle: "Section break",
     previewKind: "divider",
     run: (editor, range) => {
-      editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+      const didRun = editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+      if (didRun) smoothRevealSelection(editor);
     },
   },
   {

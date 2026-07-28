@@ -2,6 +2,7 @@ import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import type { EditorView } from "@tiptap/pm/view";
 
+import { smoothRevealSelection } from "@/editor/revealSelection";
 import { MARKDOWN_DETECTION_PATTERNS } from "@/lib/constants";
 
 /** ProseMirror view input state (not exposed on public EditorView types). */
@@ -78,7 +79,9 @@ export const MarkdownPaste = Extension.create({
             }
 
             const parsed = markdownStorage.parser.parse(text) as string;
-            return this.editor.chain().focus().insertContent(parsed).run();
+            const didRun = this.editor.chain().focus().insertContent(parsed).run();
+            if (didRun) smoothRevealSelection(this.editor);
+            return didRun;
           },
         },
       }),

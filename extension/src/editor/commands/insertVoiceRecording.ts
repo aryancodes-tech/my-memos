@@ -1,6 +1,7 @@
 import type { Editor } from "@tiptap/react";
 import type { SlashRange } from "@/editor/slashBlock";
 import { appendAfterSelectedNode } from "@/editor/commands/insertSelection";
+import { smoothRevealSelection } from "@/editor/revealSelection";
 import { isAttachmentStorageSupported } from "@/lib/attachments/fileSystemManager";
 import { ATTACHMENT_FS_UNSUPPORTED_MESSAGE } from "@/lib/constants";
 
@@ -46,9 +47,12 @@ export function insertInlineVoiceRecording(
   focusVoiceInsertPosition(editor);
 
   const chain = editor.chain().focus();
+  let didRun = false;
   if (range) {
-    chain.deleteRange(range).insertVoiceNoteRecording().run();
+    didRun = chain.deleteRange(range).insertVoiceNoteRecording().run();
+    if (didRun) smoothRevealSelection(editor);
     return;
   }
-  appendAfterSelectedNode(chain).insertVoiceNoteRecording().run();
+  didRun = appendAfterSelectedNode(chain).insertVoiceNoteRecording().run();
+  if (didRun) smoothRevealSelection(editor);
 }

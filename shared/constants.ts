@@ -351,6 +351,9 @@ export const DEFAULT_FOLDER_TITLE = "Untitled folder";
 /** Milliseconds to debounce editor and title persistence. */
 export const EDITOR_SAVE_DEBOUNCE_MS = 250;
 
+/** Target vertical viewport position (0-1) for smooth cursor reveal after block inserts. */
+export const EDITOR_SELECTION_REVEAL_VIEWPORT_RATIO = 0.35;
+
 /** chrome.storage keys for lightweight settings. */
 export const SETTINGS_KEYS = {
   theme: "theme",
@@ -734,6 +737,9 @@ export const IMAGE_ALIGN_DEFAULT: (typeof IMAGE_ALIGNMENTS)[number] = "center";
 
 /** Placeholder shown under an image until the user adds a caption. */
 export const IMAGE_CAPTION_PLACEHOLDER = "Write a caption…";
+
+/** Visual overflow hint shown when an inline image caption is clipped. */
+export const IMAGE_CAPTION_OVERFLOW_HINT = "...";
 
 /**
  * Image frame width (px) below which the floating toolbar collapses to a single
