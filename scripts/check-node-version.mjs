@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { c, command, errorBlock, hint, kv } from "./cli-style.mjs";
+
 /** Fallback minimum when package.json engines.node is missing or unparsable. */
 const FALLBACK_MIN_NODE = [20, 19, 0];
 
@@ -67,19 +69,26 @@ if (!current || !meetsMinimum(current, minimum)) {
   const required = formatVersion(minimum);
   const nvmrcVersion = readNvmrcVersion();
 
-  console.error("\n[MyMemos] Unsupported Node.js version.");
-  console.error(`  Required: Node.js >= ${required}`);
-  console.error(`  Current:  ${process.version}`);
-  console.error("\nVite 7 and TanStack Start need a current Node release.");
-  console.error("Using an older Node version also causes cryptic config load errors.\n");
+  errorBlock("Unsupported Node.js version", [
+    kv("Required", c.bold(`>= ${required}`)),
+    kv("Current", c.brightRed(process.version)),
+    "",
+    "Vite 7 and TanStack Start need a current Node release.",
+    "Older Node versions also cause cryptic config load errors.",
+  ]);
 
   if (nvmrcVersion.length > 0) {
-    console.error("Fix:");
-    console.error("  nvm install");
-    console.error("  nvm use");
-    console.error("  npm run build:web\n");
+    console.error(`  ${c.bold("Fix")}`);
+    command("nvm install");
+    command("nvm use");
+    command("npm run build:web");
+    console.error("");
+    hint(`(.nvmrc recommends ${nvmrcVersion})`);
+    console.error("");
   } else {
-    console.error(`Fix: install Node.js ${required} or newer, then rerun the command.\n`);
+    console.error(`  ${c.bold("Fix")}`);
+    hint(`Install Node.js ${required} or newer, then rerun the command.`);
+    console.error("");
   }
 
   process.exit(1);
