@@ -372,11 +372,11 @@
   background: rgba(0, 0, 0, 0.04);
 }
 .landing-tour-btn-primary {
-  color: #fff;
-  background: var(--ko-accent);
+  color: var(--ko-bg);
+  background: var(--ko-text);
 }
 .landing-tour-btn-primary:hover {
-  filter: brightness(1.05);
+  opacity: 0.88;
 }
 
 .landing-scroll-cue {

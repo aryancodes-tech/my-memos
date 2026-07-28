@@ -1,7 +1,7 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { useEffect, useRef } from "react";
 import type { BlockDoc } from "@/storage/types";
-import { EDITOR_SAVE_DEBOUNCE_MS, EDITOR_TAB_INSERT, PRODUCT_TOUR_TARGETS } from "@/lib/constants";
+import { EDITOR_SAVE_DEBOUNCE_MS, EDITOR_TAB_INSERT } from "@/lib/constants";
 import { sanitizeBlockDocForPersistence } from "@/lib/attachments/sanitizeBlockDoc";
 import { useStore } from "@/store/useStore";
 import { createEditorExtensions } from "@/editor/editorExtensions";
@@ -20,15 +20,10 @@ interface Props {
  */
 export default function Editor({ docKey, initial, onChange }: Props) {
   const debounceRef = useRef<number | null>(null);
-  const editorRef = useRef<ReturnType<typeof useEditor>>(null);
   const onChangeRef = useRef(onChange);
   const setPageEditor = useStore((state) => state.setPageEditor);
 
   onChangeRef.current = onChange;
-
-  const persistDoc = (doc: BlockDoc) => {
-    onChangeRef.current(sanitizeBlockDocForPersistence(doc));
-  };
 
   const editor = useEditor(
     {
@@ -64,14 +59,12 @@ export default function Editor({ docKey, initial, onChange }: Props) {
       onUpdate({ editor: ed }) {
         if (debounceRef.current) window.clearTimeout(debounceRef.current);
         debounceRef.current = window.setTimeout(() => {
-          persistDoc(ed.getJSON() as BlockDoc);
+          onChangeRef.current(sanitizeBlockDocForPersistence(ed.getJSON() as BlockDoc));
         }, EDITOR_SAVE_DEBOUNCE_MS);
       },
     },
     [docKey],
   );
-
-  editorRef.current = editor;
 
   useEffect(() => {
     if (!editor) {
@@ -83,21 +76,30 @@ export default function Editor({ docKey, initial, onChange }: Props) {
     return () => setPageEditor(null);
   }, [editor, setPageEditor]);
 
+  /**
+   * Flush pending edits when leaving a page (docKey/editor change) or unmounting.
+   * Capture `editor` + `onChange` at effect setup time so cleanup never writes the
+   * previous page's JSON through the next page's update callback (or the next editor).
+   */
   useEffect(() => {
+    if (!editor) return;
+
+    const editorForPage = editor;
+    const persistForPage = onChangeRef.current;
+
     return () => {
       if (debounceRef.current) {
         window.clearTimeout(debounceRef.current);
         debounceRef.current = null;
       }
-      const ed = editorRef.current;
-      if (ed && !ed.isDestroyed) {
-        persistDoc(ed.getJSON() as BlockDoc);
+      if (!editorForPage.isDestroyed) {
+        persistForPage(sanitizeBlockDocForPersistence(editorForPage.getJSON() as BlockDoc));
       }
     };
-  }, [docKey]);
+  }, [editor, docKey]);
 
   return (
-    <div className="ko-editor-wrap" data-tour-target={PRODUCT_TOUR_TARGETS.slashMenu}>
+    <div className="ko-editor-wrap">
       <div className="relative">
         <EditorContent editor={editor} className="ko-editor max-w-none" />
         {editor && <SlashMenu editor={editor} />}

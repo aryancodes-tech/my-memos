@@ -293,6 +293,9 @@ export const SIDEBAR_EXPAND_LABEL = "Expand sidebar";
 /** Tooltip / title: collapse the sidebar. */
 export const SIDEBAR_COLLAPSE_LABEL = "Collapse sidebar";
 
+/** Aria label for the sidebar product name (navigates home). */
+export const SIDEBAR_BRAND_HOME_ARIA_LABEL = `${PRODUCT_NAME} home`;
+
 /** Tooltip / title: open the dashboard view. */
 export const SIDEBAR_DASHBOARD_LABEL = "Dashboard";
 

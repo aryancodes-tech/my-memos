@@ -2,6 +2,7 @@ import { useStore, selectDashboardRecentPages } from "@/store/useStore";
 import { PageIcon } from "@/components/PageIcon";
 import {
   CONTENT_MAX_WIDTH_PX,
+  DEFAULT_PAGE_TITLE,
   PAGE_CONTENT_PADDING_X_PX,
   PAGE_CONTENT_PADDING_TOP_PX,
   PRODUCT_TOUR_TARGETS,
@@ -135,7 +136,7 @@ function RecentPageRow({ page, onOpen }: RecentPageRowProps) {
         <span className="ko-dashboard-recent-row-icon" aria-hidden>
           <PageIcon kind={page.kind} size={16} />
         </span>
-        <span className="ko-dashboard-recent-row-title">{page.title || "Untitled"}</span>
+        <span className="ko-dashboard-recent-row-title">{page.title || DEFAULT_PAGE_TITLE}</span>
         <span className="ko-dashboard-recent-row-meta">
           {formatRecentActivity(page.updated_at)}
         </span>

@@ -2,6 +2,9 @@ import { afterEach, describe, expect, it } from "vitest";
 import { DEFAULT_THEME } from "@/lib/constants";
 import {
   applyThemeToDocument,
+  CONTRAST_INK_DARK,
+  CONTRAST_INK_LIGHT,
+  contrastInkForBackground,
   deriveThemeTokens,
   getCustomThemeStorageId,
   getThemeLabel,
@@ -13,6 +16,19 @@ import {
   toCustomThemeName,
 } from "@/lib/themes";
 import type { CustomTheme } from "@/storage/types";
+
+describe("contrastInkForBackground", () => {
+  it("uses dark ink on pastel highlight backgrounds", () => {
+    expect(contrastInkForBackground("#fadbd8")).toBe(CONTRAST_INK_DARK);
+    expect(contrastInkForBackground("#fff3b0")).toBe(CONTRAST_INK_DARK);
+    expect(contrastInkForBackground("#d5f5e3")).toBe(CONTRAST_INK_DARK);
+  });
+
+  it("uses light ink on dark backgrounds", () => {
+    expect(contrastInkForBackground("#1f1f1e")).toBe(CONTRAST_INK_LIGHT);
+    expect(contrastInkForBackground("#191919")).toBe(CONTRAST_INK_LIGHT);
+  });
+});
 
 describe("normalizeHexColor", () => {
   it("normalizes shorthand and full hex values", () => {

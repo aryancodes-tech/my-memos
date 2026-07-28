@@ -574,25 +574,25 @@ function ColorMenu({
         <div className="ko-toolbar-color-popover-inner">
           <div className="ko-toolbar-color-popover-title">{title}</div>
           <div className="ko-toolbar-color-grid">
-            {colors.map((color) => (
-              <button
-                key={color.id}
-                type="button"
-                title={color.label}
-                className={`ko-toolbar-color-swatch ${
-                  color.value === activeColor && !isCustomActive ? "is-active" : ""
-                }`}
-                style={
-                  len(color.value) > 0
-                    ? { background: color.value }
-                    : { background: "var(--ko-bg)", border: "1px dashed var(--ko-border)" }
-                }
-                onClick={() => {
-                  onPick(color.value);
-                  setOpen(false);
-                }}
-              />
-            ))}
+            {colors.map((color) => {
+              const isReset = len(color.value) === 0;
+              return (
+                <button
+                  key={color.id}
+                  type="button"
+                  title={color.label}
+                  aria-label={color.label}
+                  className={`ko-toolbar-color-swatch ${isReset ? "is-reset" : ""} ${
+                    color.value === activeColor && !isCustomActive ? "is-active" : ""
+                  }`}
+                  style={isReset ? undefined : { background: color.value }}
+                  onClick={() => {
+                    onPick(color.value);
+                    setOpen(false);
+                  }}
+                />
+              );
+            })}
           </div>
           {allowCustom && (
             <div className={`ko-toolbar-color-custom ${isCustomActive ? "is-active" : ""}`}>

@@ -6,6 +6,7 @@ import {
   EDITOR_SAVE_DEBOUNCE_MS,
   PAGE_CONTENT_PADDING_TOP_PX,
   PAGE_CONTENT_PADDING_X_PX,
+  PRODUCT_TOUR_TARGETS,
 } from "@/lib/constants";
 import { Star, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -60,7 +61,7 @@ export default function PageView({ id }: { id: string }) {
         paddingTop: PAGE_CONTENT_PADDING_TOP_PX,
       }}
     >
-      <header className="ko-page-header group">
+      <header className="ko-page-header group" data-tour-target={PRODUCT_TOUR_TARGETS.slashMenu}>
         <div className="ko-page-title-row">
           <input
             value={titleDraft}
