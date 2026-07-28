@@ -1,9 +1,16 @@
 import { nanoid } from "nanoid";
 import * as db from "@/storage/db";
-import type { AttachmentRef, BlockDoc, Page } from "@/storage/types";
-import { saveUploadedAudioAttachment } from "@/lib/attachments/attachmentManager";
+import type { AttachmentRef, BlockDoc, BlockNode, Page } from "@/storage/types";
+import {
+  saveImageAttachment,
+  saveUploadedAudioAttachment,
+} from "@/lib/attachments/attachmentManager";
 import { isAttachmentStorageSupported } from "@/lib/attachments/fileSystemManager";
 import {
+  DEMO_SEED_IMAGE_ALT,
+  DEMO_SEED_IMAGE_CAPTION,
+  DEMO_SEED_IMAGE_FILE_NAME,
+  DEMO_SEED_IMAGE_PUBLIC_PATH,
   DEMO_SEED_PAGE_TITLE,
   DEMO_SEED_VOICE_FILE_NAME,
   DEMO_SEED_VOICE_PUBLIC_PATH,
@@ -24,12 +31,29 @@ export type DemoSeedVoiceAttrs = {
   createdAt: string;
 };
 
+/** Optional attrs when a sample image was copied into OPFS. */
+export type DemoSeedImageAttrs = {
+  attachmentPath: string;
+  attachmentSize: number;
+  alt: string;
+  caption: string;
+};
+
+/** Media attachments available when building the demo seed document. */
+export type DemoSeedMedia = {
+  voice?: DemoSeedVoiceAttrs | null;
+  image?: DemoSeedImageAttrs | null;
+};
+
 /**
  * Rich sample BlockDoc for the web-demo empty workspace.
- * Includes a voice note when `voice` is provided (OPFS-backed).
+ * Includes image / voice blocks when OPFS-backed media is provided.
  */
-export function buildDemoSeedBlockDoc(voice?: DemoSeedVoiceAttrs | null): BlockDoc {
-  const content: NonNullable<BlockDoc["content"]> = [
+export function buildDemoSeedBlockDoc(media?: DemoSeedMedia | null): BlockDoc {
+  const voice = media?.voice ?? null;
+  const image = media?.image ?? null;
+
+  const content: BlockNode[] = [
     {
       type: "heading",
       attrs: { level: 1 },
@@ -44,6 +68,38 @@ export function buildDemoSeedBlockDoc(voice?: DemoSeedVoiceAttrs | null): BlockD
         },
       ],
     },
+  ];
+
+  if (image && len(image.attachmentPath) > 0) {
+    content.push(
+      {
+        type: "heading",
+        attrs: { level: 2 },
+        content: [{ type: "text", text: "Sample image" }],
+      },
+      {
+        type: "paragraph",
+        content: [
+          {
+            type: "text",
+            text: "Images paste, drop, or pick from the toolbar - this one ships with the demo so you can try captions and lightbox right away.",
+          },
+        ],
+      },
+      {
+        type: "image",
+        attrs: {
+          attachmentPath: image.attachmentPath,
+          attachmentSize: image.attachmentSize,
+          alt: image.alt,
+          caption: image.caption,
+          src: null,
+        },
+      },
+    );
+  }
+
+  content.push(
     {
       type: "heading",
       attrs: { level: 2 },
@@ -115,7 +171,7 @@ export function buildDemoSeedBlockDoc(voice?: DemoSeedVoiceAttrs | null): BlockD
         },
       ],
     },
-  ];
+  );
 
   if (voice && len(voice.attachmentPath) > 0) {
     content.push(
@@ -187,34 +243,45 @@ export function buildDemoSeedBlockDoc(voice?: DemoSeedVoiceAttrs | null): BlockD
 }
 
 /**
- * Candidate URLs for the demo voice sample (landing root, then demo base).
+ * Candidate URLs for a demo asset (landing root, then demo base).
  * @internal Exported for unit tests.
  */
-export function demoSeedVoiceFetchUrls(
+export function demoSeedAssetFetchUrls(
+  fileName: string,
+  publicPath: string,
   baseUrl: string = import.meta.env.BASE_URL ?? "/",
 ): string[] {
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-  const underBase = `${normalizedBase}${DEMO_SEED_VOICE_FILE_NAME}`;
-  const urls = [DEMO_SEED_VOICE_PUBLIC_PATH, underBase];
-  return [...new Set(urls)];
+  const underBase = `${normalizedBase}${fileName}`;
+  return [...new Set([publicPath, underBase])];
+}
+
+/** @deprecated Prefer `demoSeedAssetFetchUrls` - kept for existing tests. */
+export function demoSeedVoiceFetchUrls(
+  baseUrl: string = import.meta.env.BASE_URL ?? "/",
+): string[] {
+  return demoSeedAssetFetchUrls(DEMO_SEED_VOICE_FILE_NAME, DEMO_SEED_VOICE_PUBLIC_PATH, baseUrl);
 }
 
 /**
- * Fetches the sample MP3 and returns a File, or null when unavailable.
+ * Fetches a public demo asset and returns a File, or null when unavailable.
  * @internal Exported for unit tests.
  */
-export async function fetchDemoSeedVoiceFile(
+export async function fetchDemoSeedAssetFile(
+  fileName: string,
+  publicPath: string,
+  fallbackMime: string,
   fetchImpl: typeof fetch = fetch,
   baseUrl?: string,
 ): Promise<File | null> {
-  for (const url of demoSeedVoiceFetchUrls(baseUrl)) {
+  for (const url of demoSeedAssetFetchUrls(fileName, publicPath, baseUrl)) {
     try {
       const response = await fetchImpl(url);
       if (!response.ok) continue;
       const blob = await response.blob();
       if (blob.size === 0) continue;
-      const type = len(blob.type) > 0 ? blob.type : "audio/mpeg";
-      return new File([blob], DEMO_SEED_VOICE_FILE_NAME, { type });
+      const type = len(blob.type) > 0 ? blob.type : fallbackMime;
+      return new File([blob], fileName, { type });
     } catch {
       // Try the next candidate URL.
     }
@@ -222,12 +289,30 @@ export async function fetchDemoSeedVoiceFile(
   return null;
 }
 
+/** @deprecated Prefer `fetchDemoSeedAssetFile` - kept for existing tests. */
+export async function fetchDemoSeedVoiceFile(
+  fetchImpl: typeof fetch = fetch,
+  baseUrl?: string,
+): Promise<File | null> {
+  return fetchDemoSeedAssetFile(
+    DEMO_SEED_VOICE_FILE_NAME,
+    DEMO_SEED_VOICE_PUBLIC_PATH,
+    "audio/mpeg",
+    fetchImpl,
+    baseUrl,
+  );
+}
+
 /** Copies the public sample MP3 into OPFS when attachment storage is available. */
 async function seedDemoVoiceAttachment(): Promise<DemoSeedVoiceAttrs | null> {
   if (!isAttachmentStorageSupported()) return null;
 
   try {
-    const file = await fetchDemoSeedVoiceFile();
+    const file = await fetchDemoSeedAssetFile(
+      DEMO_SEED_VOICE_FILE_NAME,
+      DEMO_SEED_VOICE_PUBLIC_PATH,
+      "audio/mpeg",
+    );
     if (!file) return null;
 
     const ref: AttachmentRef = await saveUploadedAudioAttachment(file);
@@ -240,6 +325,31 @@ async function seedDemoVoiceAttachment(): Promise<DemoSeedVoiceAttrs | null> {
     };
   } catch (err) {
     console.warn("[MyMemos] Demo seed voice note skipped:", err);
+    return null;
+  }
+}
+
+/** Copies the public sample PNG into OPFS when attachment storage is available. */
+async function seedDemoImageAttachment(): Promise<DemoSeedImageAttrs | null> {
+  if (!isAttachmentStorageSupported()) return null;
+
+  try {
+    const file = await fetchDemoSeedAssetFile(
+      DEMO_SEED_IMAGE_FILE_NAME,
+      DEMO_SEED_IMAGE_PUBLIC_PATH,
+      "image/png",
+    );
+    if (!file) return null;
+
+    const path = await saveImageAttachment(file);
+    return {
+      attachmentPath: path,
+      attachmentSize: file.size,
+      alt: DEMO_SEED_IMAGE_ALT,
+      caption: DEMO_SEED_IMAGE_CAPTION,
+    };
+  } catch (err) {
+    console.warn("[MyMemos] Demo seed image skipped:", err);
     return null;
   }
 }
@@ -271,7 +381,7 @@ export interface SeedDemoResult {
  * so later empties (user deleted everything) do not reseed.
  *
  * If the only page is still the stock welcome page from an older seed, its
- * document is upgraded in place (adds the sample voice note when possible).
+ * document is upgraded in place (adds sample media when possible).
  */
 export async function maybeSeedDemoWorkspace(pages: Page[]): Promise<SeedDemoResult | null> {
   const seedVersion = await readDemoSeedVersion();
@@ -285,9 +395,12 @@ export async function maybeSeedDemoWorkspace(pages: Page[]): Promise<SeedDemoRes
     return null;
   }
 
-  const voice = await seedDemoVoiceAttachment();
+  const [voice, image] = await Promise.all([
+    seedDemoVoiceAttachment(),
+    seedDemoImageAttachment(),
+  ]);
   const now = Date.now();
-  const doc = buildDemoSeedBlockDoc(voice);
+  const doc = buildDemoSeedBlockDoc({ voice, image });
 
   if (onlyWelcomePage) {
     const updated: Page = {
