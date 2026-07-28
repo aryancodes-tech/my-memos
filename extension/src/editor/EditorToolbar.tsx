@@ -31,6 +31,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { DEFAULT_CODE_LANGUAGE } from "@/editor/codeLowlight";
 import { preventEditorBlur, ToolbarPopover, ToolbarTip } from "@/editor/ToolbarPopover";
 import {
+  ATTACHMENT_FS_UNSUPPORTED_MESSAGE,
   EDITOR_ALIGN_CENTER_LABEL,
   EDITOR_ALIGN_JUSTIFY_LABEL,
   EDITOR_ALIGN_LEFT_LABEL,
@@ -42,13 +43,16 @@ import {
   EDITOR_HIGHLIGHT_CUSTOM_DEFAULT,
   EDITOR_TEXT_COLORS,
   EDITOR_TEXT_CUSTOM_DEFAULT,
+  EDITOR_TOOLBAR_ATTACH_AUDIO_LABEL,
+  EDITOR_TOOLBAR_AUDIO_ARIA,
+  EDITOR_TOOLBAR_AUDIO_TIP,
   EDITOR_TOOLBAR_BLOCK_TYPE_ARIA,
   EDITOR_TOOLBAR_CODE_BLOCK_LABEL,
   EDITOR_TOOLBAR_IMAGE_ALIGN_ARIA,
   EDITOR_TOOLBAR_LINK_LABEL,
+  EDITOR_TOOLBAR_RECORD_VOICE_LABEL,
   EDITOR_TOOLBAR_STRIKETHROUGH_LABEL,
   EDITOR_TOOLBAR_TEXT_ALIGN_ARIA,
-  ATTACHMENT_FS_UNSUPPORTED_MESSAGE,
   PRODUCT_TOUR_TARGETS,
 } from "@/lib/constants";
 import { normalizeHexColor } from "@/lib/themes";
@@ -358,18 +362,81 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           >
             <ImageIcon size={14} strokeWidth={1.75} />
           </ToolbarButton>
-          <ToolbarButton
-            title="Voice"
-            tourTarget={PRODUCT_TOUR_TARGETS.addVoice}
-            onClick={startVoiceRecording}
-          >
-            <Mic size={14} strokeWidth={1.75} />
-          </ToolbarButton>
-          <ToolbarButton title="Audio" onClick={attachAudioFile}>
-            <Paperclip size={14} strokeWidth={1.75} />
-          </ToolbarButton>
+          <AudioSelect onRecord={startVoiceRecording} onAttachFile={attachAudioFile} />
         </ToolbarGroup>
       </div>
+    </div>
+  );
+}
+
+function AudioSelect({
+  onRecord,
+  onAttachFile,
+}: {
+  onRecord: () => void;
+  onAttachFile: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const { tip, showTip, hideTip } = useInstantTip();
+
+  return (
+    <div
+      className="ko-toolbar-block-select"
+      ref={anchorRef}
+      data-tour-target={PRODUCT_TOUR_TARGETS.addVoice}
+    >
+      <button
+        type="button"
+        className="ko-toolbar-btn ko-toolbar-btn-menu"
+        aria-label={EDITOR_TOOLBAR_AUDIO_ARIA}
+        aria-expanded={open}
+        onMouseDown={preventEditorBlur}
+        onMouseEnter={(event) => {
+          if (!open) showTip(EDITOR_TOOLBAR_AUDIO_TIP, event.currentTarget);
+        }}
+        onMouseLeave={hideTip}
+        onFocus={(event) => {
+          if (!open) showTip(EDITOR_TOOLBAR_AUDIO_TIP, event.currentTarget);
+        }}
+        onBlur={hideTip}
+        onClick={() => {
+          hideTip();
+          setOpen((current) => !current);
+        }}
+      >
+        <Mic size={14} strokeWidth={1.75} />
+        <ChevronDown size={12} strokeWidth={1.75} />
+      </button>
+      <ToolbarTip
+        label={tip?.label ?? ""}
+        visible={tip !== null && !open}
+        anchorRect={tip?.rect ?? null}
+      />
+      <ToolbarPopover open={open} onClose={() => setOpen(false)} anchorRef={anchorRef}>
+        <button
+          type="button"
+          className="ko-toolbar-popover-item ko-toolbar-popover-item-icon"
+          onClick={() => {
+            onRecord();
+            setOpen(false);
+          }}
+        >
+          <Mic size={14} strokeWidth={1.75} />
+          <span>{EDITOR_TOOLBAR_RECORD_VOICE_LABEL}</span>
+        </button>
+        <button
+          type="button"
+          className="ko-toolbar-popover-item ko-toolbar-popover-item-icon"
+          onClick={() => {
+            onAttachFile();
+            setOpen(false);
+          }}
+        >
+          <Paperclip size={14} strokeWidth={1.75} />
+          <span>{EDITOR_TOOLBAR_ATTACH_AUDIO_LABEL}</span>
+        </button>
+      </ToolbarPopover>
     </div>
   );
 }
