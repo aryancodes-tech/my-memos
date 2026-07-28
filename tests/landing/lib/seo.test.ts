@@ -6,6 +6,8 @@ import {
   buildLandingLinkTags,
   buildLandingMetaTags,
   buildLlmsTxt,
+  buildPrivacyLinkTags,
+  buildPrivacyMetaTags,
   buildRobotsTxt,
   buildSitemapXml,
   resolveSiteOrigin,
@@ -87,11 +89,13 @@ describe("buildRobotsTxt", () => {
 });
 
 describe("buildSitemapXml", () => {
-  it("lists the homepage with absolute URL", () => {
+  it("lists the homepage and privacy policy with absolute URLs", () => {
     const xml = buildSitemapXml("https://mymemos.app");
 
     expect(xml).toContain("<loc>https://mymemos.app/</loc>");
+    expect(xml).toContain("<loc>https://mymemos.app/privacy</loc>");
     expect(xml).toContain("<priority>1.0</priority>");
+    expect(xml).toContain("<priority>0.4</priority>");
   });
 });
 
@@ -104,5 +108,27 @@ describe("buildLlmsTxt", () => {
     expect(llms).toContain("https://www.mymemos.in/");
     expect(llms).toContain("What is MyMemos?");
     expect(llms).toContain("https://www.mymemos.in/demo/");
+    expect(llms).toContain("https://www.mymemos.in/privacy");
+  });
+});
+
+describe("buildPrivacyMetaTags", () => {
+  it("includes title, description, and canonical social fields", () => {
+    const tags = buildPrivacyMetaTags("https://mymemos.app");
+    const title = tags.find((tag) => "title" in tag);
+    const description = tags.find((tag) => tag.name === "description");
+    const ogUrl = tags.find((tag) => tag.property === "og:url");
+
+    expect(title?.title).toContain("Privacy Policy");
+    expect(description?.content).toContain("on your device");
+    expect(ogUrl?.content).toBe("https://mymemos.app/privacy");
+  });
+});
+
+describe("buildPrivacyLinkTags", () => {
+  it("emits a canonical link for the privacy page", () => {
+    expect(buildPrivacyLinkTags("https://mymemos.app")).toEqual([
+      { rel: "canonical", href: "https://mymemos.app/privacy" },
+    ]);
   });
 });

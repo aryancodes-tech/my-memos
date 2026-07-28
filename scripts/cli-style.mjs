@@ -20,7 +20,7 @@ const ESC = "\u001b[";
 
 /**
  * Wrap text in an ANSI SGR sequence when color is enabled.
- * Pass semicolon-joined codes (e.g. `"1;96"`) — do not nest `paint` calls.
+ * Pass semicolon-joined codes (e.g. `"1;96"`) - do not nest `paint` calls.
  */
 function paint(codes, text) {
   if (!colorEnabled) return String(text);

@@ -335,7 +335,7 @@ body {
   padding: 0 1px;
   border-radius: 2px;
 }
-/* TipTap's stock multicolor used `color: inherit` — override so pastels stay readable in dark themes. */
+/* TipTap's stock multicolor used `color: inherit` - override so pastels stay readable in dark themes. */
 .ProseMirror mark[style*="color: inherit"],
 .ProseMirror mark[style*="color:inherit"] {
   color: #1f1f1e !important;
