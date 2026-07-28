@@ -395,10 +395,7 @@ export async function maybeSeedDemoWorkspace(pages: Page[]): Promise<SeedDemoRes
     return null;
   }
 
-  const [voice, image] = await Promise.all([
-    seedDemoVoiceAttachment(),
-    seedDemoImageAttachment(),
-  ]);
+  const [voice, image] = await Promise.all([seedDemoVoiceAttachment(), seedDemoImageAttachment()]);
   const now = Date.now();
   const doc = buildDemoSeedBlockDoc({ voice, image });
 
