@@ -436,6 +436,22 @@ export const DELETE_FOLDER_TITLE = "Delete this folder?";
 /** Delete confirm dialog title for a page. */
 export const DELETE_PAGE_TITLE = "Delete this page?";
 
+/** Aria label for closing a confirm dialog. */
+export const DIALOG_CLOSE_ARIA_LABEL = "Close";
+
+/** Attachment delete dialog title. */
+export const ATTACHMENT_DELETE_TITLE = "Delete attachment?";
+
+/** Attachment delete dialog body copy. */
+export const ATTACHMENT_DELETE_BODY =
+  "This will permanently remove the attachment file and delete the block from your note. Your note text will not be affected.";
+
+/** Attachment delete dialog cancel / keep action. */
+export const ATTACHMENT_DELETE_KEEP_LABEL = "Keep attachment";
+
+/** Attachment delete dialog confirm action. */
+export const ATTACHMENT_DELETE_CONFIRM_LABEL = "Delete permanently";
+
 // ---------------------------------------------------------------------------
 // Themes
 // ---------------------------------------------------------------------------
