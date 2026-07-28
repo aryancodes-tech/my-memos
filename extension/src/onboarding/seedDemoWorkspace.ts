@@ -25,7 +25,7 @@ export type DemoSeedVoiceAttrs = {
 };
 
 /**
- * Rich sample BlockDoc for the web-demo empty workspace.
+ * Rich sample BlockDoc for a fresh empty workspace.
  * Includes a voice note when `voice` is provided (OPFS-backed), placed near the top.
  */
 export function buildDemoSeedBlockDoc(voice?: DemoSeedVoiceAttrs | null): BlockDoc {
@@ -291,9 +291,9 @@ export interface SeedDemoResult {
 }
 
 /**
- * Seeds one sample page when the web-demo workspace is empty and the seed
- * version is outdated. Marks the version even when other pages already exist
- * so later empties (user deleted everything) do not reseed.
+ * Seeds one sample page when the workspace is empty and the seed version is
+ * outdated. Marks the version even when other pages already exist so later
+ * empties (user deleted everything) do not reseed.
  *
  * If the only page is still the stock welcome page from an older seed, its
  * document is upgraded in place (adds the sample voice note when possible).

@@ -372,7 +372,7 @@ export const PRODUCT_TOUR_REPLAY_LABEL = "Tour";
 /** Aria label for the header tour replay button. */
 export const PRODUCT_TOUR_REPLAY_ARIA_LABEL = "Take the product tour";
 
-/** Title of the sample page seeded into an empty web-demo workspace. */
+/** Title of the sample page seeded into a fresh empty workspace. */
 export const DEMO_SEED_PAGE_TITLE = "Welcome to MyMemos";
 
 /** Filename of the sample voice note seeded into the web demo workspace. */

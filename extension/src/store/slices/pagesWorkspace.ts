@@ -21,7 +21,6 @@ import {
   isCustomThemeId,
   syncCustomThemeStyles,
 } from "@/lib/themes";
-import { isWebAppContext } from "@/lib/platform";
 import { maybeSeedDemoWorkspace } from "@/onboarding/seedDemoWorkspace";
 import type { CustomTheme, ThemeName } from "@/storage/types";
 import type { PagesWorkspaceSlice, StoreState, View } from "@/store/types";
@@ -100,13 +99,11 @@ export const createPagesWorkspaceSlice: StateCreator<StoreState, [], [], PagesWo
     let resolvedView = resolveView(lastView, pages);
     let seededView = false;
 
-    if (isWebAppContext()) {
-      const seeded = await maybeSeedDemoWorkspace(pages);
-      if (seeded) {
-        pages = seeded.pages;
-        resolvedView = seeded.view;
-        seededView = true;
-      }
+    const seeded = await maybeSeedDemoWorkspace(pages);
+    if (seeded) {
+      pages = seeded.pages;
+      resolvedView = seeded.view;
+      seededView = true;
     }
 
     set({
