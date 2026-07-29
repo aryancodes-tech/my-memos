@@ -39,7 +39,15 @@ Keep `npm run dev` running while you edit. Do **not** run `build:extension` duri
 npm run dev:web            # http://localhost:8080/  and  /demo/
 ```
 
-For the landing download button locally: `npm run package:extension`.
+Install for end users via the [Chrome Web Store](https://chromewebstore.google.com/detail/mymemos/hdcanofeenpjkbbfpgcalbobeolbffbi) (landing CTAs go through `/install`).
+
+**Package a ZIP** (Chrome Web Store upload, or sideload without `npm run dev`):
+
+```bash
+npm run package:extension  # → public/mymemos-extension.zip and extension/mymemos-extension.zip
+```
+
+Then unzip and **Load unpacked** that folder, or upload the ZIP in the Chrome Web Store developer dashboard.
 
 ---
 
@@ -90,11 +98,10 @@ Notes and attachments stay in your browser. Uninstalling the extension removes i
 
 ## Troubleshooting
 
-| Problem                        | Fix                                                                 |
-| ------------------------------ | ------------------------------------------------------------------- |
-| Edits don't show up            | `npm run dev:reset --prefix extension` → reload extension → new tab |
-| Extension named **MyMemos**    | Prod build loaded — run `npm run dev` again                         |
-| Download button 404 on landing | Run `npm run package:extension`                                     |
+| Problem                     | Fix                                                                 |
+| --------------------------- | ------------------------------------------------------------------- |
+| Edits don't show up         | `npm run dev:reset --prefix extension` → reload extension → new tab |
+| Extension named **MyMemos** | Prod build loaded — run `npm run dev` again                         |
 
 ---
 

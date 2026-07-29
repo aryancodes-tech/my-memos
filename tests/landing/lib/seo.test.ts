@@ -10,10 +10,13 @@ import {
   buildPrivacyMetaTags,
   buildRobotsTxt,
   buildSitemapXml,
+  buildInstallLinkTags,
+  buildInstallMetaTags,
   buildUninstallLinkTags,
   buildUninstallMetaTags,
   resolveSiteOrigin,
 } from "@/lib/seo";
+import { resolveLandingFaqItems } from "@/lib/landingFaqContent";
 
 describe("resolveSiteOrigin", () => {
   it("uses the request origin when SITE_ORIGIN is unset", () => {
@@ -72,8 +75,7 @@ describe("buildLandingJsonLdScripts", () => {
     const scripts = buildLandingJsonLdScripts("https://www.mymemos.in");
     const faqPage = JSON.parse(scripts[3].children);
     const demoQuestion = faqPage.mainEntity.find(
-      (item: { name: string }) =>
-        item.name === "Can I try MyMemos before installing the browser extension?",
+      (item: { name: string }) => item.name === "Can I try MyMemos before installing?",
     );
 
     expect(demoQuestion.acceptedAnswer.text).toContain("https://www.mymemos.in/demo/");
@@ -81,12 +83,13 @@ describe("buildLandingJsonLdScripts", () => {
 });
 
 describe("buildRobotsTxt", () => {
-  it("allows the homepage and blocks the demo app and uninstall hop", () => {
+  it("allows the homepage and blocks demo, uninstall, and install hops", () => {
     const robots = buildRobotsTxt("https://mymemos.app");
 
     expect(robots).toContain("Allow: /");
     expect(robots).toContain("Disallow: /demo/");
     expect(robots).toContain("Disallow: /uninstall");
+    expect(robots).toContain("Disallow: /install");
     expect(robots).toContain("Sitemap: https://mymemos.app/sitemap.xml");
   });
 });
@@ -109,7 +112,8 @@ describe("buildLlmsTxt", () => {
     expect(llms).toContain("# MyMemos");
     expect(llms).toContain("local-first browser extension");
     expect(llms).toContain("https://www.mymemos.in/");
-    expect(llms).toContain("What is MyMemos?");
+    // Assert against the content source so FAQ copy edits do not break this test.
+    expect(llms).toContain(resolveLandingFaqItems("https://www.mymemos.in")[0].question);
     expect(llms).toContain("https://www.mymemos.in/demo/");
     expect(llms).toContain("https://www.mymemos.in/privacy");
   });
@@ -151,6 +155,25 @@ describe("buildUninstallLinkTags", () => {
   it("emits a canonical link for the uninstall hop", () => {
     expect(buildUninstallLinkTags("https://mymemos.app")).toEqual([
       { rel: "canonical", href: "https://mymemos.app/uninstall" },
+    ]);
+  });
+});
+
+describe("buildInstallMetaTags", () => {
+  it("marks the install hop as noindex", () => {
+    const tags = buildInstallMetaTags();
+    const robots = tags.find((tag) => tag.name === "robots");
+    const title = tags.find((tag) => "title" in tag);
+
+    expect(title?.title).toContain("Install");
+    expect(robots?.content).toBe("noindex, nofollow");
+  });
+});
+
+describe("buildInstallLinkTags", () => {
+  it("emits a canonical link for the install hop", () => {
+    expect(buildInstallLinkTags("https://mymemos.app")).toEqual([
+      { rel: "canonical", href: "https://mymemos.app/install" },
     ]);
   });
 });

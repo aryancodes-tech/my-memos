@@ -14,6 +14,10 @@ import {
   UNINSTALL_PAGE_LEAD,
   UNINSTALL_PAGE_TITLE,
   UNINSTALL_PATH,
+  INSTALL_PAGE_LEAD,
+  INSTALL_PAGE_TITLE,
+  INSTALL_PATH,
+  CHROME_WEB_STORE_URL,
 } from "@/lib/constants";
 import { flattenFaqAnswerForSchema, resolveLandingFaqItems } from "@/lib/landingFaqContent";
 import { buildAbsoluteUrl } from "@/lib/url";
@@ -140,6 +144,25 @@ export function buildUninstallLinkTags(origin: string): SeoLinkTag[] {
   ];
 }
 
+/** Install hop `<head>` meta tags - noindex; not for search or social. */
+export function buildInstallMetaTags(): SeoMetaTag[] {
+  return [
+    { title: INSTALL_PAGE_TITLE },
+    { name: "description", content: INSTALL_PAGE_LEAD },
+    { name: "robots", content: "noindex, nofollow" },
+  ];
+}
+
+/** Install hop `<head>` link tags (canonical when origin is known). */
+export function buildInstallLinkTags(origin: string): SeoLinkTag[] {
+  return [
+    {
+      rel: "canonical",
+      href: buildAbsoluteUrl(origin, INSTALL_PATH),
+    },
+  ];
+}
+
 /** JSON-LD scripts describing the product and website. */
 export function buildLandingJsonLdScripts(origin: string): SeoScriptTag[] {
   const pageUrl = buildAbsoluteUrl(origin, "/");
@@ -174,8 +197,9 @@ export function buildLandingJsonLdScripts(origin: string): SeoScriptTag[] {
       "Nested pages and folders",
       "No account required",
     ],
-    downloadUrl: pageUrl,
-    sameAs: [GITHUB_REPO_URL],
+    downloadUrl: buildAbsoluteUrl(origin, INSTALL_PATH),
+    installUrl: CHROME_WEB_STORE_URL,
+    sameAs: [GITHUB_REPO_URL, CHROME_WEB_STORE_URL],
   };
 
   const webSite = {

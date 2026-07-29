@@ -1,50 +1,17 @@
 import {
   DEMO_PATH,
-  LANDING_GET_STARTED_DESC,
   LANDING_GET_STARTED_DEMO_CTA,
+  LANDING_GET_STARTED_DESC,
+  LANDING_GET_STARTED_EYEBROW,
   LANDING_GET_STARTED_SECTION_ID,
-  PRODUCT_NAME,
+  LANDING_GET_STARTED_TITLE,
+  LANDING_LOCAL_SETUP_STEPS,
 } from "@/lib/constants";
+import { LandingChromeCta } from "@/components/landing/LandingChromeCta";
 import { LandingFaq } from "@/components/landing/LandingFaq";
-import { LandingPageFooter } from "@/components/landing/LandingPageFooter";
 
-const INSTALL_STEPS: Array<{
-  title: string;
-  body: string;
-  code?: string;
-}> = [
-  {
-    title: "Download & unzip",
-    body: "Grab the extension bundle and extract it to a folder on your machine.",
-  },
-  {
-    title: "Open browser extensions",
-    body: "Open your browser's extensions page from the menu (Extensions → Manage extensions).",
-  },
-  {
-    title: "Enable developer mode",
-    body: "Toggle Developer mode in the top-right corner of the extensions page.",
-  },
-  {
-    title: "Load unpacked",
-    body: "Click Load unpacked and select the folder you extracted.",
-  },
-  {
-    title: "Open a new tab",
-    body: `${PRODUCT_NAME} replaces your New Tab - start writing immediately.`,
-  },
-];
-
-type LandingGetStartedProps = {
-  onDownload: () => void;
-  isDownloading: boolean;
-};
-
-/**
- * Closing section: a compact install timeline and minimal page footer.
- * Replaces the previous separate install grid and CTA band.
- */
-export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStartedProps) {
+/** Local setup timeline, Chrome Web Store CTA, and FAQ. */
+export function LandingGetStarted() {
   return (
     <section
       id={LANDING_GET_STARTED_SECTION_ID}
@@ -53,21 +20,14 @@ export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStart
     >
       <div className="landing-get-started-panel">
         <div className="landing-get-started-intro">
-          <p className="landing-eyebrow">Get started</p>
+          <p className="landing-eyebrow">{LANDING_GET_STARTED_EYEBROW}</p>
           <h2 id="get-started-heading" className="landing-section-title">
-            Up and running in five steps
+            {LANDING_GET_STARTED_TITLE}
           </h2>
           <p className="landing-section-desc">{LANDING_GET_STARTED_DESC}</p>
 
           <div className="landing-get-started-actions">
-            <button
-              type="button"
-              onClick={onDownload}
-              disabled={isDownloading}
-              className="landing-btn landing-btn-primary"
-            >
-              {isDownloading ? "Downloading…" : "Download extension"}
-            </button>
+            <LandingChromeCta />
             <a href={DEMO_PATH} className="landing-btn landing-btn-ghost">
               {LANDING_GET_STARTED_DEMO_CTA}
             </a>
@@ -75,22 +35,14 @@ export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStart
         </div>
 
         <ol className="landing-get-started-steps">
-          {INSTALL_STEPS.map((step, index) => (
+          {LANDING_LOCAL_SETUP_STEPS.map((step, index) => (
             <li key={step.title} className="landing-get-started-step">
               <div className="landing-get-started-step-rail" aria-hidden>
                 <span className="landing-get-started-step-dot">{index + 1}</span>
               </div>
               <div className="landing-get-started-step-copy">
                 <h3>{step.title}</h3>
-                <p>
-                  {"code" in step && step.code !== undefined && step.code.length > 0 ? (
-                    <>
-                      Navigate to <code className="landing-code">{step.code}</code> in your browser.
-                    </>
-                  ) : (
-                    step.body
-                  )}
-                </p>
+                <p>{step.body}</p>
               </div>
             </li>
           ))}
@@ -98,8 +50,6 @@ export function LandingGetStarted({ onDownload, isDownloading }: LandingGetStart
       </div>
 
       <LandingFaq />
-
-      <LandingPageFooter />
     </section>
   );
 }

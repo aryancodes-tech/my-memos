@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { banner, bullet, kv, ok, path as stylePath, rule } from "./cli-style.mjs";
 
 /** Paths excluded from search indexing via robots.txt. */
-const SEO_ROBOTS_DISALLOW_PATHS = ["/demo/", "/uninstall"];
+const SEO_ROBOTS_DISALLOW_PATHS = ["/demo/", "/uninstall", "/install"];
 
 /**
  * Resolves the site origin for generated SEO files.
