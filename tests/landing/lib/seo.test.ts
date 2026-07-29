@@ -10,6 +10,8 @@ import {
   buildPrivacyMetaTags,
   buildRobotsTxt,
   buildSitemapXml,
+  buildUninstallLinkTags,
+  buildUninstallMetaTags,
   resolveSiteOrigin,
 } from "@/lib/seo";
 
@@ -79,11 +81,12 @@ describe("buildLandingJsonLdScripts", () => {
 });
 
 describe("buildRobotsTxt", () => {
-  it("allows the homepage and blocks the demo app", () => {
+  it("allows the homepage and blocks the demo app and uninstall hop", () => {
     const robots = buildRobotsTxt("https://mymemos.app");
 
     expect(robots).toContain("Allow: /");
     expect(robots).toContain("Disallow: /demo/");
+    expect(robots).toContain("Disallow: /uninstall");
     expect(robots).toContain("Sitemap: https://mymemos.app/sitemap.xml");
   });
 });
@@ -129,6 +132,25 @@ describe("buildPrivacyLinkTags", () => {
   it("emits a canonical link for the privacy page", () => {
     expect(buildPrivacyLinkTags("https://mymemos.app")).toEqual([
       { rel: "canonical", href: "https://mymemos.app/privacy" },
+    ]);
+  });
+});
+
+describe("buildUninstallMetaTags", () => {
+  it("marks the uninstall hop as noindex", () => {
+    const tags = buildUninstallMetaTags();
+    const robots = tags.find((tag) => tag.name === "robots");
+    const title = tags.find((tag) => "title" in tag);
+
+    expect(title?.title).toContain("Sorry to see you go");
+    expect(robots?.content).toBe("noindex, nofollow");
+  });
+});
+
+describe("buildUninstallLinkTags", () => {
+  it("emits a canonical link for the uninstall hop", () => {
+    expect(buildUninstallLinkTags("https://mymemos.app")).toEqual([
+      { rel: "canonical", href: "https://mymemos.app/uninstall" },
     ]);
   });
 });

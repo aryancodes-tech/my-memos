@@ -92,7 +92,71 @@ export const SITE_OG_IMAGE_PATH = "/launch-poster.png";
 export const SITE_THEME_COLOR = "#ffffff";
 
 /** Paths excluded from search indexing via `robots.txt`. */
-export const SEO_ROBOTS_DISALLOW_PATHS = ["/demo/"] as const;
+export const SEO_ROBOTS_DISALLOW_PATHS = ["/demo/", "/uninstall"] as const;
+
+/**
+ * Absolute URL Chrome opens after the extension is uninstalled.
+ * Keep aligned with production `VITE_SITE_URL` + {@link UNINSTALL_PATH}.
+ */
+export const EXTENSION_UNINSTALL_PAGE_URL = "https://www.mymemos.in/uninstall";
+
+/** Landing path that hops to the uninstall feedback Google Form. */
+export const UNINSTALL_PATH = "/uninstall";
+
+/**
+ * Google Form URL for uninstall feedback.
+ * Paste the live “Send” link (`…/viewform`) after you create the form.
+ * When empty, `/uninstall` shows a short fallback page instead of redirecting.
+ */
+export const UNINSTALL_FEEDBACK_FORM_URL = "https://forms.gle/f7nunsDHyiSdpHbVA";
+
+/** `<title>` for the uninstall fallback page (before form redirect). */
+export const UNINSTALL_PAGE_TITLE = `Sorry to see you go - ${PRODUCT_NAME}`;
+
+/** Visible heading on the uninstall fallback page / Google Form title. */
+export const UNINSTALL_PAGE_HEADING = "Sorry to see you go";
+
+/**
+ * Lead copy for the uninstall Google Form description and fallback page.
+ * Mentions local data loss because uninstall has already cleared extension storage.
+ */
+export const UNINSTALL_PAGE_LEAD =
+  "May we know what went wrong? Your notes lived only on this device and were removed with the extension. Optional feedback helps us improve MyMemos.";
+
+/** Label for the optional email field on the uninstall feedback form. */
+export const UNINSTALL_FEEDBACK_EMAIL_LABEL = "Email (optional)";
+
+/** Label for the multi-select reasons field on the uninstall feedback form. */
+export const UNINSTALL_FEEDBACK_REASONS_LABEL = "What went wrong? (select all that apply)";
+
+/** Label for free-text follow-up on the uninstall feedback form. */
+export const UNINSTALL_FEEDBACK_DETAILS_LABEL = "Anything else you'd like to share? (optional)";
+
+/** CTA on the uninstall fallback page when the Google Form URL is configured. */
+export const UNINSTALL_FEEDBACK_CONTINUE_LABEL = "Share feedback";
+
+/** CTA on the uninstall fallback page when the Google Form URL is not yet set. */
+export const UNINSTALL_FEEDBACK_HOME_LABEL = "Back to MyMemos";
+
+/**
+ * Checkbox options for the uninstall Google Form.
+ * Create the form with these exact labels (multi-select).
+ */
+export const UNINSTALL_FEEDBACK_REASONS = [
+  "Missing features I need",
+  "Bugs, crashes, or something felt broken",
+  "Too slow or felt heavy",
+  "Hard to install or set up",
+  "New Tab didn't feel replaced the way I expected",
+  "Prefer another notes or New Tab extension",
+  "I wanted cloud sync or multi-device access",
+  "Privacy or security concerns",
+  "UI or design wasn't for me",
+  "I don't open New Tab often enough to use it",
+  "Conflicted with another extension or workflow",
+  "Just trying it out / installed by accident",
+  "Other",
+] as const;
 
 /** DOM id for the landing FAQ section. */
 export const LANDING_FAQ_SECTION_ID = "faq";

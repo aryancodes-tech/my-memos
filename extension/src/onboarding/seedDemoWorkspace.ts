@@ -370,7 +370,6 @@ function buildLaunchPlanDoc(
   image?: DemoSeedImageAttrs | null,
 ): BlockDoc {
   const content: BlockNode[] = [
-    heading(1, "Launch plan"),
     paragraph(
       "Everything for a launch lives in one place: priorities, assets, talking points, and quick voice reminders.",
     ),

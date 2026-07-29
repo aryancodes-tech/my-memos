@@ -1354,6 +1354,17 @@
   text-underline-offset: 0.12em;
 }
 
+.landing-uninstall-reasons {
+  margin: 1.5rem 0 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  color: var(--ko-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
 @media (max-width: 768px) {
   .landing-video-runway {
     height: auto !important;

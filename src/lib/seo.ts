@@ -11,6 +11,9 @@ import {
   SEO_ROBOTS_DISALLOW_PATHS,
   SITE_OG_IMAGE_PATH,
   SITE_ORIGIN,
+  UNINSTALL_PAGE_LEAD,
+  UNINSTALL_PAGE_TITLE,
+  UNINSTALL_PATH,
 } from "@/lib/constants";
 import { flattenFaqAnswerForSchema, resolveLandingFaqItems } from "@/lib/landingFaqContent";
 import { buildAbsoluteUrl } from "@/lib/url";
@@ -114,6 +117,25 @@ export function buildPrivacyLinkTags(origin: string): SeoLinkTag[] {
     {
       rel: "canonical",
       href: buildAbsoluteUrl(origin, PRIVACY_POLICY_PATH),
+    },
+  ];
+}
+
+/** Uninstall hop `<head>` meta tags - noindex; not for search or social. */
+export function buildUninstallMetaTags(): SeoMetaTag[] {
+  return [
+    { title: UNINSTALL_PAGE_TITLE },
+    { name: "description", content: UNINSTALL_PAGE_LEAD },
+    { name: "robots", content: "noindex, nofollow" },
+  ];
+}
+
+/** Uninstall hop `<head>` link tags (canonical when origin is known). */
+export function buildUninstallLinkTags(origin: string): SeoLinkTag[] {
+  return [
+    {
+      rel: "canonical",
+      href: buildAbsoluteUrl(origin, UNINSTALL_PATH),
     },
   ];
 }
