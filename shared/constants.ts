@@ -64,6 +64,94 @@ export const LANDING_FEATURES_DESC =
 /** Caption shown below the launch video at peak scroll. */
 export const LANDING_LAUNCH_VIDEO_CAPTION = "Your new tab, in action";
 
+/** Eyebrow label for the landing screenshot showcase. */
+export const LANDING_SHOWCASE_EYEBROW = "Screenshots";
+
+/** Heading for the landing screenshot showcase. */
+export const LANDING_SHOWCASE_TITLE = "A closer look at the workspace";
+
+/** Description for the landing screenshot showcase. */
+export const LANDING_SHOWCASE_DESC =
+  "Real screens from the extension - dashboard, nested pages, the block editor, attachments, and the first-run tour.";
+
+/** Accessible label for the showcase carousel region. */
+export const LANDING_SHOWCASE_REGION_LABEL = "Product screenshots";
+
+/** Label for the previous-screenshot control. */
+export const LANDING_SHOWCASE_PREV_LABEL = "Previous screenshot";
+
+/** Label for the next-screenshot control. */
+export const LANDING_SHOWCASE_NEXT_LABEL = "Next screenshot";
+
+/** Prefix for per-slide jump controls, completed with the slide number. */
+export const LANDING_SHOWCASE_JUMP_LABEL_PREFIX = "Show screenshot";
+
+/** Accessible label for opening a screenshot in the zoom lightbox. */
+export const LANDING_SHOWCASE_ZOOM_LABEL = "Zoom screenshot";
+
+/** Accessible label for closing the screenshot zoom lightbox. */
+export const LANDING_SHOWCASE_ZOOM_CLOSE_LABEL = "Close screenshot";
+
+/** Accessible label for the screenshot zoom dialog. */
+export const LANDING_SHOWCASE_ZOOM_DIALOG_LABEL = "Screenshot preview";
+
+/** Dismiss hint shown under the zoomed screenshot (no visible close button). */
+export const LANDING_SHOWCASE_ZOOM_HINT = "Click outside or press Esc to close";
+
+/**
+ * Quiet period after the last carousel scroll event before the active slide is
+ * re-read, in milliseconds. Filters out offsets mid smooth-scroll.
+ */
+export const LANDING_SHOWCASE_SCROLL_SETTLE_MS = 120;
+
+/** Intrinsic width of showcase screenshots, in pixels. */
+export const LANDING_SHOWCASE_IMAGE_WIDTH = 1280;
+
+/** Intrinsic height of showcase screenshots, in pixels. */
+export const LANDING_SHOWCASE_IMAGE_HEIGHT = 800;
+
+/**
+ * Slides for the landing screenshot carousel, in display order.
+ * `src` paths are served from `public/screenshots/`.
+ */
+export const LANDING_SHOWCASE_SLIDES: {
+  src: string;
+  alt: string;
+  title: string;
+  caption: string;
+}[] = [
+  {
+    src: "/screenshots/dashboard.webp",
+    alt: "MyMemos dashboard on a new tab with quick create actions and recent pages",
+    title: "Dashboard on every new tab",
+    caption: "Quick create, recent pages, and ⌘K search the moment a tab opens.",
+  },
+  {
+    src: "/screenshots/workspace-editor.webp",
+    alt: "Nested folders in the MyMemos sidebar beside a page with task list and voice note",
+    title: "Nested workspace, block editor",
+    caption: "Folders, favorites, and recent pages next to headings, task lists, and voice notes.",
+  },
+  {
+    src: "/screenshots/image-attachments.webp",
+    alt: "Image block in MyMemos with caption and controls for align, replace, and copy",
+    title: "Images with captions",
+    caption: "Align, caption, replace, or copy an image - files stay on your device.",
+  },
+  {
+    src: "/screenshots/guided-tour.webp",
+    alt: "MyMemos product tour coachmark pointing at the toolbar image button",
+    title: "Guided first run",
+    caption: "A short tour points out pages, the slash menu, images, and voice recording.",
+  },
+  {
+    src: "/screenshots/feature-overview.webp",
+    alt: "Annotated overview of the MyMemos editor, voice memos, themes, and privacy",
+    title: "Everything at a glance",
+    caption: "Editor, voice memos, themes, and on-device storage in one workspace.",
+  },
+];
+
 /** Meta description for the landing page. */
 export const LANDING_META_DESCRIPTION =
   "MyMemos replaces your browser New Tab with a local-first notes workspace - capture ideas instantly on every ⌘T, no account required.";
@@ -92,7 +180,140 @@ export const SITE_OG_IMAGE_PATH = "/launch-poster.png";
 export const SITE_THEME_COLOR = "#ffffff";
 
 /** Paths excluded from search indexing via `robots.txt`. */
-export const SEO_ROBOTS_DISALLOW_PATHS = ["/demo/"] as const;
+export const SEO_ROBOTS_DISALLOW_PATHS = ["/demo/", "/uninstall", "/install"] as const;
+
+/**
+ * Absolute URL Chrome opens after the extension is uninstalled.
+ * Keep aligned with production `VITE_SITE_URL` + {@link UNINSTALL_PATH}.
+ */
+export const EXTENSION_UNINSTALL_PAGE_URL = "https://www.mymemos.in/uninstall";
+
+/** Landing path that hops to the uninstall feedback Google Form. */
+export const UNINSTALL_PATH = "/uninstall";
+
+/**
+ * Google Form URL for uninstall feedback.
+ * Paste the live “Send” link (`…/viewform`) after you create the form.
+ * When empty, `/uninstall` shows a short fallback page instead of redirecting.
+ */
+export const UNINSTALL_FEEDBACK_FORM_URL = "https://forms.gle/f7nunsDHyiSdpHbVA";
+
+/** `<title>` for the uninstall fallback page (before form redirect). */
+export const UNINSTALL_PAGE_TITLE = `Sorry to see you go - ${PRODUCT_NAME}`;
+
+/** Visible heading on the uninstall fallback page / Google Form title. */
+export const UNINSTALL_PAGE_HEADING = "Sorry to see you go";
+
+/**
+ * Lead copy for the uninstall Google Form description and fallback page.
+ * Mentions local data loss because uninstall has already cleared extension storage.
+ */
+export const UNINSTALL_PAGE_LEAD =
+  "May we know what went wrong? Your notes lived only on this device and were removed with the extension. Optional feedback helps us improve MyMemos.";
+
+/** Label for the optional email field on the uninstall feedback form. */
+export const UNINSTALL_FEEDBACK_EMAIL_LABEL = "Email (optional)";
+
+/** Label for the multi-select reasons field on the uninstall feedback form. */
+export const UNINSTALL_FEEDBACK_REASONS_LABEL = "What went wrong? (select all that apply)";
+
+/** Label for free-text follow-up on the uninstall feedback form. */
+export const UNINSTALL_FEEDBACK_DETAILS_LABEL = "Anything else you'd like to share? (optional)";
+
+/** CTA on the uninstall fallback page when the Google Form URL is configured. */
+export const UNINSTALL_FEEDBACK_CONTINUE_LABEL = "Share feedback";
+
+/** CTA on the uninstall fallback page when the Google Form URL is not yet set. */
+export const UNINSTALL_FEEDBACK_HOME_LABEL = "Back to MyMemos";
+
+/**
+ * Checkbox options for the uninstall Google Form.
+ * Create the form with these exact labels (multi-select).
+ */
+export const UNINSTALL_FEEDBACK_REASONS = [
+  "Missing features I need",
+  "Bugs, crashes, or something felt broken",
+  "Too slow or felt heavy",
+  "Hard to install or set up",
+  "New Tab didn't feel replaced the way I expected",
+  "Prefer another notes or New Tab extension",
+  "I wanted cloud sync or multi-device access",
+  "Privacy or security concerns",
+  "UI or design wasn't for me",
+  "I don't open New Tab often enough to use it",
+  "Conflicted with another extension or workflow",
+  "Just trying it out / installed by accident",
+  "Other",
+] as const;
+
+/** Google Chrome mark used in install CTAs (served from `public/`). */
+export const CHROME_MARK_ICON_PATH = "/chrome.svg";
+
+/** Chrome Web Store listing for the published MyMemos extension. */
+export const CHROME_WEB_STORE_URL =
+  "https://chromewebstore.google.com/detail/mymemos/hdcanofeenpjkbbfpgcalbobeolbffbi";
+
+/**
+ * Absolute install hop URL (analytics-friendly redirect to the Chrome Web Store).
+ * Keep aligned with production `VITE_SITE_URL` + {@link INSTALL_PATH}.
+ */
+export const EXTENSION_INSTALL_PAGE_URL = "https://www.mymemos.in/install";
+
+/** Landing path that hops to the Chrome Web Store listing. */
+export const INSTALL_PATH = "/install";
+
+/** `<title>` for the install hop fallback page. */
+export const INSTALL_PAGE_TITLE = `Install ${PRODUCT_NAME} - Chrome Web Store`;
+
+/** Visible heading on the install hop fallback page. */
+export const INSTALL_PAGE_HEADING = `Install ${PRODUCT_NAME}`;
+
+/** Lead copy on the install hop fallback page. */
+export const INSTALL_PAGE_LEAD =
+  "Add MyMemos from the Chrome Web Store. Every new tab becomes your private notes workspace.";
+
+/** Hero / install primary CTA label on the Chrome Web Store button. */
+export const LANDING_INSTALL_CTA = "Add to Chrome";
+
+/** Supporting line under the install CTA label. */
+export const LANDING_INSTALL_CTA_SUFFIX = "Free · No account needed";
+
+/** Get-started section primary CTA lead (same Chrome Web Store hop). */
+export const LANDING_GET_STARTED_INSTALL_CTA = LANDING_INSTALL_CTA;
+
+/** Eyebrow for the local / sideload setup section. */
+export const LANDING_GET_STARTED_EYEBROW = "Local setup";
+
+/** Heading for the local / sideload setup section. */
+export const LANDING_GET_STARTED_TITLE = "Up and running in five steps";
+
+/** Intro copy for the local / sideload setup section. */
+export const LANDING_GET_STARTED_DESC =
+  "Prefer the Chrome Web Store for everyday use. These steps are for loading MyMemos from source on your machine (contributors and sideloading).";
+
+/** Ordered steps for local / unpacked extension setup on the landing page. */
+export const LANDING_LOCAL_SETUP_STEPS = [
+  {
+    title: "Get the source",
+    body: "Clone the GitHub repo (or download the source ZIP from the repository page).",
+  },
+  {
+    title: "Install and build",
+    body: "From the project root run npm install, npm install --prefix extension, then npm run package:extension to produce the extension ZIP.",
+  },
+  {
+    title: "Unzip the package",
+    body: "Extract public/mymemos-extension.zip (or use extension/dist/ after npm run dev) into a folder on your machine.",
+  },
+  {
+    title: "Load unpacked",
+    body: "Open chrome://extensions, turn on Developer mode, click Load unpacked, and select that folder.",
+  },
+  {
+    title: "Open a new tab",
+    body: `${PRODUCT_NAME} replaces your New Tab - start writing immediately.`,
+  },
+] as const;
 
 /** DOM id for the landing FAQ section. */
 export const LANDING_FAQ_SECTION_ID = "faq";
@@ -106,10 +327,6 @@ export const LANDING_FAQ_TITLE = "Common questions about MyMemos";
 /** Description for the landing FAQ section. */
 export const LANDING_FAQ_DESC =
   "Quick answers for anyone comparing local-first New Tab notes apps.";
-
-/** Intro copy for the landing get-started section. */
-export const LANDING_GET_STARTED_DESC =
-  "Install once. Every new tab becomes your workspace - no account, no server, no config.";
 
 /** Hero secondary CTA label linking to `/demo/`. */
 export const LANDING_HERO_DEMO_CTA = "Try before you install";
@@ -160,11 +377,8 @@ export const LANDING_DEMO_TOUR_HISTORY_GUARD_KEY = "mymemosLandingTourGuard";
 /** DOM id for the landing get-started install section. */
 export const LANDING_GET_STARTED_SECTION_ID = "get-started";
 
-/** Nav link label pointing to the install steps section. */
-export const LANDING_NAV_INSTALL_LINK_LABEL = "Install Guide";
-
-/** Footer tagline on the landing page. */
-export const LANDING_FOOTER_TAGLINE = "Replaces your New Tab · Local-first · No cloud required";
+/** Nav link label pointing to the local setup steps section. */
+export const LANDING_NAV_INSTALL_LINK_LABEL = "Local setup";
 
 /** Top padding for the landing hero shell below the fixed nav, in rem. */
 export const LANDING_HERO_SHELL_PADDING_TOP_REM = 6.75;
@@ -180,6 +394,85 @@ export const PRIVACY_POLICY_PATH = "/privacy";
 
 /** Footer link label for the privacy policy. */
 export const LANDING_FOOTER_PRIVACY_LABEL = "Privacy Policy";
+
+/** Personal site credited in the landing footer author link. */
+export const AUTHOR_SITE_URL = "https://www.aryancodes.tech/";
+
+/** X (Twitter) profile used as the public contact channel. */
+export const CONTACT_X_PROFILE_URL = "https://x.com/aryancodes_tech";
+
+/** Issue tracker for bug reports and feature requests. */
+export const GITHUB_ISSUES_URL = `${GITHUB_REPO_URL}/issues`;
+
+/** Contributor guide on GitHub. */
+export const GITHUB_CONTRIBUTING_URL = `${GITHUB_REPO_URL}/blob/main/CONTRIBUTING.md`;
+
+/** Security policy on GitHub. */
+export const GITHUB_SECURITY_URL = `${GITHUB_REPO_URL}/blob/main/SECURITY.md`;
+
+/** MIT license text on GitHub. */
+export const GITHUB_LICENSE_URL = `${GITHUB_REPO_URL}/blob/main/LICENSE`;
+
+/** Release changelog on GitHub. */
+export const GITHUB_CHANGELOG_URL = `${GITHUB_REPO_URL}/blob/main/CHANGELOG.md`;
+
+/** Short product description in the footer brand column. */
+export const LANDING_FOOTER_DESCRIPTION =
+  "Local-first notes on every new tab. Open a tab and start writing - no account, no cloud.";
+
+/** Credit line text before the heart glyph. */
+export const LANDING_FOOTER_BUILT_BY_PREFIX = "Built with";
+
+/** Credit line text between the heart glyph and the author name. */
+export const LANDING_FOOTER_BUILT_BY_CONNECTOR = "by";
+
+/** Decorative heart glyph in the footer credit line. */
+export const LANDING_FOOTER_HEART_GLYPH = "♥";
+
+/** Author name credited in the footer. */
+export const LANDING_FOOTER_AUTHOR_NAME = "Aryan";
+
+/** Rights notice appended after the footer copyright year. */
+export const LANDING_FOOTER_RIGHTS_NOTICE = "All rights reserved.";
+
+/** Accessible label for the footer navigation landmark. */
+export const LANDING_FOOTER_NAV_LABEL = "Footer";
+
+/**
+ * Link columns rendered in the landing footer.
+ * `external: true` opens the destination in a new tab.
+ */
+export const LANDING_FOOTER_LINK_GROUPS: {
+  title: string;
+  links: { label: string; href: string; external?: boolean }[];
+}[] = [
+  {
+    title: "Product",
+    links: [
+      { label: "Live demo", href: DEMO_PATH },
+      { label: "Local setup", href: `/#${LANDING_GET_STARTED_SECTION_ID}` },
+      { label: "FAQ", href: `/#${LANDING_FAQ_SECTION_ID}` },
+    ],
+  },
+  {
+    title: "Project",
+    links: [
+      { label: "GitHub", href: GITHUB_REPO_URL, external: true },
+      { label: "Report an issue", href: GITHUB_ISSUES_URL, external: true },
+      { label: "Contribute", href: GITHUB_CONTRIBUTING_URL, external: true },
+      { label: "Changelog", href: GITHUB_CHANGELOG_URL, external: true },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: LANDING_FOOTER_PRIVACY_LABEL, href: PRIVACY_POLICY_PATH },
+      { label: "Security", href: GITHUB_SECURITY_URL, external: true },
+      { label: "License", href: GITHUB_LICENSE_URL, external: true },
+      { label: "Contact", href: CONTACT_X_PROFILE_URL, external: true },
+    ],
+  },
+];
 
 /** Visible H1 on the privacy policy page. */
 export const PRIVACY_PAGE_HEADING = "Privacy Policy";

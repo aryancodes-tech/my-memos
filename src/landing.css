@@ -1,6 +1,7 @@
 /* Landing page - mirrors extension design tokens (light theme) */
 
-.landing-page {
+/* Tokens live on :root so portaled overlays (zoom lightbox) resolve them too. */
+:root {
   --ko-bg: #ffffff;
   --ko-surface: #f7f7f5;
   --ko-surface-2: #efeeec;
@@ -10,7 +11,9 @@
   --ko-accent: #1f1f1e;
   --ko-font:
     ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+}
 
+.landing-page {
   min-height: 100vh;
   background: var(--ko-bg);
   color: var(--ko-text);
@@ -186,7 +189,7 @@
 }
 
 .landing-btn-lg {
-  padding: 0.55rem 1rem;
+  padding: 0.78rem 1.05rem;
 }
 
 .landing-btn-primary {
@@ -207,6 +210,68 @@
 .landing-btn-ghost:hover {
   background: var(--ko-surface);
   border-color: var(--ko-text-muted);
+}
+
+/* Chrome Web Store-style install CTA */
+.landing-btn-chrome {
+  gap: 0.55rem;
+  padding: 0.48rem 1.1rem;
+  background: var(--ko-text);
+  color: var(--ko-bg);
+}
+
+.landing-btn-chrome:hover {
+  background: color-mix(in srgb, var(--ko-text) 86%, #ffffff);
+}
+
+.landing-btn-chrome-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.landing-btn-chrome-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.landing-btn-chrome-label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.05rem;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.landing-btn-chrome-lead {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.landing-btn-chrome-suffix {
+  font-size: 0.64rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  opacity: 0.7;
+}
+
+.landing-btn-lg.landing-btn-chrome {
+  padding: 0.48rem 1.25rem;
+}
+
+.landing-btn-lg .landing-btn-chrome-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.landing-btn-lg .landing-btn-chrome-lead {
+  font-size: 0.9rem;
+}
+
+.landing-btn-lg .landing-btn-chrome-suffix {
+  font-size: 0.68rem;
 }
 
 /* Hero */
@@ -288,6 +353,8 @@
 .landing-hero-actions {
   display: flex;
   flex-wrap: wrap;
+  /* Buttons keep their natural height; the taller install CTA centers against them. */
+  align-items: center;
   gap: 0.75rem;
   margin-top: 1rem;
   padding-bottom: 0.25rem;
@@ -956,6 +1023,308 @@
   color: var(--ko-text-muted);
 }
 
+/* Screenshot showcase - scroll-snap carousel with arrow + dot controls */
+.landing-showcase {
+  margin-top: 4.5rem;
+}
+
+.landing-showcase-carousel {
+  max-width: 56rem;
+  margin-inline: auto;
+}
+
+.landing-showcase-track {
+  display: grid;
+  grid-auto-flow: column;
+  /* Slides are exactly one track width so scroll position maps to slide index. */
+  grid-auto-columns: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.landing-showcase-track::-webkit-scrollbar {
+  display: none;
+}
+
+.landing-showcase-slide {
+  margin: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.landing-showcase-frame {
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--ko-border);
+  border-radius: 14px;
+  background: var(--ko-surface);
+  cursor: zoom-in;
+  transition: box-shadow 0.15s ease;
+}
+
+.landing-showcase-frame:hover {
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--ko-text) 10%, transparent);
+}
+
+.landing-showcase-frame:focus-visible {
+  outline: 2px solid var(--ko-text);
+  outline-offset: 3px;
+}
+
+.landing-showcase-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.landing-showcase-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  padding: 0 0.15rem;
+}
+
+.landing-showcase-caption-title {
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--ko-text);
+}
+
+.landing-showcase-caption-body {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--ko-text-muted);
+}
+
+.landing-showcase-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.landing-showcase-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  border: 1px solid var(--ko-border);
+  border-radius: 999px;
+  background: var(--ko-bg);
+  color: var(--ko-text);
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    opacity 0.12s ease;
+}
+
+.landing-showcase-arrow:hover:not(:disabled) {
+  background: var(--ko-surface-2);
+}
+
+.landing-showcase-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.landing-showcase-arrow-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.landing-showcase-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.landing-showcase-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--ko-border);
+  cursor: pointer;
+  transition:
+    width 0.18s ease,
+    background 0.18s ease;
+}
+
+.landing-showcase-dot-active {
+  width: 1.35rem;
+  background: var(--ko-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-showcase-dot {
+    transition: none;
+  }
+
+  .landing-showcase-frame {
+    transition: none;
+  }
+
+  .landing-showcase-lightbox {
+    animation: none;
+  }
+}
+
+/* Full-viewport zoom for showcase screenshots (mobile + desktop) */
+.landing-showcase-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right))
+    max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+  animation: landing-showcase-lightbox-in 0.16s ease;
+}
+
+@keyframes landing-showcase-lightbox-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.landing-showcase-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  background: color-mix(in srgb, var(--ko-bg) 28%, #000000 72%);
+  cursor: zoom-out;
+}
+
+/* Empty space inside the shell stays click-through so the backdrop can close. */
+.landing-showcase-lightbox-shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(100%, 72rem);
+  max-height: 100%;
+  pointer-events: none;
+}
+
+.landing-showcase-lightbox-image,
+.landing-showcase-lightbox-arrow,
+.landing-showcase-lightbox-caption {
+  pointer-events: auto;
+}
+
+.landing-showcase-lightbox:focus-visible {
+  outline: none;
+}
+
+.landing-showcase-lightbox-stage {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 0;
+}
+
+.landing-showcase-lightbox-image {
+  display: block;
+  width: 100%;
+  max-height: min(78vh, 52rem);
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  background: var(--ko-surface);
+  box-shadow: 0 18px 48px color-mix(in srgb, #000000 35%, transparent);
+}
+
+.landing-showcase-lightbox-arrow {
+  background: color-mix(in srgb, #ffffff 92%, transparent);
+  border-color: color-mix(in srgb, #ffffff 40%, transparent);
+  color: var(--ko-text);
+}
+
+/* Caption sits on its own dark plate so it stays readable over any screenshot. */
+.landing-showcase-lightbox-caption {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-width: 42rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid color-mix(in srgb, #ffffff 12%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, #000000 62%, transparent);
+  text-align: center;
+}
+
+.landing-showcase-lightbox-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.landing-showcase-lightbox-caption-body {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, #ffffff 88%, transparent);
+}
+
+.landing-showcase-lightbox-hint {
+  margin: 0.1rem 0 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, #ffffff 62%, transparent);
+}
+
+@media (max-width: 640px) {
+  .landing-showcase-lightbox-stage {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "image image"
+      "prev next";
+    gap: 0.65rem;
+  }
+
+  .landing-showcase-lightbox-image {
+    grid-area: image;
+    max-height: min(68vh, 40rem);
+  }
+
+  .landing-showcase-lightbox-arrow:first-of-type {
+    grid-area: prev;
+    justify-self: start;
+  }
+
+  .landing-showcase-lightbox-arrow:last-of-type {
+    grid-area: next;
+    justify-self: end;
+  }
+
+  .landing-showcase-lightbox-caption {
+    align-self: stretch;
+    text-align: left;
+  }
+}
+
 /* FAQ - left-aligned header, light theme accordions */
 .landing-faq {
   margin-top: 3rem;
@@ -1148,6 +1517,7 @@
 .landing-get-started-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.65rem;
   margin-top: 1.75rem;
 }
@@ -1221,44 +1591,135 @@
   color: var(--ko-text-muted);
 }
 
+/* Site footer - brand column + link groups + bottom bar */
 .landing-page-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  margin-top: 2.5rem;
-  padding-bottom: 2.5rem;
-  font-size: 0.78rem;
-  color: var(--ko-text-muted);
+  position: relative;
+  z-index: 10;
+  margin-top: 5rem;
+  border-top: 1px solid var(--ko-border);
+  background: color-mix(in srgb, var(--ko-surface) 55%, var(--ko-bg));
+}
+
+.landing-page-footer-inner {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: 2.75rem 1.5rem 1.75rem;
+}
+
+.landing-page-footer-top {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .landing-page-footer-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: 3.5rem;
+  }
 }
 
 .landing-page-footer-brand {
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
   color: var(--ko-text);
   text-decoration: none;
 }
 
 .landing-page-footer-brand:hover {
-  color: var(--ko-accent);
+  opacity: 0.75;
 }
 
-.landing-page-footer-sep {
-  color: var(--ko-border);
-}
-
-.landing-page-footer-copy {
+.landing-page-footer-desc {
+  margin: 0.9rem 0 0;
+  max-width: 22rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
   color: var(--ko-text-muted);
+}
+
+.landing-page-footer-credit {
+  margin: 1.1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--ko-text-muted);
+}
+
+.landing-page-footer-heart {
+  color: #d1484d;
+}
+
+.landing-page-footer-author {
+  font-weight: 600;
+  color: var(--ko-text);
+  text-decoration: none;
+}
+
+.landing-page-footer-author:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.landing-page-footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 1.25rem;
+}
+
+@media (min-width: 560px) {
+  .landing-page-footer-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.landing-page-footer-group-title {
+  margin: 0 0 0.85rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ko-text-muted);
+}
+
+.landing-page-footer-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .landing-page-footer-link {
-  color: var(--ko-text-muted);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--ko-text);
+  text-decoration: none;
+  transition: opacity 0.12s ease;
 }
 
 .landing-page-footer-link:hover {
-  color: var(--ko-accent);
+  opacity: 0.65;
+}
+
+.landing-page-footer-link:focus-visible {
+  outline: 2px solid var(--ko-border);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.landing-page-footer-bottom {
+  margin-top: 2.5rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--ko-border);
+  font-size: 0.75rem;
+  color: var(--ko-text-muted);
+}
+
+.landing-page-footer-copy {
+  margin: 0;
 }
 
 .landing-legal-page {
@@ -1352,6 +1813,17 @@
 .landing-legal-back a:hover {
   text-decoration: underline;
   text-underline-offset: 0.12em;
+}
+
+.landing-uninstall-reasons {
+  margin: 1.5rem 0 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  color: var(--ko-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
 }
 
 @media (max-width: 768px) {

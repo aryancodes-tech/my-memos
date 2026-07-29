@@ -159,12 +159,12 @@ Landing + `/demo/` deploy as a Node/SSR app (TanStack Start + Nitro). The extens
 
 ## Release artifacts
 
-Extension ZIPs for the landing download button live at `public/mymemos-extension.zip`.
+Extension ZIPs for Chrome Web Store uploads (and optional sideloading) are produced at `public/mymemos-extension.zip`.
 
 ```bash
 npm run package:extension
 ```
 
-Run that when extension UI/storage changes should refresh the download artifact (not on every commit).
+End users install from the [Chrome Web Store](https://chromewebstore.google.com/detail/mymemos/hdcanofeenpjkbbfpgcalbobeolbffbi); landing CTAs use `/install` as an analytics hop to that listing.
 
 A **pre-push hook** auto-fixes Prettier/ESLint formatting when possible, then runs `npm run check` (lint, format, typecheck, tests). If files were rewritten, commit them and push again. Full builds remain on `npm run ci` and GitHub Actions. Skip with `SKIP_PRE_PUSH_CI=1` only when necessary.

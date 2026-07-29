@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import { WEB_INSTALL_BANNER_DISMISS_KEY } from "@/lib/constants";
+import { WEB_INSTALL_BANNER_DISMISS_KEY, EXTENSION_INSTALL_PAGE_URL } from "@/lib/constants";
 import { isWebAppContext } from "@/lib/platform";
 
 /** Dismissible banner shown only in the standalone web app build. */
@@ -36,7 +36,7 @@ export default function WebInstallBanner() {
       </p>
       <div className="flex shrink-0 items-center gap-2">
         <a
-          href="/"
+          href={EXTENSION_INSTALL_PAGE_URL}
           className="rounded-md px-3 py-1.5 text-xs font-medium hover:opacity-90"
           style={{ background: "var(--ko-text)", color: "var(--ko-bg)" }}
         >
