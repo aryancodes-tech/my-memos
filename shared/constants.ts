@@ -174,7 +174,7 @@ export const SITE_ORIGIN = (
 ).replace(/\/$/, "");
 
 /** Open Graph / Twitter card image path (served from `public/`). */
-export const SITE_OG_IMAGE_PATH = "/launch-poster.png";
+export const SITE_OG_IMAGE_PATH = "/thumbnail.jpg";
 
 /** Mobile browser chrome color for the landing site. */
 export const SITE_THEME_COLOR = "#ffffff";
