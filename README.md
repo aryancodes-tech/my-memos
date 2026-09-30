@@ -2,7 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**A Notion-style notes app that replaces your browser New Tab.** Local-first, offline, no account.
+**A Notion-style notes app that replaces your browser New Tab.** Local-first, offline, no account. Now with voice-support!
+
+![Quick look](public/videos/mymemos-reel.gif)
 
 | Surface               | How to run                           | Where data lives             |
 | --------------------- | ------------------------------------ | ---------------------------- |
