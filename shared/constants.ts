@@ -490,25 +490,18 @@ export const PRIVACY_POLICY_LAST_UPDATED = "July 28, 2026";
 /** Filename served by the landing page download button. */
 export const EXTENSION_ZIP_FILENAME = "mymemos-extension.zip";
 
-/** Cloudinary account cloud name for landing media delivery. */
-export const LANDING_LAUNCH_VIDEO_CLOUDINARY_CLOUD = "dhywccghy";
-
-/** Cloudinary public ID for the launch scroll video. */
-export const LANDING_LAUNCH_VIDEO_CLOUDINARY_ID = "v1780797594/launch_1_wfzltd";
+/**
+ * Launch scroll demo media (animated GIF - lighter first paint than the reel MP4).
+ * Served from landing `public/videos/`.
+ */
+export const LANDING_LAUNCH_VIDEO_SRC = "/videos/mymemos-reel.gif";
 
 /**
- * Cloudinary transforms applied to the launch video (≈2 MB vs 31 MB original).
- * Served from Cloudinary CDN with edge caching - not downloaded from your origin per visitor.
+ * Poster for MP4 launch media. Empty when the launch source is a GIF (`<img>`).
  */
-export const LANDING_LAUNCH_VIDEO_CLOUDINARY_TRANSFORMS = "q_auto:eco,w_1280,c_limit,f_mp4";
+export const LANDING_LAUNCH_VIDEO_POSTER = "";
 
-/** Optimized launch video URL for the landing scroll section. */
-export const LANDING_LAUNCH_VIDEO_SRC = `https://res.cloudinary.com/${LANDING_LAUNCH_VIDEO_CLOUDINARY_CLOUD}/video/upload/${LANDING_LAUNCH_VIDEO_CLOUDINARY_TRANSFORMS}/${LANDING_LAUNCH_VIDEO_CLOUDINARY_ID}.mp4`;
-
-/** Poster image shown before the launch video loads. */
-export const LANDING_LAUNCH_VIDEO_POSTER = "/launch-poster.png";
-
-/** Scroll progress (0–1) before the launch video begins downloading. */
+/** Scroll progress (0–1) before deferred MP4 download begins (GIFs load immediately). */
 export const LANDING_LAUNCH_VIDEO_LOAD_SCROLL_PROGRESS = 0.01;
 
 /** Base public path for per-feature demo clips in the landing bento grid. */

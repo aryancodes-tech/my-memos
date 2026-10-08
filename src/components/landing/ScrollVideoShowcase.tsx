@@ -135,6 +135,11 @@ function useLaunchVideoEnabled(maxWidthPx: number) {
   return loadLaunchVideo;
 }
 
+/** True when the launch media should render as an animated image, not `<video>`. */
+function isLaunchGifSrc(src: string): boolean {
+  return /\.gif(?:$|\?)/i.test(src);
+}
+
 /**
  * Sticky scroll section: launch video starts in the bottom half of the viewport,
  * expands to fullscreen, then shrinks to the top half as the user keeps scrolling.
@@ -149,7 +154,10 @@ export function ScrollVideoShowcase({
   const loadLaunchVideo = useLaunchVideoEnabled(LANDING_LAUNCH_VIDEO_HIDE_MAX_WIDTH_PX);
   const runwayRef = useRef<HTMLElement>(null);
   const progress = useScrollProgress(runwayRef);
-  const shouldLoadVideo = loadLaunchVideo && progress > LANDING_LAUNCH_VIDEO_LOAD_SCROLL_PROGRESS;
+  const isGif = isLaunchGifSrc(videoSrc);
+  // GIFs are small enough to load in the initial viewport; MP4 stays scroll-deferred.
+  const shouldLoadVideo =
+    loadLaunchVideo && (isGif || progress > LANDING_LAUNCH_VIDEO_LOAD_SCROLL_PROGRESS);
   const frameStyle = getVideoFrameStyle(progress);
   const isFullscreen = progress >= LANDING_VIDEO_EXPAND_END && progress < LANDING_VIDEO_HOLD_END;
   const showChrome = progress < LANDING_VIDEO_HOLD_END;
@@ -196,7 +204,7 @@ export function ScrollVideoShowcase({
         <div className="landing-video-frame" style={frameStyle}>
           <LaunchVideoFrame
             videoSrc={shouldLoadVideo ? videoSrc : ""}
-            posterSrc={posterSrc}
+            posterSrc={isGif ? "" : posterSrc}
             label={label}
             showCaption={showCaption}
             showChrome={showChrome}
@@ -232,7 +240,7 @@ type LaunchVideoFrameProps = {
   loadVideo: boolean;
 };
 
-/** Renders the launch video or a cinematic placeholder when no media file is present yet. */
+/** Renders the launch GIF/video, with a light placeholder only while MP4 loads. */
 function LaunchVideoFrame({
   videoSrc,
   posterSrc,
@@ -242,9 +250,15 @@ function LaunchVideoFrame({
   loadVideo,
 }: LaunchVideoFrameProps) {
   const [mediaReady, setMediaReady] = useState(false);
-  const [videoFailed, setVideoFailed] = useState(false);
-  const hasVideoElement = loadVideo && !videoFailed;
-  const resolvedVideoSrc = videoSrc.length > 0 ? videoSrc : undefined;
+  const [mediaFailed, setMediaFailed] = useState(false);
+  const resolvedSrc = videoSrc.length > 0 ? videoSrc : undefined;
+  const useGif = resolvedSrc !== undefined && isLaunchGifSrc(resolvedSrc);
+  const showMedia = loadVideo && !mediaFailed && resolvedSrc !== undefined;
+
+  useEffect(() => {
+    setMediaReady(false);
+    setMediaFailed(false);
+  }, [resolvedSrc]);
 
   return (
     <>
@@ -259,10 +273,21 @@ function LaunchVideoFrame({
 
       <div className="landing-video-inner">
         <div className="landing-video-media">
-          {hasVideoElement ? (
+          {showMedia && useGif ? (
+            <img
+              key={resolvedSrc}
+              className="landing-video-element"
+              src={resolvedSrc}
+              alt={label}
+              decoding="async"
+              onError={() => setMediaFailed(true)}
+            />
+          ) : null}
+
+          {showMedia && !useGif ? (
             <video
               className="landing-video-element"
-              src={resolvedVideoSrc}
+              src={resolvedSrc}
               poster={posterSrc.length > 0 ? posterSrc : undefined}
               autoPlay
               muted
@@ -272,12 +297,14 @@ function LaunchVideoFrame({
               onLoadedData={() => setMediaReady(true)}
               onError={() => {
                 setMediaReady(false);
-                setVideoFailed(true);
+                setMediaFailed(true);
               }}
             />
           ) : null}
 
-          {hasVideoElement && resolvedVideoSrc !== undefined && !mediaReady && !videoFailed && (
+          {/* GIFs paint as soon as bytes arrive - skip the overlay so a missed
+              `onLoad` (cache / Strict Mode) cannot trap the UI on the placeholder. */}
+          {showMedia && !useGif && !mediaReady && !mediaFailed && (
             <div className="landing-video-placeholder">
               <div className="landing-video-placeholder-mesh" aria-hidden />
               <div className="landing-video-placeholder-label">
