@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /demo/
+Disallow: /uninstall
+Disallow: /install
 
 Sitemap: http://localhost:8080/sitemap.xml
