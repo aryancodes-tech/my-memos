@@ -1,7 +1,9 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import { redirectAfterAnalyticsTrack } from "@/lib/analyticsHop";
 import {
+  ANALYTICS_EVENT_UNINSTALL_HOP,
   LANDING_HERO_SHELL_PADDING_TOP_REM,
   UNINSTALL_FEEDBACK_CONTINUE_LABEL,
   UNINSTALL_FEEDBACK_FORM_URL,
@@ -19,11 +21,6 @@ export const Route = createFileRoute("/uninstall")({
   loader: async () => ({
     requestOrigin: await getSeoRequestOrigin(),
   }),
-  beforeLoad: () => {
-    if (hasUninstallFormUrl) {
-      throw redirect({ href: UNINSTALL_FEEDBACK_FORM_URL });
-    }
-  },
   head: ({ loaderData }) => {
     const origin = resolveSiteOrigin(loaderData?.requestOrigin);
     return {
@@ -35,15 +32,15 @@ export const Route = createFileRoute("/uninstall")({
 });
 
 /**
- * Fallback when {@link UNINSTALL_FEEDBACK_FORM_URL} is unset.
- * Once the Google Form URL is configured, `beforeLoad` redirects there instead.
+ * Analytics hop to the uninstall feedback form.
+ * Renders briefly so Vercel Analytics can record `/uninstall`, then redirects.
  */
 function UninstallPage() {
   useEffect(() => {
     if (!hasUninstallFormUrl) {
       return;
     }
-    window.location.replace(UNINSTALL_FEEDBACK_FORM_URL);
+    void redirectAfterAnalyticsTrack(ANALYTICS_EVENT_UNINSTALL_HOP, UNINSTALL_FEEDBACK_FORM_URL);
   }, []);
 
   return (

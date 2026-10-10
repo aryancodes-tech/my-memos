@@ -71,9 +71,9 @@ export function PrivacyPolicyContent() {
       <p>
         This site may use standard hosting and delivery infrastructure (for example CDN-hosted media
         such as the launch video). The site may also load privacy-respecting web analytics provided
-        by the host (for example Vercel Analytics) to understand aggregate traffic. Analytics on the
-        marketing site are separate from extension note storage and do not include the contents of
-        your notes.
+        by the host (for example Vercel Analytics) to understand aggregate traffic on the marketing
+        pages and the live browser demo. Analytics are separate from extension note storage and do
+        not include the contents of your notes.
       </p>
       <p>
         Server logs typical of web hosting (such as IP address, user agent, and requested URL) may

@@ -1,8 +1,10 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { LandingChromeCta } from "@/components/landing/LandingChromeCta";
+import { redirectAfterAnalyticsTrack } from "@/lib/analyticsHop";
 import {
+  ANALYTICS_EVENT_INSTALL_HOP,
   CHROME_WEB_STORE_URL,
   INSTALL_PAGE_HEADING,
   INSTALL_PAGE_LEAD,
@@ -18,11 +20,6 @@ export const Route = createFileRoute("/install")({
   loader: async () => ({
     requestOrigin: await getSeoRequestOrigin(),
   }),
-  beforeLoad: () => {
-    if (hasChromeWebStoreUrl) {
-      throw redirect({ href: CHROME_WEB_STORE_URL });
-    }
-  },
   head: ({ loaderData }) => {
     const origin = resolveSiteOrigin(loaderData?.requestOrigin);
     return {
@@ -34,15 +31,15 @@ export const Route = createFileRoute("/install")({
 });
 
 /**
- * Fallback when {@link CHROME_WEB_STORE_URL} is unset.
- * With the store URL configured, `beforeLoad` redirects there instead.
+ * Analytics hop to the Chrome Web Store.
+ * Renders briefly so Vercel Analytics can record `/install`, then redirects.
  */
 function InstallPage() {
   useEffect(() => {
     if (!hasChromeWebStoreUrl) {
       return;
     }
-    window.location.replace(CHROME_WEB_STORE_URL);
+    void redirectAfterAnalyticsTrack(ANALYTICS_EVENT_INSTALL_HOP, CHROME_WEB_STORE_URL);
   }, []);
 
   return (

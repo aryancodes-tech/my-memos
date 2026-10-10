@@ -262,6 +262,24 @@ export const EXTENSION_INSTALL_PAGE_URL = "https://www.mymemos.in/install";
 /** Landing path that hops to the Chrome Web Store listing. */
 export const INSTALL_PATH = "/install";
 
+/**
+ * Vercel Analytics custom event when `/install` hops to the Chrome Web Store.
+ * Pageviews also record for `/install` once the hop page renders.
+ */
+export const ANALYTICS_EVENT_INSTALL_HOP = "install_hop";
+
+/**
+ * Vercel Analytics custom event when `/uninstall` hops to the feedback form.
+ * Pageviews also record for `/uninstall` once the hop page renders.
+ */
+export const ANALYTICS_EVENT_UNINSTALL_HOP = "uninstall_hop";
+
+/**
+ * Max wait for the analytics beacon before redirecting an install/uninstall hop.
+ * Keeps the hop snappy if the script is slow or blocked.
+ */
+export const ANALYTICS_HOP_REDIRECT_TIMEOUT_MS = 400;
+
 /** `<title>` for the install hop fallback page. */
 export const INSTALL_PAGE_TITLE = `Install ${PRODUCT_NAME} - Chrome Web Store`;
 

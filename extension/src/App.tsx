@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { useEffect } from "react";
 import { CircleHelp } from "lucide-react";
 import { useStore } from "@/store/useStore";
@@ -64,6 +65,7 @@ export default function App() {
   if (showMobileNotice) {
     return (
       <div className="ko-mobile-notice-shell">
+        {isDemoWebApp ? <Analytics /> : null}
         <MobileExperienceNotice />
       </div>
     );
@@ -72,17 +74,19 @@ export default function App() {
   if (!ready) {
     return (
       <div className="h-full flex items-center justify-center text-[var(--ko-text-muted)]">
+        {isDemoWebApp ? <Analytics /> : null}
         Loading workspace…
       </div>
     );
   }
 
-  const shellClass = isWebAppContext()
+  const shellClass = isDemoWebApp
     ? "ko-demo-shell fixed inset-0 flex flex-col overflow-hidden"
     : "h-full flex flex-col";
 
   return (
     <div className={shellClass}>
+      {isDemoWebApp ? <Analytics /> : null}
       <WebInstallBanner />
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="flex shrink-0 border-b" style={{ borderColor: "var(--ko-border)" }}>
