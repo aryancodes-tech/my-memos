@@ -5,13 +5,7 @@
 
 /** Built-in theme ids available in the appearance picker. */
 export type BuiltInThemeName =
-  | "light"
-  | "dark"
-  | "midnight"
-  | "dracula"
-  | "solarized"
-  | "forest"
-  | "ocean";
+  "light" | "dark" | "midnight" | "dracula" | "solarized" | "forest" | "ocean";
 
 /** Primary colors users pick when creating a custom theme. */
 export interface CustomThemeColors {
